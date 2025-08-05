@@ -1,29 +1,47 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import store from "@/redux/store";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import FlashMessage from "react-native-flash-message";
+import { Provider } from "react-redux";
+import persistStore from "redux-persist/es/persistStore";
+import { PersistGate } from "redux-persist/integration/react";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+const persistor = persistStore(store);
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+	const [loaded] = useFonts({
+		regular: require("../assets/fonts/Poppins-Regular.ttf"),
+		medium: require("../assets/fonts/Poppins-Medium.ttf"),
+		bold: require("../assets/fonts/Poppins-Bold.ttf"),
+	});
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+	useEffect(() => {
+		if (loaded) {
+			SplashScreen.hideAsync();
+		}
+	}, [loaded]);
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+	if (!loaded) {
+		// Async font loading only occurs in development.
+		return null;
+	}
+
+	return (
+		<Provider store={store}>
+			<PersistGate persistor={persistor}>
+				<Stack screenOptions={{ headerShown: false }} />
+				<FlashMessage
+					position="top"
+					floating={true}
+					textStyle={{ marginBottom: 5 }}
+					style={{ marginTop: 40 }}
+					titleStyle={{ marginTop: 10 }}
+				/>
+			</PersistGate>
+		</Provider>
+	);
 }
