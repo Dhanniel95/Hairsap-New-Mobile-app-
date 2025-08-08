@@ -2,6 +2,7 @@ import store from "@/redux/store";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
 import FlashMessage from "react-native-flash-message";
 import { Provider } from "react-redux";
@@ -22,6 +23,7 @@ export default function RootLayout() {
 	useEffect(() => {
 		if (loaded) {
 			SplashScreen.hideAsync();
+			SystemUI.setBackgroundColorAsync("#000");
 		}
 	}, [loaded]);
 

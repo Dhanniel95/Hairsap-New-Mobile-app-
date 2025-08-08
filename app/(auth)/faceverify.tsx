@@ -8,7 +8,7 @@ import colors from "@/utils/colors";
 import { displayError } from "@/utils/error";
 import { useAppDispatch } from "@/utils/hooks";
 import { Camera, CameraView } from "expo-camera";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator,
@@ -21,6 +21,8 @@ import {
 import { showMessage } from "react-native-flash-message";
 
 const FaceVerify = () => {
+	const router = useRouter();
+
 	const dispatch = useAppDispatch();
 
 	const params = useLocalSearchParams();
@@ -74,7 +76,10 @@ const FaceVerify = () => {
 				description: "Successfully uploaded face biometric",
 				type: "success",
 			});
-			dispatch(saveUserData(params));
+			let res = await dispatch(saveUserData(params)).unwrap();
+			if (res) {
+				router.replace("/(tabs)");
+			}
 		} catch (err) {
 			setLoad(false);
 			displayError(err, true);

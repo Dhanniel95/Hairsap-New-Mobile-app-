@@ -1,19 +1,15 @@
-import { logOut } from "@/redux/auth/authSlice";
-import { useAppDispatch } from "@/utils/hooks";
+import Header from "@/components/Header";
+import Gallery from "@/components/User/Gallery";
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 
 const HomeTab = () => {
-	const dispatch = useAppDispatch();
-
 	return (
-		<View>
-			<Text>HomeTab</Text>
-			<Button title="Logout" onPress={() => dispatch(logOut())} />
+		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
+			<Header />
+			<Gallery />
 		</View>
 	);
 };
 
 export default HomeTab;
-
-const styles = StyleSheet.create({});

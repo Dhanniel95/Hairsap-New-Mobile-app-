@@ -42,15 +42,15 @@ const Register = () => {
 						setLoad(true);
 						let res = await authService.register(payload);
 						setLoad(false);
-						if (res?.token) {
+						if (res?.data?.token) {
 							await AsyncStorage.setItem(
 								"@accesstoken",
-								res.token
+								res.data.token
 							);
 						}
 						router.push({
 							pathname: "/(auth)/faceverify",
-							params: res,
+							params: res?.data?.user,
 						});
 					} catch (err) {
 						setLoad(false);
