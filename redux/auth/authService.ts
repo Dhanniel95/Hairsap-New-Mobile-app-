@@ -35,6 +35,16 @@ const editProfile = async (obj: any) => {
 	return data;
 };
 
+const deactivateAccount = async () => {
+	const { data } = await apiRequest().post(`/deactivate`);
+	return data;
+};
+
+const changePassword = async (obj: any) => {
+	const { data } = await apiRequest().post(`/auth/changepassword`, obj);
+	return data;
+};
+
 const authService = {
 	login,
 	register,
@@ -43,6 +53,8 @@ const authService = {
 	resetPassword,
 	fetchProfile,
 	editProfile,
+	deactivateAccount,
+	changePassword,
 };
 
 export default authService;

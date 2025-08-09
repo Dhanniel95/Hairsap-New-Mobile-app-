@@ -31,10 +31,13 @@ const InputField = ({
 	autoCapitalize?: "characters" | "sentences" | "words";
 }) => {
 	return (
-		<View style={{ marginBottom: 15 }}>
+		<View style={{ marginBottom: 20 }}>
 			{label && (
 				<Text
-					style={[textStyles.text, { fontSize: 14, marginBottom: 3 }]}
+					style={[
+						textStyles.textMid,
+						{ fontSize: 14, marginBottom: 3 },
+					]}
 				>
 					{label}
 				</Text>
@@ -45,7 +48,7 @@ const InputField = ({
 				style={[
 					formStyles.input,
 					{
-						height: multi ? 120 : 50,
+						height: multi ? 120 : 60,
 					},
 				]}
 				secureTextEntry={password ? true : false}

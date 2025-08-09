@@ -5,14 +5,17 @@ import {
 	KeyboardAvoidingView,
 	ScrollView,
 	TouchableWithoutFeedback,
+	View,
 } from "react-native";
 
 function KeyboardWrapper({ children }: { children: React.ReactNode }) {
 	return (
-		<KeyboardAvoidingView style={{ backgroundColor: colors.white }}>
+		<KeyboardAvoidingView
+			style={{ backgroundColor: colors.white, height: "100%" }}
+		>
 			<ScrollView>
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-					{children}
+					<View>{children}</View>
 				</TouchableWithoutFeedback>
 			</ScrollView>
 		</KeyboardAvoidingView>

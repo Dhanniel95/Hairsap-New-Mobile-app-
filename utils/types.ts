@@ -4,6 +4,7 @@ interface UserDetailsType {
 	faceIdPhotoUrl: string;
 	email: string;
 	phone: string;
+	discountCode: string;
 }
 
 const userDetailsType: UserDetailsType | Record<string, never> = {};
