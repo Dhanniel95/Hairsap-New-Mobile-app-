@@ -43,6 +43,11 @@ const SettingsScreen = () => {
 				<ScrollView showsVerticalScrollIndicator={false}>
 					<View style={{ flex: 1, paddingTop: 20 }}>
 						<ButtonSettings
+							name="Transaction History"
+							iconName="menu"
+							onPress={() => router.push("/(app)/history")}
+						/>
+						<ButtonSettings
 							name="Change Password"
 							iconName="face-man-profile"
 							onPress={() => router.push("/(app)/changepassword")}
@@ -55,12 +60,12 @@ const SettingsScreen = () => {
 						<ButtonSettings
 							name="Terms of Service"
 							iconName="newspaper"
-							onPress={() => console.log("")}
+							onPress={() => router.push("/(app)/terms")}
 						/>
 						<ButtonSettings
 							name="Privacy Policy"
 							iconName="shield-alert-outline"
-							onPress={() => console.log("")}
+							onPress={() => router.push("/(app)/policy")}
 						/>
 						<ButtonSettings
 							name="Log Out"
