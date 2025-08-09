@@ -1,16 +1,19 @@
 import Container from "@/components/Container";
+import { getUserInfo } from "@/redux/auth/authSlice";
 import colors from "@/utils/colors";
-import {
-	Feather,
-	FontAwesome,
-	FontAwesome5,
-	MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { useAppDispatch } from "@/utils/hooks";
+import { Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { Platform } from "react-native";
 
 export default function TabLayout() {
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		dispatch(getUserInfo());
+	}, []);
+
 	return (
 		<Container dark={true}>
 			<Tabs
@@ -34,11 +37,7 @@ export default function TabLayout() {
 					options={{
 						title: "Gallery",
 						tabBarIcon: ({ color }) => (
-							<FontAwesome5
-								color={color}
-								size={22}
-								name={"photo-video"}
-							/>
+							<Feather color={color} size={22} name={"image"} />
 						),
 					}}
 				/>
@@ -47,20 +46,20 @@ export default function TabLayout() {
 					options={{
 						title: "Consult",
 						tabBarIcon: ({ color }) => (
-							<MaterialCommunityIcons
+							<Feather
 								color={color}
 								size={22}
-								name={"message-processing"}
+								name={"message-square"}
 							/>
 						),
 					}}
 				/>
 				<Tabs.Screen
-					name="activity"
+					name="profile"
 					options={{
-						title: "Activity",
+						title: "Profile",
 						tabBarIcon: ({ color }) => (
-							<FontAwesome color={color} size={20} name="th" />
+							<Feather color={color} size={20} name="user" />
 						),
 					}}
 				/>

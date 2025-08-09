@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import GoBack from "@/components/GoBack";
 import authService from "@/redux/auth/authService";
-import { saveUserData } from "@/redux/auth/authSlice";
+import { getUserInfo } from "@/redux/auth/authSlice";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
@@ -69,14 +69,14 @@ const FaceVerify = () => {
 			});
 			setLoad(true);
 			await authService.uploadFaceId(form);
-			setLoad(false);
 			showMessage({
 				duration: 3000,
 				message: "Great!",
 				description: "Successfully uploaded face biometric",
 				type: "success",
 			});
-			let res = await dispatch(saveUserData(params)).unwrap();
+			let res = await dispatch(getUserInfo()).unwrap();
+			setLoad(false);
 			if (res) {
 				router.replace("/(tabs)");
 			}

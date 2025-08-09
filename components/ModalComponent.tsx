@@ -1,16 +1,15 @@
+import React from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
 
 const ModalComponent = ({
 	open,
-	children,
 	closeModal,
-	bgColor,
+	children,
 	centered,
 }: {
 	open: boolean;
-	children: React.ReactNode;
 	closeModal: () => void;
-	bgColor?: string;
+	children: React.ReactNode;
 	centered?: boolean;
 }) => {
 	return (
@@ -34,7 +33,7 @@ const ModalComponent = ({
 				<View
 					style={[
 						centered ? styles.modalCenter : styles.modalView,
-						{ backgroundColor: bgColor || "transparent" },
+						{ backgroundColor: "#FFF" },
 					]}
 				>
 					{children}
@@ -47,23 +46,18 @@ const ModalComponent = ({
 export default ModalComponent;
 
 const styles = StyleSheet.create({
+	modalView: {
+		bottom: 0,
+		position: "absolute",
+		width: "100%",
+		paddingVertical: 30,
+		paddingHorizontal: 20,
+	},
 	modalCenter: {
 		margin: 20,
 		borderRadius: 5,
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5,
-	},
-	modalView: {
-		backgroundColor: "white",
-		borderRadius: 5,
 		paddingVertical: 20,
-		paddingHorizontal: 15,
+		paddingHorizontal: 25,
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
@@ -72,10 +66,6 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
-		position: "absolute",
-		bottom: 0,
-		right: 0,
-		left: 0,
-		minHeight: 300,
+		width: "85%",
 	},
 });

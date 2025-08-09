@@ -38,6 +38,19 @@ export const saveUserData = createAsyncThunk(
 	}
 );
 
+export const getUserInfo = createAsyncThunk(
+	"auth/userInfo",
+	async (_, thunkAPI) => {
+		try {
+			let res = await authService.fetchProfile();
+			return res?.data;
+		} catch (error: any) {
+			let message = displayError(error, true);
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const authSlice = createSlice({
 	name: "auth",
 	initialState,
@@ -65,6 +78,11 @@ export const authSlice = createSlice({
 		});
 		builder.addCase(saveUserData.fulfilled, (state, action) => {
 			state.loading = false;
+			if (action.payload?.userId) {
+				state.user = action.payload;
+			}
+		});
+		builder.addCase(getUserInfo.fulfilled, (state, action) => {
 			if (action.payload?.userId) {
 				state.user = action.payload;
 			}

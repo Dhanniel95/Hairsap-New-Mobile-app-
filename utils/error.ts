@@ -30,4 +30,13 @@ const displayError = (error: any, display: boolean) => {
 	return message;
 };
 
-export { displayError };
+const displaySuccess = (message: string, title?: string) => {
+	showMessage({
+		duration: 3000,
+		message: title || "Great!",
+		description: message,
+		type: "success",
+	});
+};
+
+export { displayError, displaySuccess };

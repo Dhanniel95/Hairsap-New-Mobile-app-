@@ -25,12 +25,24 @@ const resetPassword = async (obj: any) => {
 	return data;
 };
 
+const fetchProfile = async () => {
+	const { data } = await apiRequest().get(`/users/me`);
+	return data;
+};
+
+const editProfile = async (obj: any) => {
+	const { data } = await apiRequest().patch(`/users`, obj);
+	return data;
+};
+
 const authService = {
 	login,
 	register,
 	uploadFaceId,
 	forgotPassword,
 	resetPassword,
+	fetchProfile,
+	editProfile,
 };
 
 export default authService;

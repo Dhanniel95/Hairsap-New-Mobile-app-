@@ -1,19 +1,20 @@
+import colors from "@/utils/colors";
 import { StyleSheet } from "react-native";
 
 const textStyles = StyleSheet.create({
 	textMid: {
 		fontFamily: "medium",
-		color: "#000",
+		color: colors.dark,
 		fontSize: 16,
 	},
 	textBold: {
 		fontFamily: "bold",
-		color: "#000",
+		color: colors.dark,
 		fontSize: 16,
 	},
 	text: {
 		fontFamily: "regular",
-		color: "#000",
+		color: colors.dark,
 		fontSize: 16,
 	},
 });
