@@ -5,6 +5,7 @@ interface UserDetailsType {
 	email: string;
 	phone: string;
 	discountCode: string;
+	role: string;
 }
 
 const userDetailsType: UserDetailsType | Record<string, never> = {};
