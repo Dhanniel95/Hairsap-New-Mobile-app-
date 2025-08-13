@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>913133921485-gde552dc1ga524n3399a7or71m8tap29.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.913133921485-gde552dc1ga524n3399a7or71m8tap29</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAre7K5QNxHRLphfnRzgj2PmaYJPEZGv68</string>
+	<key>GCM_SENDER_ID</key>
+	<string>913133921485</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.reotech.Hairsap</string>
+	<key>PROJECT_ID</key>
+	<string>hairsap-41361</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hairsap-41361.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:913133921485:ios:462b26a7a0867575303584</string>
+</dict>
+</plist>

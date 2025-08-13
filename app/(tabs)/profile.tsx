@@ -64,7 +64,7 @@ const ProfileScreen = () => {
 				<View style={styles.divider}>
 					<View>
 						<Text style={[textStyles.textBold]}>Email:</Text>
-						<Text style={[textStyles.textMid]}>
+						<Text style={[textStyles.text]}>
 							{user?.email || "Email not set"}
 						</Text>
 					</View>
@@ -81,7 +81,7 @@ const ProfileScreen = () => {
 				<View style={styles.divider}>
 					<View>
 						<Text style={[textStyles.textBold]}>Phone:</Text>
-						<Text style={[textStyles.textMid]}>
+						<Text style={[textStyles.text]}>
 							{user?.phone || "Phone not set"}
 						</Text>
 					</View>

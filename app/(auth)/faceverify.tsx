@@ -8,7 +8,7 @@ import colors from "@/utils/colors";
 import { displayError } from "@/utils/error";
 import { useAppDispatch } from "@/utils/hooks";
 import { Camera, CameraView } from "expo-camera";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator,
@@ -24,8 +24,6 @@ const FaceVerify = () => {
 	const router = useRouter();
 
 	const dispatch = useAppDispatch();
-
-	const params = useLocalSearchParams();
 
 	const [hasCameraPermission, setHasCameraPermission] = useState<
 		null | boolean

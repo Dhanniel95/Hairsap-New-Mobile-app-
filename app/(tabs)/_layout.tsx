@@ -52,6 +52,9 @@ export default function TabLayout() {
 								name={"message-square"}
 							/>
 						),
+						tabBarStyle: {
+							display: "none",
+						},
 					}}
 				/>
 				<Tabs.Screen

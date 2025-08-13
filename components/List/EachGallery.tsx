@@ -1,4 +1,5 @@
 import { Entypo, FontAwesome } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
 	Image,
@@ -19,7 +20,11 @@ const EachGallery = ({
 	itemSize: number;
 	videos: any;
 }) => {
+	const router = useRouter();
+
 	const [open, setOpen] = useState(false);
+
+	console.log(videos.length, "vid");
 
 	return (
 		<>
@@ -53,6 +58,13 @@ const EachGallery = ({
 							width: "100%",
 							position: "relative",
 						}}
+						onPress={() => {
+							setOpen(false);
+							router.push({
+								pathname: "/(app)/reel",
+								params: { startFrom: gallery.id, videos },
+							});
+						}}
 					>
 						<Image
 							source={{ uri: gallery.thumbnail }}
@@ -83,6 +95,10 @@ const EachGallery = ({
 						</Text>
 					</View>
 					<TouchableOpacity
+						onPress={() => {
+							setOpen(false);
+							router.push("/(app)/chat");
+						}}
 						activeOpacity={0.8}
 						style={{
 							backgroundColor: "#14A79F",

@@ -9,14 +9,25 @@
 		"userInterfaceStyle": "automatic",
 		"newArchEnabled": true,
 		"ios": {
-			"supportsTablet": true
+			"supportsTablet": true,
+			"bundleIdentifier": "com.reotech.Hairsap",
+			"buildNumber": "1.5.8",
+			"googleServicesFile": "./GoogleService-Info.plist",
+			"infoPlist": {
+				"NSCameraUsageDescription": "Hairsap needs access to your camera to capture your face for verification and security reasons during delivery of service.",
+				"NSPhotoLibraryUsageDescription": "Hairsap needs permission to access your photo library to upload hairstyle image, set custom avatar and upload videos.",
+				"NSLocationWhenInUseUsageDescription": "Hairsap needs users location for connecting clients to the nearest beauty pro for quicker delivery of services",
+				"NSLocationAlwaysUsageDescription": "Hairsap needs users location for connecting clients to the nearest beauty pro for quicker delivery of services",
+				"UIBackgroundModes": ["remote-notification"]
+			}
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/images/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
 			},
-			"edgeToEdgeEnabled": true
+			"edgeToEdgeEnabled": true,
+			"softwareKeyboardLayoutMode": "resize"
 		},
 		"androidNavigationBar": {
 			"barStyle": "light-content",

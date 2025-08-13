@@ -10,9 +10,18 @@ const listTransactionHistory = async () => {
 	return data.data;
 };
 
+const fetchMessages = async (id: any, limit: number) => {
+	const { data } = await apiRequest().post(`/chats`, {
+		userId: id,
+		take: limit,
+	});
+	return data.data;
+};
+
 const bookService = {
 	listServices,
 	listTransactionHistory,
+	fetchMessages,
 };
 
 export default bookService;

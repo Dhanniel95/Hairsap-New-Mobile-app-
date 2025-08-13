@@ -1,15 +1,15 @@
 import ChatHeader from "@/components/Chat/ChatHeader";
 import MainChat from "@/components/Chat/MainChat";
+import Container from "@/components/Container";
 import React from "react";
-import { View } from "react-native";
 
-const MessagesScreen = () => {
+const ChatScreen = () => {
 	return (
-		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
+		<Container dark={true} bg="#FFF">
 			<ChatHeader />
 			<MainChat />
-		</View>
+		</Container>
 	);
 };
 
-export default MessagesScreen;
+export default ChatScreen;
