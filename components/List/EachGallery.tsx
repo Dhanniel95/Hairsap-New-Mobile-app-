@@ -24,8 +24,6 @@ const EachGallery = ({
 
 	const [open, setOpen] = useState(false);
 
-	console.log(videos.length, "vid");
-
 	return (
 		<>
 			<Pressable
@@ -50,8 +48,9 @@ const EachGallery = ({
 				open={open}
 				closeModal={() => setOpen(false)}
 				centered={true}
+				bg="transparent"
 			>
-				<View style={{ width: 300 }}>
+				<View style={{ backgroundColor: "transparent" }}>
 					<Pressable
 						style={{
 							height: 300,
@@ -97,7 +96,10 @@ const EachGallery = ({
 					<TouchableOpacity
 						onPress={() => {
 							setOpen(false);
-							router.push("/(app)/chat");
+							router.push({
+								pathname: "/(app)/chat",
+								params: { video: gallery.video },
+							});
 						}}
 						activeOpacity={0.8}
 						style={{
