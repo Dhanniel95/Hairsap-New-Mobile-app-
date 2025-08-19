@@ -1,7 +1,9 @@
-import bookService from "@/redux/book/bookService";
+import chatService from "@/redux/chat/chatService";
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
+import { createSocket } from "@/utils/socket";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import {
@@ -13,39 +15,49 @@ import {
 } from "react-native-gifted-chat";
 import GalleryCheck from "./GalleryCheck";
 
-const MainChat = () => {
+const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const [messages, setMessages] = useState<IMessage[]>([]);
-	const [text, setText] = useState("");
 
 	const { user } = useAppSelector((state) => state.auth);
 
-	// useEffect(() => {
-	// 	// Load initial messages (e.g., from backend or mock data)
-	// 	setMessages([
-	// 		{
-	// 			_id: 1,
-	// 			text: "Hello! 👋 Welcome to the chat.",
-	// 			createdAt: new Date(),
-	// 			user: {
-	// 				_id: 2,
-	// 				name: "Chat Bot",
-	// 				avatar: "https://i.pravatar.cc/300",
-	// 			},
-	// 		},
-	// 	]);
-	// }, []);
+	useEffect(() => {
+		connectToSocket();
+	}, []);
 
 	useEffect(() => {
 		fetchMessages();
 	}, []);
 
+	useEffect(() => {
+		if (chatInfo?.video) {
+			consultHandler();
+		}
+	}, [chatInfo]);
+
+	const connectToSocket = async () => {
+		let token = (await AsyncStorage.getItem("@accesstoken")) || "";
+		const socket = createSocket(user.role, token);
+
+		socket.connect();
+
+		socket.on("connect", () => {
+			console.log("Connected");
+		});
+
+		socket.on("disconnect", () => {
+			console.log("Disconnected");
+		});
+
+		socket.on("connect_error", (err) => {
+			console.log("Error With Connection", err);
+		});
+	};
+
 	const fetchMessages = async () => {
 		try {
-			let res = await bookService.fetchMessages(user.userId, 100);
+			let res = await chatService.listChatRooms();
 			console.log(res, "RES");
-		} catch (err) {
-			//displayError(err, true);
-		}
+		} catch (err) {}
 	};
 
 	const onSend = useCallback((newMessages: IMessage[] = []) => {
@@ -53,6 +65,23 @@ const MainChat = () => {
 			GiftedChat.append(previousMessages, newMessages)
 		);
 	}, []);
+
+	const consultHandler = () => {
+		let payload = {
+			_id: 1,
+			text: "Hello! Welcome to the chat.",
+			createdAt: new Date(),
+			user: {
+				_id: 2,
+				name: "Chat Bot",
+				avatar: "https://i.pravatar.cc/300",
+			},
+			video: chatInfo.video,
+		};
+		setMessages((previousMessages) =>
+			GiftedChat.append(previousMessages, [payload])
+		);
+	};
 
 	const renderSend = (props: any) => {
 		return (

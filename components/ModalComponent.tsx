@@ -6,11 +6,13 @@ const ModalComponent = ({
 	closeModal,
 	children,
 	centered,
+	bg,
 }: {
 	open: boolean;
 	closeModal: () => void;
 	children: React.ReactNode;
 	centered?: boolean;
+	bg?: string;
 }) => {
 	return (
 		<Modal
@@ -33,7 +35,7 @@ const ModalComponent = ({
 				<View
 					style={[
 						centered ? styles.modalCenter : styles.modalView,
-						{ backgroundColor: "#FFF" },
+						{ backgroundColor: bg || "#FFF" },
 					]}
 				>
 					{children}
@@ -56,8 +58,6 @@ const styles = StyleSheet.create({
 	modalCenter: {
 		margin: 20,
 		borderRadius: 5,
-		paddingVertical: 20,
-		paddingHorizontal: 25,
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,

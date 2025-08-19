@@ -5,8 +5,6 @@ import React from "react";
 const RootStack = () => {
 	const { user } = useAppSelector((state) => state.auth);
 
-	console.log(user, "USER");
-
 	return (
 		<Stack screenOptions={{ headerShown: false }}>
 			{user?.userId ? (
