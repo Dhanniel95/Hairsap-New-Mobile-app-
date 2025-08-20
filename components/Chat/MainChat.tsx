@@ -1,7 +1,7 @@
 import chatService from "@/redux/chat/chatService";
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
-import { createSocket } from "@/utils/socket";
+import { createSocket, getSocket } from "@/utils/socket";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useState } from "react";
@@ -13,26 +13,34 @@ import {
 	InputToolbar,
 	Send,
 } from "react-native-gifted-chat";
+import ChatVideo from "./ChatVideo";
 import GalleryCheck from "./GalleryCheck";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
+	const [isSocketConnected, setIsSocketConnected] = useState(false);
 	const [messages, setMessages] = useState<IMessage[]>([]);
 
 	const { user } = useAppSelector((state) => state.auth);
 
 	useEffect(() => {
-		connectToSocket();
+		return () => {
+			const socket = getSocket();
+			if (socket) socket.disconnect();
+		};
 	}, []);
 
 	useEffect(() => {
+		connectToSocket();
 		fetchMessages();
 	}, []);
 
 	useEffect(() => {
-		if (chatInfo?.video) {
+		if (chatInfo?.video && isSocketConnected) {
 			consultHandler();
 		}
-	}, [chatInfo]);
+	}, [chatInfo, isSocketConnected]);
+
+	console.log(isSocketConnected, "socket connect");
 
 	const connectToSocket = async () => {
 		let token = (await AsyncStorage.getItem("@accesstoken")) || "";
@@ -42,6 +50,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 		socket.on("connect", () => {
 			console.log("Connected");
+			setIsSocketConnected(true);
 		});
 
 		socket.on("disconnect", () => {
@@ -50,6 +59,10 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 		socket.on("connect_error", (err) => {
 			console.log("Error With Connection", err);
+		});
+
+		socket.on("new message", (data) => {
+			console.log(" New request received:", data);
 		});
 	};
 
@@ -68,19 +81,32 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 	const consultHandler = () => {
 		let payload = {
-			_id: 1,
-			text: "Hello! Welcome to the chat.",
+			_id: Math.random().toString(36).substring(7),
+			text: chatInfo.text || "Consultation Request",
 			createdAt: new Date(),
 			user: {
-				_id: 2,
-				name: "Chat Bot",
-				avatar: "https://i.pravatar.cc/300",
+				_id: user.userId,
+				name: user.name,
+				avatar: user.faceIdPhotoUrl,
 			},
 			video: chatInfo.video,
 		};
 		setMessages((previousMessages) =>
 			GiftedChat.append(previousMessages, [payload])
 		);
+		const socket = getSocket();
+
+		console.log(socket?.connected, "SOCKET_CON");
+
+		if (socket && socket.connected) {
+			console.log("DID you EMIT???");
+			socket.emit("new message", {
+				message: chatInfo.text || "Consultation Request",
+				photoUrl: chatInfo.video,
+				messageType: "text",
+				senderId: user.userId,
+			});
+		}
 	};
 
 	const renderSend = (props: any) => {
@@ -118,15 +144,24 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		);
 	};
 
+	const renderMessageVideo = useCallback(
+		({ currentMessage }: { currentMessage?: IMessage }) => {
+			if (!currentMessage?.video) return null;
+
+			return <ChatVideo uri={String(currentMessage.video)} />;
+		},
+		[]
+	);
+
 	return (
 		<View style={{ flex: 1 }}>
 			<GiftedChat
 				messages={messages}
 				onSend={onSend}
 				user={{
-					_id: 1, // current logged-in user id
-					name: "John Doe",
-					avatar: "https://i.pravatar.cc/300",
+					_id: user.userId,
+					name: user.name,
+					avatar: user.faceIdPhotoUrl,
 				}}
 				showUserAvatar
 				alwaysShowSend
@@ -141,6 +176,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				renderSend={renderSend}
 				renderComposer={renderComposer}
 				renderInputToolbar={renderInputToolbar}
+				renderMessageVideo={renderMessageVideo}
 			/>
 		</View>
 	);

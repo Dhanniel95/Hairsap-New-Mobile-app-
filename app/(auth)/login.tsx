@@ -1,6 +1,5 @@
 import Container from "@/components/Container";
 import FloatInput from "@/components/FloatInput";
-import GoBack from "@/components/GoBack";
 import { loginUser } from "@/redux/auth/authSlice";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
@@ -34,7 +33,7 @@ const Login = () => {
 			let res = await dispatch(
 				loginUser({ phone: phone.trim(), password: pass.trim() })
 			).unwrap();
-			if (res?.userId && !res.faceIdPhotoUrl) {
+			if (res?.userId && !res.faceIdPhotoUrl && res.role === "user") {
 				router.push({ pathname: "/(auth)/faceverify", params: res });
 			} else if (res?.userId) {
 				router.replace("/(tabs)");
@@ -48,7 +47,6 @@ const Login = () => {
 				colors={["#02302E", "#022220", "#000000"]}
 				style={{ flex: 1, paddingTop: 20 }}
 			>
-				<GoBack />
 				<KeyboardAvoidingView
 					style={{
 						width: "100%",

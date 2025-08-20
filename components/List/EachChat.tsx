@@ -3,22 +3,11 @@ import colors from "@/utils/colors";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const EachChat = ({
-	chat,
-	dark,
-	onPress,
-}: {
-	chat: any;
-	dark?: boolean;
-	onPress: () => void;
-}) => {
+const EachChat = ({ chat }: { chat: any }) => {
+	let chatInfo = Array.isArray(chat.chat) ? chat.chat[0] : chat.chat;
 	return (
 		<TouchableOpacity
-			onPress={onPress}
-			style={[
-				styles.body,
-				{ backgroundColor: dark ? colors.secondary : colors.white },
-			]}
+			style={[styles.body, { backgroundColor: colors.white }]}
 		>
 			<Image
 				source={require("../../assets/images/icon.png")}
@@ -35,7 +24,7 @@ const EachChat = ({
 					<Text
 						style={[
 							textStyles.textMid,
-							{ color: dark ? colors.white : colors.mediumGray },
+							{ color: colors.mediumGray },
 						]}
 					>
 						{chat.name}
@@ -46,11 +35,11 @@ const EachChat = ({
 						textStyles.text,
 						{
 							fontSize: 14,
-							color: dark ? colors.white : colors.mildGray,
+							color: colors.mildGray,
 						},
 					]}
 				>
-					{chat.message}
+					{chatInfo.message}
 				</Text>
 			</View>
 		</TouchableOpacity>

@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import { getUserInfo } from "@/redux/auth/authSlice";
 import colors from "@/utils/colors";
-import { useAppDispatch } from "@/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React, { useEffect } from "react";
@@ -10,8 +10,12 @@ import { Platform } from "react-native";
 export default function TabLayout() {
 	const dispatch = useAppDispatch();
 
+	const { user } = useAppSelector((state) => state.auth);
+
 	useEffect(() => {
-		dispatch(getUserInfo());
+		if (user?.role !== "consultant") {
+			dispatch(getUserInfo());
+		}
 	}, []);
 
 	return (

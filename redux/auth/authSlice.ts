@@ -14,11 +14,10 @@ export const loginUser = createAsyncThunk(
 	async (data: any, thunkAPI) => {
 		try {
 			let res = await authService.login(data);
-
 			if (res?.token) {
 				await AsyncStorage.setItem("@accesstoken", res.token);
 			}
-			return res?.user;
+			return res?.user || res?.consultant;
 		} catch (error: any) {
 			let message = displayError(error, true);
 			return thunkAPI.rejectWithValue(message);

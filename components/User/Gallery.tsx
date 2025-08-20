@@ -52,7 +52,7 @@ const Gallery = () => {
 	const listServices = async () => {
 		try {
 			let res = await bookService.listServices();
-			console.log(res, "RES");
+			console.log(res?.data[0]?.items, "RES");
 		} catch (err) {
 			displayError(err, true);
 		}
