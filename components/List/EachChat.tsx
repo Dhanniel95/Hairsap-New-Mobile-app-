@@ -1,14 +1,28 @@
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { formatChatDate } from "@/utils/datetime";
+import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const EachChat = ({ chat }: { chat: any }) => {
+	const router = useRouter();
+
 	let chatInfo = chat?.chat;
 
 	return (
 		<TouchableOpacity
+			onPress={() =>
+				router.push({
+					pathname: "/(app)/chat",
+					params: {
+						chatRoomId: chatInfo?.chatRoomId,
+						user: chat.name,
+						image: chat.profilePhotoUrl,
+						newMsg: chat.involvedUsers?.length > 0 ? "1" : "0",
+					},
+				})
+			}
 			style={[
 				styles.body,
 				{

@@ -2,9 +2,9 @@ import textStyles from "@/styles/textStyles";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
-const ChatHeader = () => {
+const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 	const router = useRouter();
 
 	return (
@@ -28,12 +28,16 @@ const ChatHeader = () => {
 					<Feather name="arrow-left" color={"#000"} size={25} />
 				</TouchableOpacity>
 				<Image
-					source={require("../../assets/images/icon.png")}
+					source={
+						headerInfo.image
+							? { uri: headerInfo.image }
+							: require("../../assets/images/icon.png")
+					}
 					style={{ height: 40, width: 40, borderRadius: 20 }}
 				/>
 				<View style={{ marginLeft: 10 }}>
 					<Text style={[textStyles.textBold, { fontSize: 15 }]}>
-						Consultant
+						{headerInfo.user}
 					</Text>
 					<Text style={[textStyles.text, { fontSize: 13 }]}>
 						Active Now
@@ -45,5 +49,3 @@ const ChatHeader = () => {
 };
 
 export default ChatHeader;
-
-const styles = StyleSheet.create({});

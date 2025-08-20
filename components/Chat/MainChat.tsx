@@ -1,82 +1,118 @@
 import chatService from "@/redux/chat/chatService";
 import colors from "@/utils/colors";
+import baseUrl from "@/utils/config";
+import { mapChatToGifted } from "@/utils/data";
 import { useAppSelector } from "@/utils/hooks";
-import { createSocket, getSocket } from "@/utils/socket";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
+	Bubble,
 	Composer,
 	GiftedChat,
 	IMessage,
 	InputToolbar,
 	Send,
 } from "react-native-gifted-chat";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { io, Socket } from "socket.io-client";
 import ChatVideo from "./ChatVideo";
 import GalleryCheck from "./GalleryCheck";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
-	const [isSocketConnected, setIsSocketConnected] = useState(false);
 	const [messages, setMessages] = useState<IMessage[]>([]);
+
+	const socketRef = useRef<Socket | null>(null);
 
 	const { user } = useAppSelector((state) => state.auth);
 
 	useEffect(() => {
-		return () => {
-			const socket = getSocket();
-			if (socket) socket.disconnect();
+		let socket: Socket;
+
+		const connectSocket = async () => {
+			const token = (await AsyncStorage.getItem("@accesstoken")) || "";
+
+			socket = io(baseUrl, {
+				query: { token, role: user.role },
+				transports: ["websocket"],
+			});
+
+			socketRef.current = socket;
+
+			socket.on("connect", () => {
+				console.log("Connected to socket:", socket.id);
+
+				// join chat room
+				if (chatInfo?.newMsg === "0") {
+					socket.emit("joinRoom", {
+						chatroomId: chatInfo.chatRoomId,
+					});
+				}
+
+				if (chatInfo?.video) {
+					consultHandler();
+				}
+			});
+
+			socket.on("disconnect", () => {
+				console.log("Disconnected from socket");
+			});
+
+			socket.on("connect_error", (err) => {
+				console.log(" Socket connection error:", err.message);
+			});
+
+			// socket.onAny((event, ...args) => {
+			// 	console.log("Got event:", event, args);
+			// });
+
+			// receive messages
+			socket.on("new customer message", (data) => {
+				console.log("New message received:", data);
+				fetchMessages();
+			});
 		};
-	}, []);
 
-	useEffect(() => {
-		connectToSocket();
+		connectSocket();
 		fetchMessages();
-	}, []);
 
-	useEffect(() => {
-		if (chatInfo?.video && isSocketConnected) {
-			consultHandler();
-		}
-	}, [chatInfo, isSocketConnected]);
-
-	const connectToSocket = async () => {
-		let token = (await AsyncStorage.getItem("@accesstoken")) || "";
-		const socket = createSocket(user.role, token);
-
-		socket.connect();
-
-		socket.on("connect", () => {
-			console.log("Connected");
-			setIsSocketConnected(true);
-		});
-
-		socket.on("disconnect", () => {
-			console.log("Disconnected");
-		});
-
-		socket.on("connect_error", (err) => {
-			console.log("Error With Connection", err);
-		});
-
-		socket.on("new message", (data) => {
-			console.log(" New request received:", data);
-		});
-	};
+		return () => {
+			if (socketRef.current) {
+				socketRef.current.disconnect();
+				socketRef.current = null;
+			}
+		};
+	}, [chatInfo]);
 
 	const fetchMessages = async () => {
-		try {
-			let res = await chatService.listChatMessages({
-				cursor: 0,
-				take: 20,
-				desc: false,
-				chatRoomId: 3,
-			});
-			// console.log(res, "RESPP");
-		} catch (err) {}
+		if (chatInfo.chatRoomId) {
+			try {
+				let res = await chatService.listChatMessages({
+					cursor: 0,
+					take: 20,
+					desc: true,
+					chatRoomId: Number(chatInfo.chatRoomId),
+				});
+				if (Array.isArray(res?.data)) {
+					let formatted = res.data.map(mapChatToGifted);
+					setMessages(formatted);
+				}
+			} catch (err) {}
+		}
 	};
 
 	const onSend = useCallback((newMessages: IMessage[] = []) => {
+		let chatMsg = newMessages[0];
+		if (socketRef.current?.connected) {
+			socketRef.current.emit("new message", {
+				message: chatMsg.text,
+				messageType: "text",
+				media: [],
+				senderId: user.userId,
+				chatRoomId: chatInfo.chatRoomId,
+			});
+		}
 		setMessages((previousMessages) =>
 			GiftedChat.append(previousMessages, newMessages)
 		);
@@ -97,12 +133,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		setMessages((previousMessages) =>
 			GiftedChat.append(previousMessages, [payload])
 		);
-		const socket = getSocket();
-
-		console.log(socket?.connected, "SOCKET_CON");
-
-		if (socket && socket.connected) {
-			socket.emit("new message", {
+		if (socketRef.current?.connected) {
+			socketRef.current.emit("new message", {
 				message: chatInfo.text || "Consultation Request",
 				messageType: "video",
 				media: [
@@ -161,7 +193,10 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	);
 
 	return (
-		<View style={{ flex: 1 }}>
+		<SafeAreaView
+			style={{ flex: 1, backgroundColor: "#fff" }}
+			edges={["bottom"]}
+		>
 			<GiftedChat
 				messages={messages}
 				onSend={onSend}
@@ -178,14 +213,42 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					contentContainerStyle: {
 						paddingHorizontal: 20,
 					},
-					ListEmptyComponent: () => <GalleryCheck />,
+					ListEmptyComponent: () =>
+						user.role === "user" ? <GalleryCheck /> : <></>,
 				}}
 				renderSend={renderSend}
 				renderComposer={renderComposer}
 				renderInputToolbar={renderInputToolbar}
 				renderMessageVideo={renderMessageVideo}
+				renderBubble={(props) => (
+					<Bubble
+						{...props}
+						wrapperStyle={{
+							right: {
+								backgroundColor: colors.primary,
+								borderRadius: 12,
+								padding: 5,
+							},
+							left: {
+								backgroundColor: "#F2F7FB",
+								borderRadius: 12,
+								padding: 5,
+							},
+						}}
+						textStyle={{
+							right: {
+								color: "#fff", // sender text color
+							},
+							left: {
+								color: "#000", // receiver text color
+							},
+						}}
+					/>
+				)}
+				keyboardShouldPersistTaps="handled"
+				bottomOffset={Platform.OS === "ios" ? 30 : 0}
 			/>
-		</View>
+		</SafeAreaView>
 	);
 };
 
@@ -196,7 +259,6 @@ const styles = StyleSheet.create({
 		paddingLeft: 20,
 		paddingHorizontal: 10,
 		paddingTop: 10,
-		paddingBottom: 20,
 		borderTopWidth: 1,
 		borderTopColor: "#ddd",
 		width: "100%",
