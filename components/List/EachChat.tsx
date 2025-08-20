@@ -1,46 +1,73 @@
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import { formatChatDate } from "@/utils/datetime";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const EachChat = ({ chat }: { chat: any }) => {
-	let chatInfo = Array.isArray(chat.chat) ? chat.chat[0] : chat.chat;
+	let chatInfo = chat?.chat;
+
 	return (
 		<TouchableOpacity
-			style={[styles.body, { backgroundColor: colors.white }]}
+			style={[
+				styles.body,
+				{
+					backgroundColor:
+						chat.involvedUsers?.length > 0
+							? colors.white
+							: "#CCFBF180",
+				},
+			]}
 		>
-			<Image
-				source={require("../../assets/images/icon.png")}
-				style={{ width: 50, height: 50, borderRadius: 25 }}
-			/>
-			<View style={{ marginLeft: 10, maxWidth: "80%" }}>
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						alignItems: "center",
-					}}
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+					marginBottom: 10,
+				}}
+			>
+				<Text
+					style={[
+						textStyles.textBold,
+						{ color: "#000E08", fontSize: 16, maxWidth: "80%" },
+					]}
 				>
-					<Text
-						style={[
-							textStyles.textMid,
-							{ color: colors.mediumGray },
-						]}
-					>
-						{chat.name}
-					</Text>
-				</View>
+					{chat.name}
+				</Text>
+				<Text
+					style={[
+						textStyles.textMid,
+						{ color: "#000E08", fontSize: 14 },
+					]}
+				>
+					{formatChatDate(chatInfo.updatedAt)}
+				</Text>
+			</View>
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+				}}
+			>
 				<Text
 					style={[
 						textStyles.text,
 						{
+							maxWidth: "80%",
 							fontSize: 14,
-							color: colors.mildGray,
+							color: "#797C7B",
 						},
 					]}
 				>
-					{chatInfo.message}
+					{chatInfo?.message?.substring(0, 60)}...
 				</Text>
+				<View style={styles.count}>
+					<Text style={[textStyles.textMid, { color: "#FFF" }]}>
+						0
+					</Text>
+				</View>
 			</View>
 		</TouchableOpacity>
 	);
@@ -50,19 +77,21 @@ export default EachChat;
 
 const styles = StyleSheet.create({
 	body: {
-		flexDirection: "row",
-		paddingHorizontal: 10,
+		paddingHorizontal: 15,
 		paddingVertical: 15,
 		backgroundColor: colors.white,
-		alignItems: "center",
-		elevation: 2,
-		shadowColor: "grey",
-		shadowOffset: { width: 0, height: 4 },
-		shadowOpacity: 0.2,
-		marginBottom: 20,
-		borderRadius: 6,
+		marginBottom: 15,
+		borderRadius: 15,
 		borderWidth: 1,
 		borderColor: "rgba(0,0,0,0.09)",
 		width: "100%",
+	},
+	count: {
+		backgroundColor: colors.primary,
+		height: 30,
+		width: 30,
+		borderRadius: 15,
+		justifyContent: "center",
+		alignItems: "center",
 	},
 });

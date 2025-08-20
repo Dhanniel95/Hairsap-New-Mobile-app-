@@ -40,8 +40,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		}
 	}, [chatInfo, isSocketConnected]);
 
-	console.log(isSocketConnected, "socket connect");
-
 	const connectToSocket = async () => {
 		let token = (await AsyncStorage.getItem("@accesstoken")) || "";
 		const socket = createSocket(user.role, token);
@@ -68,8 +66,13 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 	const fetchMessages = async () => {
 		try {
-			let res = await chatService.listChatRooms();
-			console.log(res, "RES");
+			let res = await chatService.listChatMessages({
+				cursor: 0,
+				take: 20,
+				desc: false,
+				chatRoomId: 3,
+			});
+			// console.log(res, "RESPP");
 		} catch (err) {}
 	};
 
@@ -99,11 +102,15 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		console.log(socket?.connected, "SOCKET_CON");
 
 		if (socket && socket.connected) {
-			console.log("DID you EMIT???");
 			socket.emit("new message", {
 				message: chatInfo.text || "Consultation Request",
-				photoUrl: chatInfo.video,
-				messageType: "text",
+				messageType: "video",
+				media: [
+					{
+						thumbnail: chatInfo.thumbnail,
+						url: chatInfo.video,
+					},
+				],
 				senderId: user.userId,
 			});
 		}

@@ -5,8 +5,8 @@ const listChatRooms = async () => {
 	return data;
 };
 
-const listChatMessages = async () => {
-	const { data } = await apiRequest().post(`/chats/chatrooms/messages`);
+const listChatMessages = async (obj: any) => {
+	const { data } = await apiRequest().post(`/chats/chatroom/messages`, obj);
 	return data;
 };
 

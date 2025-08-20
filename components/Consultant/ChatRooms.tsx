@@ -1,45 +1,72 @@
 import chatService from "@/redux/chat/chatService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
-import { displayError } from "@/utils/error";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 import Tab from "../Basics/Tab";
 import EachChat from "../List/EachChat";
 
 const ChatRooms = () => {
-	const [load, setLoad] = useState(false);
 	const [activeTab, setActiveTab] = useState(1);
-	const [list, setList] = useState([]);
-	const [refreshing, setRefreshing] = useState(false);
+	const [guestList, setGuestList] = useState<any>([]);
+	const [myGuestList, setMyGuestList] = useState<any>([]);
+	const [myCustomersList, setMyCustomersList] = useState<any>([]);
+	const [customersList, setCustomersList] = useState<any>([]);
+	const [braidersList, setBraidersList] = useState<any>([]);
+	const [refreshing, setRefreshing] = useState<any>(false);
 
 	useEffect(() => {
 		listChats();
-	}, [activeTab]);
+	}, []);
 
 	const listChats = async () => {
+		listGuests();
+		listCustomers();
+		listMyGuests();
+		listMyCustomers();
+		listBraiders();
+	};
+
+	const listMyGuests = async () => {
 		try {
-			setLoad(true);
-			let res;
-			if (activeTab === 1) {
-				res = await chatService.listGuestChats();
-			} else if (activeTab === 2) {
-				res = await chatService.listCustomersChats();
-			} else if (activeTab === 3) {
-				res = await chatService.listMyGuestChats();
-			} else if (activeTab === 4) {
-				res = await chatService.listMyCustomersChats();
-			} else {
-				res = [];
-			}
-			setLoad(false);
+			let res = await chatService.listMyGuestChats();
 			if (Array.isArray(res?.data)) {
-				setList(res.data);
+				setMyGuestList(res.data);
 			}
-		} catch (err) {
-			setLoad(false);
-			console.log(displayError(err, false));
-		}
+		} catch (err) {}
+	};
+
+	const listGuests = async () => {
+		try {
+			let res = await chatService.listGuestChats();
+			if (Array.isArray(res?.data)) {
+				setGuestList(res.data);
+			}
+		} catch (err) {}
+	};
+
+	const listCustomers = async () => {
+		try {
+			let res = await chatService.listCustomersChats();
+			if (Array.isArray(res?.data)) {
+				setCustomersList(res.data);
+			}
+		} catch (err) {}
+	};
+
+	const listMyCustomers = async () => {
+		try {
+			let res = await chatService.listMyCustomersChats();
+			if (Array.isArray(res?.data)) {
+				setMyCustomersList(res.data);
+			}
+		} catch (err) {}
+	};
+
+	const listBraiders = async () => {
+		try {
+			setBraidersList([]);
+		} catch (err) {}
 	};
 
 	const onRefresh = useCallback(async () => {
@@ -61,27 +88,27 @@ const ChatRooms = () => {
 						{
 							id: 1,
 							name: "All Guests",
-							sub: activeTab === 1 ? list.length : null,
+							sub: guestList.length,
 						},
 						{
 							id: 2,
 							name: "All Customers",
-							sub: activeTab === 2 ? list.length : null,
+							sub: customersList.length,
 						},
 						{
 							id: 3,
 							name: "My Guests",
-							sub: activeTab === 3 ? list.length : null,
+							sub: myGuestList.length,
 						},
 						{
 							id: 4,
 							name: "My Customers",
-							sub: activeTab === 4 ? list.length : null,
+							sub: myCustomersList.length,
 						},
 						{
 							id: 5,
 							name: "Braiders",
-							sub: activeTab === 5 ? list.length : null,
+							sub: braidersList.length,
 						},
 					]}
 					activeTab={activeTab}
@@ -90,12 +117,18 @@ const ChatRooms = () => {
 			</View>
 			<View style={{ flex: 1 }}>
 				<FlatList
-					data={list}
-					keyExtractor={(item: any) =>
-						Array.isArray(item.chat)
-							? item.chat[0].chatId?.toString()
-							: item.chat?.chatId?.toString()
+					data={
+						activeTab === 1
+							? guestList
+							: activeTab === 2
+							? customersList
+							: activeTab === 3
+							? myGuestList
+							: activeTab === 4
+							? myCustomersList
+							: braidersList
 					}
+					keyExtractor={(item: any) => item.chat?.chatId?.toString()}
 					renderItem={({ item }) => <EachChat chat={item} />}
 					contentContainerStyle={{ paddingBottom: 100 }}
 					showsVerticalScrollIndicator={false}
