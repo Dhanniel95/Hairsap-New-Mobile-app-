@@ -1,5 +1,6 @@
 import store from "@/redux/store";
 import { useFonts } from "expo-font";
+import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
@@ -13,6 +14,16 @@ const persistor = persistStore(store);
 
 SplashScreen.preventAutoHideAsync();
 
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: false,
+		shouldShowBanner: true,
+		shouldShowList: true,
+	}),
+});
+
 export default function RootLayout() {
 	const [loaded] = useFonts({
 		regular: require("../assets/fonts/Poppins-Regular.ttf"),
@@ -23,7 +34,7 @@ export default function RootLayout() {
 	useEffect(() => {
 		if (loaded) {
 			SplashScreen.hideAsync();
-			SystemUI.setBackgroundColorAsync("#000");
+			SystemUI.setBackgroundColorAsync("#000000");
 		}
 	}, [loaded]);
 

@@ -1,12 +1,21 @@
 import chatService from "@/redux/chat/chatService";
+import { saveChatId } from "@/redux/chat/chatSlice";
+import formStyles from "@/styles/formStyles";
+import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import baseUrl from "@/utils/config";
 import { mapChatToGifted } from "@/utils/data";
-import { useAppSelector } from "@/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+	Platform,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import {
 	Bubble,
 	Composer,
@@ -21,11 +30,16 @@ import ChatVideo from "./ChatVideo";
 import GalleryCheck from "./GalleryCheck";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
+	const dispatch = useAppDispatch();
+
 	const [messages, setMessages] = useState<IMessage[]>([]);
 
 	const socketRef = useRef<Socket | null>(null);
 
 	const { user } = useAppSelector((state) => state.auth);
+	const { userChatRoomId } = useAppSelector((state) => state.chat);
+
+	console.log(userChatRoomId, "CHATINFO");
 
 	useEffect(() => {
 		let socket: Socket;
@@ -43,15 +57,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 			socket.on("connect", () => {
 				console.log("Connected to socket:", socket.id);
 
-				// join chat room
-				if (chatInfo?.newMsg === "0") {
-					socket.emit("joinRoom", {
-						chatroomId: chatInfo.chatRoomId,
-					});
-				}
-
 				if (chatInfo?.video) {
-					consultHandler();
+					//consultHandler();
 				}
 			});
 
@@ -63,12 +70,17 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				console.log(" Socket connection error:", err.message);
 			});
 
-			// socket.onAny((event, ...args) => {
-			// 	console.log("Got event:", event, args);
-			// });
+			socket.onAny((event, ...args) => {
+				console.log("Got event:", event, args);
+			});
 
 			// receive messages
-			socket.on("new customer message", (data) => {
+			socket.on("message:new", (data) => {
+				console.log("New message received:", data);
+				fetchMessages();
+			});
+
+			socket.on("message:new:customer", (data) => {
 				console.log("New message received:", data);
 				fetchMessages();
 			});
@@ -86,13 +98,13 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	}, [chatInfo]);
 
 	const fetchMessages = async () => {
-		if (chatInfo.chatRoomId) {
+		if (chatInfo.chatRoomId || userChatRoomId) {
 			try {
 				let res = await chatService.listChatMessages({
 					cursor: 0,
 					take: 20,
 					desc: true,
-					chatRoomId: Number(chatInfo.chatRoomId),
+					chatRoomId: chatInfo.chatRoomId || userChatRoomId,
 				});
 				if (Array.isArray(res?.data)) {
 					let formatted = res.data.map(mapChatToGifted);
@@ -105,12 +117,13 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const onSend = useCallback((newMessages: IMessage[] = []) => {
 		let chatMsg = newMessages[0];
 		if (socketRef.current?.connected) {
-			socketRef.current.emit("new message", {
+			socketRef.current.emit("message:new", {
 				message: chatMsg.text,
 				messageType: "text",
-				media: [],
-				senderId: user.userId,
-				chatRoomId: chatInfo.chatRoomId,
+				receiverId: chatInfo.receiverId
+					? Number(chatInfo.receiverId)
+					: undefined,
+				chatRoomId: Number(chatInfo.chatRoomId),
 			});
 		}
 		setMessages((previousMessages) =>
@@ -134,17 +147,37 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 			GiftedChat.append(previousMessages, [payload])
 		);
 		if (socketRef.current?.connected) {
-			socketRef.current.emit("new message", {
-				message: chatInfo.text || "Consultation Request",
-				messageType: "video",
-				media: [
-					{
-						thumbnail: chatInfo.thumbnail,
-						url: chatInfo.video,
-					},
-				],
-				senderId: user.userId,
-			});
+			socketRef.current.emit(
+				"message:new",
+				{
+					message: chatInfo.text || "Consultation Request",
+					messageType: "video",
+					media: [
+						{
+							thumbnail: chatInfo.thumbnail,
+							url: chatInfo.video,
+						},
+					],
+				},
+				(response: any) => {
+					console.log(response, "RESPONSE");
+					if (response?.data) {
+						dispatch(saveChatId(response.data?.chatRoomId));
+					}
+				}
+			);
+		}
+	};
+
+	const joinRoom = () => {
+		if (socketRef.current?.connected) {
+			socketRef.current.emit(
+				"chatroom:join",
+				{
+					chatRoomId: Number(chatInfo.chatRoomId),
+				},
+				(response: any) => console.log(response, "reponse__")
+			);
 		}
 	};
 
@@ -158,15 +191,27 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		);
 	};
 
-	const renderInputToolbar = (props: any) => (
-		<InputToolbar
-			{...props}
-			containerStyle={styles.toolbarContainer}
-			primaryStyle={{
-				alignItems: "center",
-			}}
-		/>
-	);
+	const renderInputToolbar = (props: any) =>
+		chatInfo?.newMsg === "0" && user?.role === "consultant" ? (
+			<View style={{ paddingHorizontal: 20 }}>
+				<TouchableOpacity
+					style={[formStyles.mainBtn]}
+					onPress={joinRoom}
+				>
+					<Text style={[textStyles.textBold, { color: "#FFF" }]}>
+						Join Chat
+					</Text>
+				</TouchableOpacity>
+			</View>
+		) : (
+			<InputToolbar
+				{...props}
+				containerStyle={styles.toolbarContainer}
+				primaryStyle={{
+					alignItems: "center",
+				}}
+			/>
+		);
 
 	const renderComposer = (props: any) => {
 		return (

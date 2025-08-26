@@ -10,6 +10,11 @@ const register = async (obj: any) => {
 	return data;
 };
 
+const registerGuest = async (obj: any) => {
+	const { data } = await apiRequest().post(`/auth/signup/guest`, obj);
+	return data?.data;
+};
+
 const uploadFaceId = async (obj: any) => {
 	const { data } = await apiRequest(true).post(`/users/faceid`, obj);
 	return data;
@@ -45,9 +50,20 @@ const changePassword = async (obj: any) => {
 	return data;
 };
 
+const fetchConsultantProfile = async () => {
+	const { data } = await apiRequest().get(`/consultant/me`);
+	return data;
+};
+
+const fetchBraiderProfile = async () => {
+	const { data } = await apiRequest().get(`/pros/me`);
+	return data;
+};
+
 const authService = {
 	login,
 	register,
+	registerGuest,
 	uploadFaceId,
 	forgotPassword,
 	resetPassword,
@@ -55,6 +71,8 @@ const authService = {
 	editProfile,
 	deactivateAccount,
 	changePassword,
+	fetchBraiderProfile,
+	fetchConsultantProfile,
 };
 
 export default authService;

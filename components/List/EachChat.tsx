@@ -1,16 +1,19 @@
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { formatChatDate } from "@/utils/datetime";
+import { useAppSelector } from "@/utils/hooks";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const EachChat = ({ chat }: { chat: any }) => {
+	const { user } = useAppSelector((state) => state.auth);
+
 	const router = useRouter();
 
 	let chatInfo = chat?.chat;
 
-	return (
+	return chat?.chat ? (
 		<TouchableOpacity
 			onPress={() =>
 				router.push({
@@ -19,7 +22,12 @@ const EachChat = ({ chat }: { chat: any }) => {
 						chatRoomId: chatInfo?.chatRoomId,
 						user: chat.name,
 						image: chat.profilePhotoUrl,
-						newMsg: chat.involvedUsers?.length > 0 ? "1" : "0",
+						newMsg: chat.participants?.find(
+							(c: any) => c.userId == user.userId
+						)
+							? "1"
+							: "0",
+						receiverId: chat.userId,
 					},
 				})
 			}
@@ -55,7 +63,9 @@ const EachChat = ({ chat }: { chat: any }) => {
 						{ color: "#000E08", fontSize: 14 },
 					]}
 				>
-					{formatChatDate(chatInfo.updatedAt)}
+					{chatInfo.updatedAt
+						? formatChatDate(chatInfo.updatedAt)
+						: ""}
 				</Text>
 			</View>
 			<View
@@ -79,9 +89,59 @@ const EachChat = ({ chat }: { chat: any }) => {
 				</Text>
 				<View style={styles.count}>
 					<Text style={[textStyles.textMid, { color: "#FFF" }]}>
-						0
+						{chat.unreadMessages}
 					</Text>
 				</View>
+			</View>
+		</TouchableOpacity>
+	) : (
+		<TouchableOpacity
+			style={[
+				styles.body,
+				{
+					backgroundColor:
+						chat.involvedUsers?.length > 0
+							? colors.white
+							: "#CCFBF180",
+				},
+			]}
+		>
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+					marginBottom: 10,
+				}}
+			>
+				<Text
+					style={[
+						textStyles.textBold,
+						{ color: "#000E08", fontSize: 16, maxWidth: "80%" },
+					]}
+				>
+					{chat.name}
+				</Text>
+			</View>
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+				}}
+			>
+				<Text
+					style={[
+						textStyles.text,
+						{
+							maxWidth: "80%",
+							fontSize: 14,
+							color: "#797C7B",
+						},
+					]}
+				>
+					Click to Chat
+				</Text>
 			</View>
 		</TouchableOpacity>
 	);

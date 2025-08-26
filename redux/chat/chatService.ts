@@ -30,6 +30,11 @@ const listMyGuestChats = async () => {
 	return data;
 };
 
+const listBraidersChats = async () => {
+	const { data } = await apiRequest().get(`/chats/chatroom/me/pros`);
+	return data;
+};
+
 const chatService = {
 	listChatRooms,
 	listChatMessages,
@@ -37,6 +42,7 @@ const chatService = {
 	listGuestChats,
 	listMyCustomersChats,
 	listMyGuestChats,
+	listBraidersChats,
 };
 
 export default chatService;

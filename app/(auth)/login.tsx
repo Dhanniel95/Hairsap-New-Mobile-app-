@@ -36,7 +36,15 @@ const Login = () => {
 			if (res?.userId && !res.faceIdPhotoUrl && res.role === "user") {
 				router.push({ pathname: "/(auth)/faceverify", params: res });
 			} else if (res?.userId) {
-				router.replace("/(tabs)");
+				if (res?.role === "consultant") {
+					router.replace("/(tabs-consultant)/chats");
+				} else if (res?.role === "pro") {
+					router.replace("/(tabs-pros)/home");
+				} else if (res?.role === "guest") {
+					router.replace("/(tabs-guest)/gallery");
+				} else {
+					router.replace("/(tabs-user)/gallery");
+				}
 			}
 		}
 	};

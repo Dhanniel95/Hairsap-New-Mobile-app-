@@ -1,10 +1,21 @@
 import bookService from "@/redux/book/bookService";
+import textStyles from "@/styles/textStyles";
 import { displayError } from "@/utils/error";
-import React, { useEffect } from "react";
-import { Dimensions, FlatList, View } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import {
+	Dimensions,
+	FlatList,
+	StyleSheet,
+	Text,
+	TextInput,
+	View,
+} from "react-native";
 import EachGallery from "../List/EachGallery";
 
 const Gallery = () => {
+	const [search, setSearch] = useState("");
+
 	const { width } = Dimensions.get("window");
 
 	const viewWidth = width - 40;
@@ -52,14 +63,36 @@ const Gallery = () => {
 	const listServices = async () => {
 		try {
 			let res = await bookService.listServices();
-			// console.log(res?.data[0]?.items, "RES");
+			console.log(res?.data[0]?.items, "RES");
 		} catch (err) {
 			displayError(err, true);
 		}
 	};
 
 	return (
-		<View style={{ flex: 1, paddingHorizontal: 20 }}>
+		<View
+			style={{ flex: 1, paddingHorizontal: 20, backgroundColor: "#FFF" }}
+		>
+			<View style={{ paddingVertical: 10 }}>
+				<Text style={[textStyles.textBold, { fontSize: 17 }]}>
+					Gallery
+				</Text>
+				<View style={{ marginVertical: 15, position: "relative" }}>
+					<TextInput
+						value={search}
+						onChangeText={setSearch}
+						placeholder="Search"
+						style={styles.input}
+						placeholderTextColor={"rgba(0,0,0,0.3)"}
+					/>
+					<Feather
+						name="search"
+						color={"rgba(0,0,0,0.3)"}
+						size={20}
+						style={styles.pos}
+					/>
+				</View>
+			</View>
 			<FlatList
 				data={videos}
 				numColumns={3}
@@ -82,3 +115,21 @@ const Gallery = () => {
 };
 
 export default Gallery;
+
+const styles = StyleSheet.create({
+	input: {
+		width: "100%",
+		borderColor: "rgba(0,0,0,0.3)",
+		borderWidth: 1,
+		height: 50,
+		paddingLeft: 35,
+		borderRadius: 20,
+		fontFamily: "regular",
+		color: "rgba(0,0,0,0.3)",
+	},
+	pos: {
+		position: "absolute",
+		top: 14,
+		left: 10,
+	},
+});

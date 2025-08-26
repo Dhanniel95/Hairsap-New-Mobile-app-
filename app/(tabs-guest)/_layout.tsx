@@ -1,22 +1,21 @@
 import Container from "@/components/Container";
-import { getUserInfo } from "@/redux/auth/authSlice";
+import { logOut } from "@/redux/auth/authSlice";
 import colors from "@/utils/colors";
-import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import { useAppDispatch } from "@/utils/hooks";
 import { Feather } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
-import React, { useEffect } from "react";
-import { Platform } from "react-native";
+import { Tabs, useRouter } from "expo-router";
+import React from "react";
+import { Alert, Platform, TouchableOpacity } from "react-native";
 
 export default function TabLayout() {
+	const router = useRouter();
+
 	const dispatch = useAppDispatch();
 
-	const { user } = useAppSelector((state) => state.auth);
-
-	useEffect(() => {
-		if (user?.role !== "consultant") {
-			dispatch(getUserInfo());
-		}
-	}, []);
+	const logoutHandler = () => {
+		router.replace("/(auth)/register");
+		dispatch(logOut());
+	};
 
 	return (
 		<Container dark={true}>
@@ -37,7 +36,7 @@ export default function TabLayout() {
 				}}
 			>
 				<Tabs.Screen
-					name="index"
+					name="gallery"
 					options={{
 						title: "Gallery",
 						tabBarIcon: ({ color }) => (
@@ -46,7 +45,7 @@ export default function TabLayout() {
 					}}
 				/>
 				<Tabs.Screen
-					name="messages"
+					name="consult"
 					options={{
 						title: "Consult",
 						tabBarIcon: ({ color }) => (
@@ -62,21 +61,36 @@ export default function TabLayout() {
 					}}
 				/>
 				<Tabs.Screen
-					name="profile"
+					name="exit"
 					options={{
-						title: "Profile",
+						title: "SignUp",
 						tabBarIcon: ({ color }) => (
-							<Feather color={color} size={20} name="user" />
+							<Feather name="log-out" size={22} color={color} />
 						),
-					}}
-				/>
-				<Tabs.Screen
-					name="settings"
-					options={{
-						title: "Settings",
-						tabBarIcon: ({ color }) => (
-							<Feather color={color} size={22} name="settings" />
-						),
+						tabBarButton: (props) => {
+							return (
+								<TouchableOpacity
+									{...props}
+									onPress={() => {
+										Alert.alert(
+											"Sign Up",
+											"Do you want to sign up?",
+											[
+												{
+													text: "Cancel",
+													style: "cancel",
+												},
+												{
+													text: "Yes",
+													onPress: () =>
+														logoutHandler(),
+												},
+											]
+										);
+									}}
+								/>
+							);
+						},
 					}}
 				/>
 			</Tabs>
