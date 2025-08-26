@@ -13,7 +13,7 @@ export default function TabLayout() {
 	const dispatch = useAppDispatch();
 
 	const logoutHandler = () => {
-		router.replace("/(auth)/register");
+		router.replace("/(auth)/login");
 		dispatch(logOut());
 	};
 
@@ -63,9 +63,9 @@ export default function TabLayout() {
 				<Tabs.Screen
 					name="exit"
 					options={{
-						title: "SignUp",
+						title: "Log In",
 						tabBarIcon: ({ color }) => (
-							<Feather name="log-out" size={22} color={color} />
+							<Feather name="log-in" size={22} color={color} />
 						),
 						tabBarButton: (props) => {
 							return (
@@ -73,15 +73,15 @@ export default function TabLayout() {
 									{...props}
 									onPress={() => {
 										Alert.alert(
-											"Sign Up",
-											"Do you want to sign up?",
+											"Log In",
+											"Log In to Hairsap to access more",
 											[
 												{
 													text: "Cancel",
 													style: "cancel",
 												},
 												{
-													text: "Yes",
+													text: "Login",
 													onPress: () =>
 														logoutHandler(),
 												},

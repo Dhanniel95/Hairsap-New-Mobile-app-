@@ -10,9 +10,21 @@ const getProStats = async (id: string) => {
 	return data?.data;
 };
 
+const getProTarget = async () => {
+	const { data } = await apiRequest().get(`/task-target`);
+	return data?.data;
+};
+
+const getReviews = async (id: any) => {
+	const { data } = await apiRequest().post(`/pros/${id}/reviews`, {});
+	return data?.data;
+};
+
 const basicService = {
 	getDiscount,
 	getProStats,
+	getProTarget,
+	getReviews,
 };
 
 export default basicService;

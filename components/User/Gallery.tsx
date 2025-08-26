@@ -11,6 +11,7 @@ import {
 	TextInput,
 	View,
 } from "react-native";
+import Header from "../Header";
 import EachGallery from "../List/EachGallery";
 
 const Gallery = () => {
@@ -70,46 +71,47 @@ const Gallery = () => {
 	};
 
 	return (
-		<View
-			style={{ flex: 1, paddingHorizontal: 20, backgroundColor: "#FFF" }}
-		>
-			<View style={{ paddingVertical: 10 }}>
-				<Text style={[textStyles.textBold, { fontSize: 17 }]}>
-					Gallery
-				</Text>
-				<View style={{ marginVertical: 15, position: "relative" }}>
-					<TextInput
-						value={search}
-						onChangeText={setSearch}
-						placeholder="Search"
-						style={styles.input}
-						placeholderTextColor={"rgba(0,0,0,0.3)"}
-					/>
-					<Feather
-						name="search"
-						color={"rgba(0,0,0,0.3)"}
-						size={20}
-						style={styles.pos}
-					/>
+		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
+			<Header />
+			<View style={{ flex: 1, paddingHorizontal: 20 }}>
+				<View style={{ paddingVertical: 10 }}>
+					<Text style={[textStyles.textBold, { fontSize: 17 }]}>
+						Gallery
+					</Text>
+					<View style={{ marginVertical: 15, position: "relative" }}>
+						<TextInput
+							value={search}
+							onChangeText={setSearch}
+							placeholder="Search"
+							style={styles.input}
+							placeholderTextColor={"rgba(0,0,0,0.3)"}
+						/>
+						<Feather
+							name="search"
+							color={"rgba(0,0,0,0.3)"}
+							size={20}
+							style={styles.pos}
+						/>
+					</View>
 				</View>
+				<FlatList
+					data={videos}
+					numColumns={3}
+					columnWrapperStyle={{ gap: spacing }}
+					contentContainerStyle={{
+						gap: spacing,
+						paddingBottom: spacing,
+					}}
+					keyExtractor={(item) => item.id.toString()}
+					renderItem={({ item }) => (
+						<EachGallery
+							gallery={item}
+							itemSize={itemSize}
+							videos={videos}
+						/>
+					)}
+				/>
 			</View>
-			<FlatList
-				data={videos}
-				numColumns={3}
-				columnWrapperStyle={{ gap: spacing }}
-				contentContainerStyle={{
-					gap: spacing,
-					paddingBottom: spacing,
-				}}
-				keyExtractor={(item) => item.id.toString()}
-				renderItem={({ item }) => (
-					<EachGallery
-						gallery={item}
-						itemSize={itemSize}
-						videos={videos}
-					/>
-				)}
-			/>
 		</View>
 	);
 };
