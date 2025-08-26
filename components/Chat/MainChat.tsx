@@ -58,7 +58,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				console.log("Connected to socket:", socket.id);
 
 				if (chatInfo?.video) {
-					//consultHandler();
+					consultHandler();
 				}
 			});
 
@@ -104,7 +104,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					cursor: 0,
 					take: 20,
 					desc: true,
-					chatRoomId: chatInfo.chatRoomId || userChatRoomId,
+					chatRoomId:
+						Number(chatInfo.chatRoomId) || Number(userChatRoomId),
 				});
 				if (Array.isArray(res?.data)) {
 					let formatted = res.data.map(mapChatToGifted);

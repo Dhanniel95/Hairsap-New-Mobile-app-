@@ -34,6 +34,7 @@ const GuestCheckScreen = () => {
 				router.replace("/(tabs-guest)/gallery");
 			}
 		} catch (err) {
+			router.replace("/(auth)/login");
 			displayError(err, true);
 		}
 	};

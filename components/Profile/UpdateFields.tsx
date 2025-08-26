@@ -57,7 +57,7 @@ const UpdateFields = ({
 
 	return (
 		<KeyboardWrapper>
-			<View style={{ paddingVertical: 20 }}>
+			<View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
 				<InputField
 					value={value}
 					setValue={setValue}

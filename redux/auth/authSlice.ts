@@ -17,7 +17,7 @@ export const loginUser = createAsyncThunk(
 			if (res?.token) {
 				await AsyncStorage.setItem("@accesstoken", res.token);
 			}
-			return res?.user || res?.consultant;
+			return res?.user || res?.consultant || res?.pro;
 		} catch (error: any) {
 			let message = displayError(error, true);
 			return thunkAPI.rejectWithValue(message);

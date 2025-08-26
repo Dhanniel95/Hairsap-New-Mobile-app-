@@ -33,6 +33,7 @@ const Login = () => {
 			let res = await dispatch(
 				loginUser({ phone: phone.trim(), password: pass.trim() })
 			).unwrap();
+			console.log(res, "RES");
 			if (res?.userId && !res.faceIdPhotoUrl && res.role === "user") {
 				router.push({ pathname: "/(auth)/faceverify", params: res });
 			} else if (res?.userId) {

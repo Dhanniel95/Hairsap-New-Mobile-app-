@@ -37,7 +37,29 @@ export default function TabLayout() {
 					options={{
 						title: "Home",
 						tabBarIcon: ({ color }) => (
-							<Feather color={color} size={22} name={"image"} />
+							<Feather color={color} size={22} name={"home"} />
+						),
+					}}
+				/>
+				<Tabs.Screen
+					name="profile"
+					options={{
+						title: "Profile",
+						tabBarIcon: ({ color }) => (
+							<Feather color={color} size={20} name="user" />
+						),
+					}}
+				/>
+				<Tabs.Screen
+					name="chats"
+					options={{
+						title: "Messages",
+						tabBarIcon: ({ color }) => (
+							<Feather
+								color={color}
+								size={22}
+								name={"message-square"}
+							/>
 						),
 					}}
 				/>
