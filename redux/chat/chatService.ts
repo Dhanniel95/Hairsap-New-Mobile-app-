@@ -5,14 +5,44 @@ const listChatRooms = async () => {
 	return data;
 };
 
-const listChatMessages = async () => {
-	const { data } = await apiRequest().post(`/chats/chatrooms/messages`);
+const listChatMessages = async (obj: any) => {
+	const { data } = await apiRequest().post(`/chats/chatroom/messages`, obj);
+	return data;
+};
+
+const listCustomersChats = async () => {
+	const { data } = await apiRequest().get(`/chats/chatroom/customers`);
+	return data;
+};
+
+const listGuestChats = async () => {
+	const { data } = await apiRequest().get(`/chats/chatroom/guests`);
+	return data;
+};
+
+const listMyCustomersChats = async () => {
+	const { data } = await apiRequest().get(`/chats/chatroom/me/customers`);
+	return data;
+};
+
+const listMyGuestChats = async () => {
+	const { data } = await apiRequest().get(`/chats/chatroom/me/guests`);
+	return data;
+};
+
+const listBraidersChats = async () => {
+	const { data } = await apiRequest().get(`/chats/chatroom/me/pros`);
 	return data;
 };
 
 const chatService = {
 	listChatRooms,
 	listChatMessages,
+	listCustomersChats,
+	listGuestChats,
+	listMyCustomersChats,
+	listMyGuestChats,
+	listBraidersChats,
 };
 
 export default chatService;

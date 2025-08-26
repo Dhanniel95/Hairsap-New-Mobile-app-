@@ -7,9 +7,11 @@ import React from "react";
 const ChatScreen = () => {
 	const params = useLocalSearchParams();
 
+	console.log(params);
+
 	return (
 		<Container dark={true} bg="#FFF">
-			<ChatHeader />
+			<ChatHeader headerInfo={params} />
 			<MainChat chatInfo={params} />
 		</Container>
 	);

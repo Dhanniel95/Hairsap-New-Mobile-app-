@@ -98,7 +98,11 @@ const EachGallery = ({
 							setOpen(false);
 							router.push({
 								pathname: "/(app)/chat",
-								params: { video: gallery.video },
+								params: {
+									thumbnail: gallery.thumbnail,
+									video: gallery.video,
+									text: `Service Name: 14+ All-Back Cornrows \n Regular Service: ₦26,500 • Duration: 4 hrs \n VIP Service: ₦53,000 • Duration: 2 hrs \n Description: One pack of lush extensions included`,
+								},
 							});
 						}}
 						activeOpacity={0.8}

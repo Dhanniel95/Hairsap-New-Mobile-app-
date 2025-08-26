@@ -1,10 +1,33 @@
+import Load from "@/components/Load";
+import authService from "@/redux/auth/authService";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
+import { generateString } from "@/utils/data";
+import { displayError } from "@/utils/error";
 import { Link } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 
 const Landing = () => {
+	const [load, setLoad] = useState(false);
+
+	const signUpAsGuest = async () => {
+		try {
+			let payload = {
+				message: generateString(8),
+				role: "guest",
+			};
+			console.log(payload, "payload");
+			setLoad(true);
+			let res = await authService.registerGuest(payload);
+			setLoad(false);
+			console.log(res, "RES");
+		} catch (err) {
+			setLoad(false);
+			displayError(err, true);
+		}
+	};
+
 	return (
 		<ImageBackground
 			source={require("../../assets/images/hairsap_home.png")}
@@ -71,6 +94,7 @@ const Landing = () => {
 					}}
 				>
 					<TouchableOpacity
+						onPress={signUpAsGuest}
 						style={{
 							borderBottomWidth: 1,
 							borderBottomColor: "#FFF",
@@ -87,6 +111,7 @@ const Landing = () => {
 					</TouchableOpacity>
 				</View>
 			</View>
+			{load && <Load />}
 		</ImageBackground>
 	);
 };

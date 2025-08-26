@@ -14,11 +14,27 @@ export const loginUser = createAsyncThunk(
 	async (data: any, thunkAPI) => {
 		try {
 			let res = await authService.login(data);
-
 			if (res?.token) {
 				await AsyncStorage.setItem("@accesstoken", res.token);
 			}
-			return res?.user;
+			return res?.user || res?.consultant;
+		} catch (error: any) {
+			let message = displayError(error, true);
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const loginGuest = createAsyncThunk(
+	"auth/guest",
+	async (data: any, thunkAPI) => {
+		try {
+			let res = await authService.registerGuest(data);
+			if (res?.token) {
+				await AsyncStorage.setItem("@accesstoken", res.token);
+			}
+			console.log(res, "RES");
+			return res?.guest;
 		} catch (error: any) {
 			let message = displayError(error, true);
 			return thunkAPI.rejectWithValue(message);
@@ -40,9 +56,17 @@ export const saveUserData = createAsyncThunk(
 
 export const getUserInfo = createAsyncThunk(
 	"auth/userInfo",
-	async (_, thunkAPI) => {
+	async (_, thunkAPI: any) => {
 		try {
-			let res = await authService.fetchProfile();
+			const { user } = thunkAPI.getState()?.auth;
+			let res;
+			if (user?.role === "consultant") {
+				res = await authService.fetchConsultantProfile();
+			} else if (user?.role === "pro") {
+				res = await authService.fetchBraiderProfile();
+			} else {
+				res = await authService.fetchProfile();
+			}
 			return res?.data;
 		} catch (error: any) {
 			let message = displayError(error, true);
@@ -75,6 +99,12 @@ export const authSlice = createSlice({
 		});
 		builder.addCase(loginUser.rejected, (state, action) => {
 			state.loading = false;
+		});
+		builder.addCase(loginGuest.fulfilled, (state, action) => {
+			state.loading = false;
+			if (action.payload?.userId) {
+				state.user = action.payload;
+			}
 		});
 		builder.addCase(saveUserData.fulfilled, (state, action) => {
 			state.loading = false;

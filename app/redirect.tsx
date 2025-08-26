@@ -9,9 +9,17 @@ export default function RedirectPage() {
 
 	useEffect(() => {
 		if (user?.userId) {
-			router.replace("/(tabs)");
+			if (user?.role === "consultant") {
+				router.replace("/(tabs-consultant)/chats");
+			} else if (user?.role === "pro") {
+				router.replace("/(tabs-pros)/home");
+			} else if (user?.role === "guest") {
+				router.replace("/(tabs-guest)/gallery");
+			} else {
+				router.replace("/(tabs-user)/gallery");
+			}
 		} else {
-			router.replace("/(auth)/landing");
+			router.replace("/(auth)/guest");
 		}
 	}, [user]);
 

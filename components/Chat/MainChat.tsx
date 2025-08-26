@@ -1,66 +1,131 @@
 import chatService from "@/redux/chat/chatService";
+import { saveChatId } from "@/redux/chat/chatSlice";
+import formStyles from "@/styles/formStyles";
+import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
-import { useAppSelector } from "@/utils/hooks";
-import { createSocket } from "@/utils/socket";
+import baseUrl from "@/utils/config";
+import { mapChatToGifted } from "@/utils/data";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+	Platform,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
+import {
+	Bubble,
 	Composer,
 	GiftedChat,
 	IMessage,
 	InputToolbar,
 	Send,
 } from "react-native-gifted-chat";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { io, Socket } from "socket.io-client";
+import ChatVideo from "./ChatVideo";
 import GalleryCheck from "./GalleryCheck";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
+	const dispatch = useAppDispatch();
+
 	const [messages, setMessages] = useState<IMessage[]>([]);
 
+	const socketRef = useRef<Socket | null>(null);
+
 	const { user } = useAppSelector((state) => state.auth);
+	const { userChatRoomId } = useAppSelector((state) => state.chat);
+
+	console.log(userChatRoomId, "CHATINFO");
 
 	useEffect(() => {
-		connectToSocket();
-	}, []);
+		let socket: Socket;
 
-	useEffect(() => {
+		const connectSocket = async () => {
+			const token = (await AsyncStorage.getItem("@accesstoken")) || "";
+
+			socket = io(baseUrl, {
+				query: { token, role: user.role },
+				transports: ["websocket"],
+			});
+
+			socketRef.current = socket;
+
+			socket.on("connect", () => {
+				console.log("Connected to socket:", socket.id);
+
+				if (chatInfo?.video) {
+					//consultHandler();
+				}
+			});
+
+			socket.on("disconnect", () => {
+				console.log("Disconnected from socket");
+			});
+
+			socket.on("connect_error", (err) => {
+				console.log(" Socket connection error:", err.message);
+			});
+
+			socket.onAny((event, ...args) => {
+				console.log("Got event:", event, args);
+			});
+
+			// receive messages
+			socket.on("message:new", (data) => {
+				console.log("New message received:", data);
+				fetchMessages();
+			});
+
+			socket.on("message:new:customer", (data) => {
+				console.log("New message received:", data);
+				fetchMessages();
+			});
+		};
+
+		connectSocket();
 		fetchMessages();
-	}, []);
 
-	useEffect(() => {
-		if (chatInfo?.video) {
-			consultHandler();
-		}
+		return () => {
+			if (socketRef.current) {
+				socketRef.current.disconnect();
+				socketRef.current = null;
+			}
+		};
 	}, [chatInfo]);
 
-	const connectToSocket = async () => {
-		let token = (await AsyncStorage.getItem("@accesstoken")) || "";
-		const socket = createSocket(user.role, token);
-
-		socket.connect();
-
-		socket.on("connect", () => {
-			console.log("Connected");
-		});
-
-		socket.on("disconnect", () => {
-			console.log("Disconnected");
-		});
-
-		socket.on("connect_error", (err) => {
-			console.log("Error With Connection", err);
-		});
-	};
-
 	const fetchMessages = async () => {
-		try {
-			let res = await chatService.listChatRooms();
-			console.log(res, "RES");
-		} catch (err) {}
+		if (chatInfo.chatRoomId || userChatRoomId) {
+			try {
+				let res = await chatService.listChatMessages({
+					cursor: 0,
+					take: 20,
+					desc: true,
+					chatRoomId: chatInfo.chatRoomId || userChatRoomId,
+				});
+				if (Array.isArray(res?.data)) {
+					let formatted = res.data.map(mapChatToGifted);
+					setMessages(formatted);
+				}
+			} catch (err) {}
+		}
 	};
 
 	const onSend = useCallback((newMessages: IMessage[] = []) => {
+		let chatMsg = newMessages[0];
+		if (socketRef.current?.connected) {
+			socketRef.current.emit("message:new", {
+				message: chatMsg.text,
+				messageType: "text",
+				receiverId: chatInfo.receiverId
+					? Number(chatInfo.receiverId)
+					: undefined,
+				chatRoomId: Number(chatInfo.chatRoomId),
+			});
+		}
 		setMessages((previousMessages) =>
 			GiftedChat.append(previousMessages, newMessages)
 		);
@@ -68,19 +133,52 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 	const consultHandler = () => {
 		let payload = {
-			_id: 1,
-			text: "Hello! Welcome to the chat.",
+			_id: Math.random().toString(36).substring(7),
+			text: chatInfo.text || "Consultation Request",
 			createdAt: new Date(),
 			user: {
-				_id: 2,
-				name: "Chat Bot",
-				avatar: "https://i.pravatar.cc/300",
+				_id: user.userId,
+				name: user.name,
+				avatar: user.faceIdPhotoUrl,
 			},
 			video: chatInfo.video,
 		};
 		setMessages((previousMessages) =>
 			GiftedChat.append(previousMessages, [payload])
 		);
+		if (socketRef.current?.connected) {
+			socketRef.current.emit(
+				"message:new",
+				{
+					message: chatInfo.text || "Consultation Request",
+					messageType: "video",
+					media: [
+						{
+							thumbnail: chatInfo.thumbnail,
+							url: chatInfo.video,
+						},
+					],
+				},
+				(response: any) => {
+					console.log(response, "RESPONSE");
+					if (response?.data) {
+						dispatch(saveChatId(response.data?.chatRoomId));
+					}
+				}
+			);
+		}
+	};
+
+	const joinRoom = () => {
+		if (socketRef.current?.connected) {
+			socketRef.current.emit(
+				"chatroom:join",
+				{
+					chatRoomId: Number(chatInfo.chatRoomId),
+				},
+				(response: any) => console.log(response, "reponse__")
+			);
+		}
 	};
 
 	const renderSend = (props: any) => {
@@ -93,15 +191,27 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		);
 	};
 
-	const renderInputToolbar = (props: any) => (
-		<InputToolbar
-			{...props}
-			containerStyle={styles.toolbarContainer}
-			primaryStyle={{
-				alignItems: "center",
-			}}
-		/>
-	);
+	const renderInputToolbar = (props: any) =>
+		chatInfo?.newMsg === "0" && user?.role === "consultant" ? (
+			<View style={{ paddingHorizontal: 20 }}>
+				<TouchableOpacity
+					style={[formStyles.mainBtn]}
+					onPress={joinRoom}
+				>
+					<Text style={[textStyles.textBold, { color: "#FFF" }]}>
+						Join Chat
+					</Text>
+				</TouchableOpacity>
+			</View>
+		) : (
+			<InputToolbar
+				{...props}
+				containerStyle={styles.toolbarContainer}
+				primaryStyle={{
+					alignItems: "center",
+				}}
+			/>
+		);
 
 	const renderComposer = (props: any) => {
 		return (
@@ -118,15 +228,27 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		);
 	};
 
+	const renderMessageVideo = useCallback(
+		({ currentMessage }: { currentMessage?: IMessage }) => {
+			if (!currentMessage?.video) return null;
+
+			return <ChatVideo uri={String(currentMessage.video)} />;
+		},
+		[]
+	);
+
 	return (
-		<View style={{ flex: 1 }}>
+		<SafeAreaView
+			style={{ flex: 1, backgroundColor: "#fff" }}
+			edges={["bottom"]}
+		>
 			<GiftedChat
 				messages={messages}
 				onSend={onSend}
 				user={{
-					_id: 1, // current logged-in user id
-					name: "John Doe",
-					avatar: "https://i.pravatar.cc/300",
+					_id: user.userId,
+					name: user.name,
+					avatar: user.faceIdPhotoUrl,
 				}}
 				showUserAvatar
 				alwaysShowSend
@@ -136,13 +258,42 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					contentContainerStyle: {
 						paddingHorizontal: 20,
 					},
-					ListEmptyComponent: () => <GalleryCheck />,
+					ListEmptyComponent: () =>
+						user.role === "user" ? <GalleryCheck /> : <></>,
 				}}
 				renderSend={renderSend}
 				renderComposer={renderComposer}
 				renderInputToolbar={renderInputToolbar}
+				renderMessageVideo={renderMessageVideo}
+				renderBubble={(props) => (
+					<Bubble
+						{...props}
+						wrapperStyle={{
+							right: {
+								backgroundColor: colors.primary,
+								borderRadius: 12,
+								padding: 5,
+							},
+							left: {
+								backgroundColor: "#F2F7FB",
+								borderRadius: 12,
+								padding: 5,
+							},
+						}}
+						textStyle={{
+							right: {
+								color: "#fff", // sender text color
+							},
+							left: {
+								color: "#000", // receiver text color
+							},
+						}}
+					/>
+				)}
+				keyboardShouldPersistTaps="handled"
+				bottomOffset={Platform.OS === "ios" ? 30 : 0}
 			/>
-		</View>
+		</SafeAreaView>
 	);
 };
 
@@ -153,7 +304,6 @@ const styles = StyleSheet.create({
 		paddingLeft: 20,
 		paddingHorizontal: 10,
 		paddingTop: 10,
-		paddingBottom: 20,
 		borderTopWidth: 1,
 		borderTopColor: "#ddd",
 		width: "100%",
