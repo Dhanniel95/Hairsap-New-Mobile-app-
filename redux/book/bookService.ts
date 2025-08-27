@@ -23,11 +23,17 @@ const listBookings = async () => {
 	return data;
 };
 
+const serviceList = async () => {
+	const { data } = await apiRequest().get(`/services`);
+	return data;
+};
+
 const bookService = {
 	listServices,
 	listTransactionHistory,
 	fetchMessages,
 	listBookings,
+	serviceList,
 };
 
 export default bookService;

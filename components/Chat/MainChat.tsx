@@ -10,6 +10,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+	ActivityIndicator,
 	Platform,
 	StyleSheet,
 	Text,
@@ -41,6 +42,10 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 	const { user } = useAppSelector((state) => state.auth);
 	const { userChatRoomId } = useAppSelector((state) => state.chat);
+
+	useEffect(() => {
+		loadLastMessage();
+	}, []);
 
 	useEffect(() => {
 		let socket: Socket;
@@ -97,6 +102,17 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 			}
 		};
 	}, [chatInfo]);
+
+	const loadLastMessage = () => {
+		let payload = {
+			chatId: chatInfo.chatId,
+			message: chatInfo.message,
+			createdAt: chatInfo.createdAt,
+			senderId: chatInfo.receiverId,
+			messageType: chatInfo.messageType,
+		};
+		setMessages([mapChatToGifted(payload)]);
+	};
 
 	const fetchMessages = async () => {
 		if (chatInfo.chatRoomId || userChatRoomId) {
@@ -183,6 +199,39 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		}
 	};
 
+	const createdUserHandler = (arg: any) => {
+		let message = `An account has been created for you. Login with ${
+			arg?.phone
+		} as Phone Number and use ${arg?.name?.toUpperCase()} as Password.`;
+		let payload = {
+			_id: Math.random().toString(36).substring(7),
+			text: message,
+			createdAt: new Date(),
+			user: {
+				_id: user.userId,
+				name: user.name,
+				avatar: user.faceIdPhotoUrl,
+			},
+		};
+		setMessages((previousMessages) =>
+			GiftedChat.append(previousMessages, [payload])
+		);
+		if (socketRef.current?.connected) {
+			socketRef.current.emit(
+				"message:new",
+				{
+					message,
+					messageType: "text",
+					receiverId: Number(chatInfo.receiverId),
+					chatRoomId: Number(chatInfo.chatRoomId),
+				},
+				(response: any) => {
+					fetchMessages();
+				}
+			);
+		}
+	};
+
 	const renderSend = (props: any) => {
 		return (
 			<View
@@ -223,6 +272,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						allowBooking={
 							chatInfo?.userType === "user" ? true : false
 						}
+						onSubmit={createdUserHandler}
 					/>
 				)}
 				<InputToolbar
@@ -234,8 +284,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				/>
 			</>
 		);
-
-	console.log(chatInfo);
 
 	const renderComposer = (props: any) => {
 		return (
@@ -347,6 +395,9 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					setShowDoc(false);
 					setShowMenu(false);
 				}}
+				renderLoading={() => (
+					<ActivityIndicator size="large" color={colors.primary} />
+				)}
 			/>
 		</SafeAreaView>
 	);

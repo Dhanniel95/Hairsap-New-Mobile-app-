@@ -29,6 +29,10 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 							: "0",
 						receiverId: chat.userId,
 						userType,
+						chatId: chatInfo.chatId,
+						createdAt: chatInfo?.createdAt,
+						messageType: chatInfo.messageType,
+						message: chatInfo.message,
 					},
 				})
 			}

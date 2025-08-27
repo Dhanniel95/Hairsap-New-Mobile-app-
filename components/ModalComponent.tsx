@@ -1,5 +1,12 @@
+import { Entypo } from "@expo/vector-icons";
 import React from "react";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import {
+	Modal,
+	Pressable,
+	StyleSheet,
+	TouchableOpacity,
+	View,
+} from "react-native";
 
 const ModalComponent = ({
 	open,
@@ -7,12 +14,14 @@ const ModalComponent = ({
 	children,
 	centered,
 	bg,
+	maxHeight,
 }: {
 	open: boolean;
 	closeModal: () => void;
 	children: React.ReactNode;
 	centered?: boolean;
 	bg?: string;
+	maxHeight?: number;
 }) => {
 	return (
 		<Modal
@@ -32,10 +41,30 @@ const ModalComponent = ({
 					alignItems: "center",
 				}}
 			>
+				<View style={{ alignItems: "flex-end", width: "85%" }}>
+					<TouchableOpacity
+						onPress={closeModal}
+						style={{
+							backgroundColor: "#334155",
+							height: 40,
+							width: 40,
+							borderRadius: 20,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<Entypo name="cross" size={25} />
+					</TouchableOpacity>
+				</View>
+
 				<View
 					style={[
 						centered ? styles.modalCenter : styles.modalView,
-						{ backgroundColor: bg || "#FFF" },
+						{
+							backgroundColor: bg || "#FFF",
+							maxHeight: maxHeight ? `${maxHeight}%` : "70%",
+							overflow: "hidden",
+						},
 					]}
 				>
 					{children}

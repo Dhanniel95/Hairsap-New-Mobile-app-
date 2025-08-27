@@ -20,11 +20,17 @@ const getReviews = async (id: any) => {
 	return data?.data;
 };
 
+const getBraidersAvailability = async (date: any, id: string) => {
+	const { data } = await apiRequest().get(`/consultant/available/pros`);
+	return data?.data;
+};
+
 const basicService = {
 	getDiscount,
 	getProStats,
 	getProTarget,
 	getReviews,
+	getBraidersAvailability,
 };
 
 export default basicService;

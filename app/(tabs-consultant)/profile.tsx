@@ -1,20 +1,15 @@
-import ModalComponent from "@/components/ModalComponent";
-import UpdateFields from "@/components/Profile/UpdateFields";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const ProfileScreen = () => {
 	const router = useRouter();
 
 	const { user } = useAppSelector((state) => state.auth);
-
-	const [openModal, setOpenModal] = useState(false);
-	const [editType, setEditType] = useState("");
 
 	return (
 		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
@@ -68,15 +63,6 @@ const ProfileScreen = () => {
 							{user?.email || "Email not set"}
 						</Text>
 					</View>
-					<TouchableOpacity
-						style={styles.btn}
-						onPress={() => {
-							setEditType("email");
-							setOpenModal(true);
-						}}
-					>
-						<MaterialCommunityIcons name="pencil" size={20} />
-					</TouchableOpacity>
 				</View>
 				<View style={styles.divider}>
 					<View>
@@ -85,27 +71,8 @@ const ProfileScreen = () => {
 							{user?.phone || "Phone not set"}
 						</Text>
 					</View>
-					<TouchableOpacity
-						style={styles.btn}
-						onPress={() => {
-							setEditType("phone");
-							setOpenModal(true);
-						}}
-					>
-						<MaterialCommunityIcons name="pencil" size={20} />
-					</TouchableOpacity>
 				</View>
 			</View>
-			<ModalComponent
-				open={openModal}
-				closeModal={() => setOpenModal(false)}
-				centered={true}
-			>
-				<UpdateFields
-					closeModal={() => setOpenModal(false)}
-					editType={editType}
-				/>
-			</ModalComponent>
 		</View>
 	);
 };
@@ -139,13 +106,5 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		paddingBottom: 15,
 		marginBottom: 20,
-	},
-	btn: {
-		height: 40,
-		width: 40,
-		alignItems: "center",
-		justifyContent: "center",
-		borderRadius: 20,
-		backgroundColor: colors.appGray,
 	},
 });

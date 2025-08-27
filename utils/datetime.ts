@@ -28,4 +28,15 @@ const formatChatDate = (dateString: string) => {
 	return format(date, "MMM d, yyyy"); // e.g. "Aug 10, 2025"
 };
 
-export { formatChatDate };
+const formatTime = (value: any) => {
+	if (value < 60) return `${value} mins`;
+
+	let hours = value / 60;
+	let mins = value % 60;
+
+	return `${hours.toFixed(0)} hr${hours > 1 && "s"} ${
+		mins !== 0 ? mins + " mins" : ""
+	}`;
+};
+
+export { formatChatDate, formatTime };

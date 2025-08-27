@@ -1,5 +1,5 @@
 import textStyles from "@/styles/textStyles";
-import { Feather } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -43,6 +43,15 @@ const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 						Active Now
 					</Text>
 				</View>
+			</View>
+			<View>
+				<TouchableOpacity>
+					<Entypo
+						name="dots-three-vertical"
+						size={20}
+						color="black"
+					/>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);

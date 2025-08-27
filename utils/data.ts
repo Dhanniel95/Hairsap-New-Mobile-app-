@@ -9,7 +9,7 @@ const mapChatToGifted = (chat: any) => ({
 	user: {
 		_id: chat.senderId,
 		name: `User ${chat.senderId}`, // optional
-		// avatar: someUrl
+		avatar: "",
 	},
 	image: chat.messageType === "image" ? chat.media?.[0]?.url : undefined,
 	video: chat.messageType === "video" ? chat.media?.[0]?.url : undefined,

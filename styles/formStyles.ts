@@ -8,7 +8,7 @@ const formStyles = StyleSheet.create({
 		fontFamily: "medium",
 		height: 50,
 		paddingLeft: 20,
-		borderRadius: 5,
+		borderRadius: 10,
 	},
 	mainBtn: {
 		backgroundColor: "#279E98",

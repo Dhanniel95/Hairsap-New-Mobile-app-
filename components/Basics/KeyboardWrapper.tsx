@@ -1,4 +1,3 @@
-import colors from "@/utils/colors";
 import React from "react";
 import {
 	Keyboard,
@@ -8,12 +7,16 @@ import {
 	View,
 } from "react-native";
 
-function KeyboardWrapper({ children }: { children: React.ReactNode }) {
+function KeyboardWrapper({
+	children,
+	bg,
+}: {
+	children: React.ReactNode;
+	bg?: string;
+}) {
 	return (
-		<KeyboardAvoidingView
-			style={{ backgroundColor: colors.white, height: "100%" }}
-		>
-			<ScrollView>
+		<KeyboardAvoidingView style={{ backgroundColor: bg || "transparent" }}>
+			<ScrollView showsVerticalScrollIndicator={false}>
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<View>{children}</View>
 				</TouchableWithoutFeedback>

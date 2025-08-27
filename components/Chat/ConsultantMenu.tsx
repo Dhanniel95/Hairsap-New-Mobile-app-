@@ -9,9 +9,11 @@ import UserForm from "../User/UserForm";
 const ConsultantMenu = ({
 	allowBooking,
 	allowUserCreate,
+	onSubmit,
 }: {
 	allowBooking?: boolean;
 	allowUserCreate?: boolean;
+	onSubmit: (arg: any) => void;
 }) => {
 	const [openModal, setOpenModal] = useState(false);
 	const [forBooking, setForBooking] = useState(false);
@@ -74,7 +76,11 @@ const ConsultantMenu = ({
 				centered
 				bg="#334155"
 			>
-				{forBooking ? <BookingForm /> : <UserForm />}
+				{forBooking ? (
+					<BookingForm />
+				) : (
+					<UserForm onSubmit={onSubmit} />
+				)}
 			</ModalComponent>
 		</View>
 	);
