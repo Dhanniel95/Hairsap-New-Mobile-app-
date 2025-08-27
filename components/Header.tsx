@@ -1,13 +1,13 @@
 import colors from "@/utils/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const Header = () => {
 	return (
 		<View style={styles.header}>
-			{/* <Logo /> */}
-			<View />
+			<Image source={require("../assets/images/logo.png")} />
+
 			<TouchableOpacity style={{ position: "relative" }}>
 				<FontAwesome name="bell" size={24} color={"#000"} />
 				<View style={styles.badge}>

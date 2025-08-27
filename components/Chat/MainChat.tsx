@@ -6,7 +6,7 @@ import colors from "@/utils/colors";
 import baseUrl from "@/utils/config";
 import { mapChatToGifted } from "@/utils/data";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -27,19 +27,20 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { io, Socket } from "socket.io-client";
 import ChatVideo from "./ChatVideo";
+import ConsultantMenu from "./ConsultantMenu";
 import GalleryCheck from "./GalleryCheck";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const dispatch = useAppDispatch();
 
 	const [messages, setMessages] = useState<IMessage[]>([]);
+	const [showMenu, setShowMenu] = useState(false);
+	const [showDoc, setShowDoc] = useState(false);
 
 	const socketRef = useRef<Socket | null>(null);
 
 	const { user } = useAppSelector((state) => state.auth);
 	const { userChatRoomId } = useAppSelector((state) => state.chat);
-
-	console.log(userChatRoomId, "CHATINFO");
 
 	useEffect(() => {
 		let socket: Socket;
@@ -184,16 +185,24 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 	const renderSend = (props: any) => {
 		return (
-			<Send {...props} containerStyle={styles.sendContainer}>
-				<View style={styles.sendBtn}>
-					<Ionicons name="send" size={20} color="#fff" />
-				</View>
-			</Send>
+			<View
+				style={{
+					width: "20%",
+					justifyContent: "flex-end",
+					alignItems: "flex-end",
+				}}
+			>
+				<Send {...props} containerStyle={styles.sendContainer}>
+					<View style={styles.sendBtn}>
+						<Ionicons name="send" size={20} color="#fff" />
+					</View>
+				</Send>
+			</View>
 		);
 	};
 
 	const renderInputToolbar = (props: any) =>
-		chatInfo?.newMsg === "0" && user?.role === "consultant" ? (
+		chatInfo?.newMsg === "0" && user?.role === "consultan" ? (
 			<View style={{ paddingHorizontal: 20 }}>
 				<TouchableOpacity
 					style={[formStyles.mainBtn]}
@@ -205,26 +214,67 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				</TouchableOpacity>
 			</View>
 		) : (
-			<InputToolbar
-				{...props}
-				containerStyle={styles.toolbarContainer}
-				primaryStyle={{
-					alignItems: "center",
-				}}
-			/>
+			<>
+				{showMenu && (
+					<ConsultantMenu
+						allowUserCreate={
+							chatInfo?.userType === "guest" ? true : false
+						}
+						allowBooking={
+							chatInfo?.userType === "user" ? true : false
+						}
+					/>
+				)}
+				<InputToolbar
+					{...props}
+					containerStyle={styles.toolbarContainer}
+					primaryStyle={{
+						alignItems: "center",
+					}}
+				/>
+			</>
 		);
+
+	console.log(chatInfo);
 
 	const renderComposer = (props: any) => {
 		return (
-			<View style={styles.composerWrapper}>
-				<Composer
-					{...props}
-					textInputStyle={styles.customComposer}
-					placeholder="Type a message..."
-				/>
-				<TouchableOpacity onPress={() => console.log("File Upload")}>
-					<MaterialIcons name="attach-file" size={24} color="#555" />
-				</TouchableOpacity>
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					width: "80%",
+				}}
+			>
+				{user.role === "consultant" && (
+					<TouchableOpacity
+						style={{ width: "10%" }}
+						onPress={() => setShowMenu(!showMenu)}
+					>
+						<Feather name="paperclip" size={24} color="#555" />
+					</TouchableOpacity>
+				)}
+				<View
+					style={[
+						styles.composerWrapper,
+						{ width: user.role === "consultant" ? "95%" : "100%" },
+					]}
+				>
+					<Composer
+						{...props}
+						textInputStyle={styles.customComposer}
+						placeholder="Type a message..."
+					/>
+					<TouchableOpacity
+						onPress={() => console.log("File Upload")}
+					>
+						<Ionicons
+							name="documents-outline"
+							size={24}
+							color="#555"
+						/>
+					</TouchableOpacity>
+				</View>
 			</View>
 		);
 	};
@@ -283,16 +333,20 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						}}
 						textStyle={{
 							right: {
-								color: "#fff", // sender text color
+								color: "#fff",
 							},
 							left: {
-								color: "#000", // receiver text color
+								color: "#000",
 							},
 						}}
 					/>
 				)}
 				keyboardShouldPersistTaps="handled"
 				bottomOffset={Platform.OS === "ios" ? 30 : 0}
+				onPress={() => {
+					setShowDoc(false);
+					setShowMenu(false);
+				}}
 			/>
 		</SafeAreaView>
 	);
@@ -315,7 +369,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "#F3F6F6",
 		borderRadius: 20,
 		paddingHorizontal: 10,
-		width: "80%",
 		marginRight: 20,
 		height: 50,
 	},

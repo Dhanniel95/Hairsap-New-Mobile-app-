@@ -4,9 +4,9 @@ import { formatChatDate } from "@/utils/datetime";
 import { useAppSelector } from "@/utils/hooks";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const EachChat = ({ chat }: { chat: any }) => {
+const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 	const { user } = useAppSelector((state) => state.auth);
 
 	const router = useRouter();
@@ -28,6 +28,7 @@ const EachChat = ({ chat }: { chat: any }) => {
 							? "1"
 							: "0",
 						receiverId: chat.userId,
+						userType,
 					},
 				})
 			}
@@ -35,62 +36,78 @@ const EachChat = ({ chat }: { chat: any }) => {
 				styles.body,
 				{
 					backgroundColor:
-						chat.involvedUsers?.length > 0
+						chat.participants?.length > 1
 							? colors.white
 							: "#CCFBF180",
 				},
 			]}
 		>
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
-					marginBottom: 10,
-				}}
-			>
-				<Text
-					style={[
-						textStyles.textBold,
-						{ color: "#000E08", fontSize: 16, maxWidth: "80%" },
-					]}
-				>
-					{chat.name}
-				</Text>
-				<Text
-					style={[
-						textStyles.textMid,
-						{ color: "#000E08", fontSize: 14 },
-					]}
-				>
-					{chatInfo.updatedAt
-						? formatChatDate(chatInfo.updatedAt)
-						: ""}
-				</Text>
+			<View style={{ marginRight: 10 }}>
+				<Image
+					source={
+						chat.profilePhotoUrl
+							? { uri: chat.profilePhotoUrl }
+							: require("../../assets/images/profile.jpg")
+					}
+					style={{ height: 60, width: 60, borderRadius: 30 }}
+				/>
 			</View>
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
-				}}
-			>
-				<Text
-					style={[
-						textStyles.text,
-						{
-							maxWidth: "80%",
-							fontSize: 14,
-							color: "#797C7B",
-						},
-					]}
+			<View style={{ width: "80%" }}>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+						marginBottom: 5,
+					}}
 				>
-					{chatInfo?.message?.substring(0, 60)}...
-				</Text>
-				<View style={styles.count}>
-					<Text style={[textStyles.textMid, { color: "#FFF" }]}>
-						{chat.unreadMessages}
+					<Text
+						style={[
+							textStyles.textBold,
+							{
+								color: "#000E08",
+								fontSize: 15,
+								textTransform: "capitalize",
+							},
+						]}
+					>
+						{chat.name}
 					</Text>
+					<Text
+						style={[
+							textStyles.textMid,
+							{ color: "#000E08", fontSize: 12 },
+						]}
+					>
+						{chatInfo.updatedAt
+							? formatChatDate(chatInfo.updatedAt)
+							: ""}
+					</Text>
+				</View>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+					}}
+				>
+					<Text
+						style={[
+							textStyles.text,
+							{
+								maxWidth: "80%",
+								fontSize: 12,
+								color: "#797C7B",
+							},
+						]}
+					>
+						{chatInfo?.message?.substring(0, 40)}...
+					</Text>
+					<View style={styles.count}>
+						<Text style={[textStyles.textMid, { color: "#FFF" }]}>
+							{chat.unreadMessages}
+						</Text>
+					</View>
 				</View>
 			</View>
 		</TouchableOpacity>
@@ -106,42 +123,57 @@ const EachChat = ({ chat }: { chat: any }) => {
 				},
 			]}
 		>
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
-					marginBottom: 10,
-				}}
-			>
-				<Text
-					style={[
-						textStyles.textBold,
-						{ color: "#000E08", fontSize: 16, maxWidth: "80%" },
-					]}
-				>
-					{chat.name}
-				</Text>
+			<View style={{ marginRight: 10 }}>
+				<Image
+					source={
+						chat.profilePhotoUrl
+							? { uri: chat.profilePhotoUrl }
+							: require("../../assets/images/profile.jpg")
+					}
+					style={{ height: 60, width: 60, borderRadius: 30 }}
+				/>
 			</View>
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
-				}}
-			>
-				<Text
-					style={[
-						textStyles.text,
-						{
-							maxWidth: "80%",
-							fontSize: 14,
-							color: "#797C7B",
-						},
-					]}
+			<View style={{ maxWidth: "80%" }}>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+						marginBottom: 5,
+					}}
 				>
-					Click to Chat
-				</Text>
+					<Text
+						style={[
+							textStyles.textBold,
+							{
+								color: "#000E08",
+								fontSize: 15,
+								textTransform: "capitalize",
+							},
+						]}
+					>
+						{chat.name}
+					</Text>
+				</View>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+					}}
+				>
+					<Text
+						style={[
+							textStyles.text,
+							{
+								fontSize: 13,
+								color: "#797C7B",
+							},
+						]}
+					>
+						Click to Chat
+					</Text>
+				</View>
 			</View>
 		</TouchableOpacity>
 	);
@@ -159,6 +191,8 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: "rgba(0,0,0,0.09)",
 		width: "100%",
+		flexDirection: "row",
+		alignItems: "center",
 	},
 	count: {
 		backgroundColor: colors.primary,

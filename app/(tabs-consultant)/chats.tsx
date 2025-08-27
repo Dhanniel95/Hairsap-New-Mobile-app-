@@ -1,4 +1,5 @@
 import Tab from "@/components/Basics/Tab";
+import Header from "@/components/Header";
 import EachChat from "@/components/List/EachChat";
 import chatService from "@/redux/chat/chatService";
 import textStyles from "@/styles/textStyles";
@@ -84,75 +85,94 @@ const ChatRooms = () => {
 		<View
 			style={{
 				flex: 1,
-				paddingHorizontal: 20,
-				paddingVertical: 15,
+
 				backgroundColor: "#FFF",
 			}}
 		>
-			<View style={{ paddingTop: 15 }}>
-				<Text style={[textStyles.textBold, { fontSize: 17 }]}>
-					Consultations
-				</Text>
-			</View>
-			<View style={{ marginVertical: 15 }}>
-				<Tab
-					tabs={[
-						{
-							id: 1,
-							name: "All Guests",
-							sub: guestList.length,
-						},
-						{
-							id: 2,
-							name: "All Customers",
-							sub: customersList.length,
-						},
-						{
-							id: 3,
-							name: "My Guests",
-							sub: myGuestList.length,
-						},
-						{
-							id: 4,
-							name: "My Customers",
-							sub: myCustomersList.length,
-						},
-						{
-							id: 5,
-							name: "Braiders",
-							sub: braidersList.length,
-						},
-					]}
-					activeTab={activeTab}
-					setActiveTab={setActiveTab}
-				/>
-			</View>
-			<View style={{ flex: 1 }}>
-				<FlatList
-					data={
-						activeTab === 1
-							? guestList
-							: activeTab === 2
-							? customersList
-							: activeTab === 3
-							? myGuestList
-							: activeTab === 4
-							? myCustomersList
-							: braidersList
-					}
-					keyExtractor={(item: any) => item.chat?.chatId?.toString()}
-					renderItem={({ item }) => <EachChat chat={item} />}
-					contentContainerStyle={{ paddingBottom: 100 }}
-					showsVerticalScrollIndicator={false}
-					refreshControl={
-						<RefreshControl
-							refreshing={refreshing}
-							onRefresh={onRefresh}
-							tintColor={colors.dark}
-							colors={[colors.dark]}
-						/>
-					}
-				/>
+			<Header />
+			<View
+				style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 15 }}
+			>
+				<View style={{ paddingTop: 15 }}>
+					<Text style={[textStyles.textBold, { fontSize: 17 }]}>
+						Consultations
+					</Text>
+				</View>
+				<View style={{ marginBottom: 20, marginTop: 15 }}>
+					<Tab
+						tabs={[
+							{
+								id: 1,
+								name: "All Guests",
+								sub: guestList.length,
+							},
+							{
+								id: 2,
+								name: "All Customers",
+								sub: customersList.length,
+							},
+							{
+								id: 3,
+								name: "My Guests",
+								sub: myGuestList.length,
+							},
+							{
+								id: 4,
+								name: "My Customers",
+								sub: myCustomersList.length,
+							},
+							{
+								id: 5,
+								name: "Braiders",
+								sub: braidersList.length,
+							},
+						]}
+						activeTab={activeTab}
+						setActiveTab={setActiveTab}
+					/>
+				</View>
+				<View style={{ flex: 1 }}>
+					<FlatList
+						data={
+							activeTab === 1
+								? guestList
+								: activeTab === 2
+								? customersList
+								: activeTab === 3
+								? myGuestList
+								: activeTab === 4
+								? myCustomersList
+								: braidersList
+						}
+						keyExtractor={(item: any) =>
+							activeTab === 5
+								? item.userId
+								: item.chat?.chatId?.toString()
+						}
+						renderItem={({ item }) => (
+							<EachChat
+								chat={item}
+								userType={
+									activeTab === 1 || activeTab === 3
+										? "guest"
+										: activeTab === 2 || activeTab === 4
+										? "user"
+										: "pro"
+								}
+							/>
+						)}
+						contentContainerStyle={{ paddingBottom: 100 }}
+						showsVerticalScrollIndicator={false}
+						refreshControl={
+							<RefreshControl
+								refreshing={refreshing}
+								onRefresh={onRefresh}
+								tintColor={colors.dark}
+								colors={[colors.dark]}
+							/>
+						}
+					/>
+				</View>
 			</View>
 		</View>
 	);
