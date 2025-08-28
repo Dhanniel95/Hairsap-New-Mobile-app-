@@ -41,7 +41,7 @@ const ProfileScreen = () => {
 			>
 				Profile
 			</Text>
-			<View style={{ flex: 1, paddingHorizontal: 20 }}>
+			<View style={{ flex: 1, paddingHorizontal: 25 }}>
 				<ScrollView showsVerticalScrollIndicator={false}>
 					<View style={{ flex: 1 }}>
 						<View
@@ -179,6 +179,86 @@ const ProfileScreen = () => {
 								</View>
 							</View>
 						</View>
+						<Text
+							style={[
+								textStyles.textBold,
+								{ color: colors.mediumGray, fontSize: 14 },
+							]}
+						>
+							June Target
+						</Text>
+						<View style={{ alignItems: "center" }}>
+							<View style={styles.round}>
+								<Text
+									style={[
+										textStyles.textBold,
+										{ fontSize: 18 },
+									]}
+								>
+									78%
+								</Text>
+								<Text
+									style={[textStyles.text, { fontSize: 13 }]}
+								>
+									of target
+								</Text>
+							</View>
+						</View>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "space-between",
+								marginTop: 20,
+							}}
+						>
+							<View style={{ alignItems: "center" }}>
+								<Text
+									style={[
+										textStyles.textMid,
+										{
+											fontSize: 16,
+											color: colors.mediumGray,
+										},
+									]}
+								>
+									Current
+								</Text>
+								<Text
+									style={[
+										textStyles.textBold,
+										{
+											fontSize: 16,
+										},
+									]}
+								>
+									₦100,000
+								</Text>
+							</View>
+							<View style={{ alignItems: "center" }}>
+								<Text
+									style={[
+										textStyles.textMid,
+										{
+											fontSize: 16,
+											color: colors.mediumGray,
+										},
+									]}
+								>
+									Target
+								</Text>
+								<Text
+									style={[
+										textStyles.textBold,
+										{
+											fontSize: 16,
+										},
+									]}
+								>
+									₦100,000
+								</Text>
+							</View>
+						</View>
 					</View>
 				</ScrollView>
 			</View>
@@ -194,24 +274,13 @@ const styles = StyleSheet.create({
 		width: 80,
 		borderRadius: 40,
 	},
-	iconContainer: {
-		position: "absolute",
-		width: 50,
-		height: 50,
-		backgroundColor: colors.primary,
-		borderRadius: 25,
+	round: {
+		height: 180,
+		width: 180,
+		borderRadius: 90,
+		borderWidth: 5,
+		borderColor: colors.primary,
 		alignItems: "center",
 		justifyContent: "center",
-		bottom: 0,
-		right: 0,
-	},
-	divider: {
-		borderBottomWidth: 1,
-		borderBottomColor: colors.appGray,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		paddingBottom: 15,
-		marginBottom: 20,
 	},
 });
