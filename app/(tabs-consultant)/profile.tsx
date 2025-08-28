@@ -2,6 +2,7 @@ import consultantService from "@/redux/consultant/consultantService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -64,6 +65,118 @@ const ProfileScreen = () => {
 								<Text style={[textStyles.text]}>
 									{user.email}
 								</Text>
+							</View>
+						</View>
+						<View style={{ marginTop: 30 }}>
+							<Text
+								style={[
+									textStyles.textBold,
+									{ color: colors.mediumGray, fontSize: 14 },
+								]}
+							>
+								Key Performance Summary
+							</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									justifyContent: "space-between",
+									marginVertical: 20,
+								}}
+							>
+								<View
+									style={{
+										width: "32%",
+										alignItems: "center",
+									}}
+								>
+									<Entypo
+										name="bar-graph"
+										color={colors.primary}
+										size={25}
+									/>
+									<Text
+										style={[
+											textStyles.textBold,
+											{ marginTop: 10, fontSize: 16 },
+										]}
+									>
+										₦100,000
+									</Text>
+									<Text
+										style={[
+											textStyles.textMid,
+											{
+												color: colors.mediumGray,
+												fontSize: 14,
+											},
+										]}
+									>
+										Monthly Sales
+									</Text>
+								</View>
+								<View
+									style={{
+										width: "32%",
+										alignItems: "center",
+									}}
+								>
+									<AntDesign
+										name="calendar"
+										size={25}
+										color={colors.primary}
+									/>
+									<Text
+										style={[
+											textStyles.textBold,
+											{ marginTop: 10, fontSize: 16 },
+										]}
+									>
+										32
+									</Text>
+									<Text
+										style={[
+											textStyles.textMid,
+											{
+												color: colors.mediumGray,
+												fontSize: 14,
+											},
+										]}
+									>
+										Bookings
+									</Text>
+								</View>
+								<View
+									style={{
+										width: "32%",
+										alignItems: "center",
+									}}
+								>
+									<Entypo
+										name="bar-graph"
+										color={"lightgreen"}
+										size={25}
+									/>
+									<Text
+										style={[
+											textStyles.textBold,
+											{ marginTop: 10, fontSize: 16 },
+										]}
+									>
+										78%
+									</Text>
+									<Text
+										style={[
+											textStyles.textMid,
+											{
+												color: colors.mediumGray,
+												fontSize: 14,
+											},
+										]}
+									>
+										Achievement
+									</Text>
+								</View>
 							</View>
 						</View>
 					</View>
