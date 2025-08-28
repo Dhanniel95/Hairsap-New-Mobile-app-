@@ -10,10 +10,12 @@ const ConsultantMenu = ({
 	allowBooking,
 	allowUserCreate,
 	onSubmit,
+	userId,
 }: {
 	allowBooking?: boolean;
 	allowUserCreate?: boolean;
 	onSubmit: (arg: any) => void;
+	userId: string;
 }) => {
 	const [openModal, setOpenModal] = useState(false);
 	const [forBooking, setForBooking] = useState(false);
@@ -77,9 +79,9 @@ const ConsultantMenu = ({
 				bg="#334155"
 			>
 				{forBooking ? (
-					<BookingForm />
+					<BookingForm userId={userId} />
 				) : (
-					<UserForm onSubmit={onSubmit} />
+					<UserForm onSubmit={onSubmit} userId={userId} />
 				)}
 			</ModalComponent>
 		</View>

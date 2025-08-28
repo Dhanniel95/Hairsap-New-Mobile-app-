@@ -28,12 +28,18 @@ const serviceList = async () => {
 	return data;
 };
 
+const createBooking = async (obj: any) => {
+	const { data } = await apiRequest().post(`/consultant/service/book`, obj);
+	return data;
+};
+
 const bookService = {
 	listServices,
 	listTransactionHistory,
 	fetchMessages,
 	listBookings,
 	serviceList,
+	createBooking,
 };
 
 export default bookService;

@@ -1,11 +1,23 @@
 import textStyles from "@/styles/textStyles";
+import colors from "@/utils/colors";
+import { useAppSelector } from "@/utils/hooks";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 	const router = useRouter();
+
+	const { user } = useAppSelector((state) => state.auth);
+
+	const [openMenu, setOpenMenu] = useState(false);
+
+	const openHandler = () => {
+		if (user.role === "consultant") {
+			setOpenMenu(!openMenu);
+		}
+	};
 
 	return (
 		<View
@@ -45,7 +57,7 @@ const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 				</View>
 			</View>
 			<View>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={openHandler}>
 					<Entypo
 						name="dots-three-vertical"
 						size={20}
@@ -53,8 +65,46 @@ const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 					/>
 				</TouchableOpacity>
 			</View>
+			{openMenu && (
+				<View style={styles.pos}>
+					<TouchableOpacity
+						style={{ marginBottom: 10 }}
+						onPress={() => {
+							setOpenMenu(false);
+							router.push({
+								pathname: "/(app)/booksumaries",
+								params: { userId: "93" },
+							});
+						}}
+					>
+						<Text style={[textStyles.textMid, { fontSize: 14 }]}>
+							Booking Summaries
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity>
+						<Text style={[textStyles.textMid, { fontSize: 14 }]}>
+							Settings
+						</Text>
+					</TouchableOpacity>
+				</View>
+			)}
 		</View>
 	);
 };
 
 export default ChatHeader;
+
+const styles = StyleSheet.create({
+	pos: {
+		position: "absolute",
+		right: 30,
+		top: 70,
+		zIndex: 99991,
+		backgroundColor: colors.white,
+		borderWidth: 1.5,
+		borderColor: "#000",
+		paddingHorizontal: 20,
+		paddingVertical: 10,
+		borderRadius: 10,
+	},
+});

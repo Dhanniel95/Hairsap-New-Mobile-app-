@@ -1,15 +1,34 @@
+import consultantService from "@/redux/consultant/consultantService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const ProfileScreen = () => {
 	const router = useRouter();
 
 	const { user } = useAppSelector((state) => state.auth);
+
+	const [load, setLoad] = useState(false);
+	const [profile, setProfile] = useState<any>({});
+
+	useEffect(() => {
+		getProfile();
+	}, []);
+
+	const getProfile = async () => {
+		try {
+			setLoad(true);
+			let res = await consultantService.profileDetails(user.userId);
+			console.log(res, "res");
+			setLoad(false);
+		} catch (err) {
+			setLoad(false);
+			console.log(err, "err");
+		}
+	};
 
 	return (
 		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
@@ -21,57 +40,34 @@ const ProfileScreen = () => {
 			>
 				Profile
 			</Text>
-			<View style={{ alignItems: "center", marginTop: 20 }}>
-				<View
-					style={{
-						position: "relative",
-					}}
-				>
-					<Image
-						source={
-							user.faceIdPhotoUrl
-								? { uri: user.faceIdPhotoUrl }
-								: require("../../assets/images/profile.jpg")
-						}
-						style={styles.img}
-					/>
-					<TouchableOpacity
-						style={styles.iconContainer}
-						onPress={() => router.push("/(auth)/faceverify")}
-					>
-						<Ionicons
-							name="camera"
-							size={20}
-							color={colors.white}
-						/>
-					</TouchableOpacity>
-				</View>
-				<Text
-					style={[
-						textStyles.textBold,
-						{ fontSize: 20, marginTop: 20 },
-					]}
-				>
-					{user.name}
-				</Text>
-			</View>
-			<View style={{ paddingHorizontal: "10%", marginTop: 30 }}>
-				<View style={styles.divider}>
-					<View>
-						<Text style={[textStyles.textBold]}>Email:</Text>
-						<Text style={[textStyles.text]}>
-							{user?.email || "Email not set"}
-						</Text>
+			<View style={{ flex: 1, paddingHorizontal: 20 }}>
+				<ScrollView showsVerticalScrollIndicator={false}>
+					<View style={{ flex: 1 }}>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+							}}
+						>
+							<Image
+								source={
+									user.faceIdPhotoUrl
+										? { uri: user.faceIdPhotoUrl }
+										: require("../../assets/images/profile.jpg")
+								}
+								style={styles.img}
+							/>
+							<View style={{ marginLeft: 15 }}>
+								<Text style={[textStyles.textBold]}>
+									{user.name}
+								</Text>
+								<Text style={[textStyles.text]}>
+									{user.email}
+								</Text>
+							</View>
+						</View>
 					</View>
-				</View>
-				<View style={styles.divider}>
-					<View>
-						<Text style={[textStyles.textBold]}>Phone:</Text>
-						<Text style={[textStyles.text]}>
-							{user?.phone || "Phone not set"}
-						</Text>
-					</View>
-				</View>
+				</ScrollView>
 			</View>
 		</View>
 	);
@@ -81,11 +77,9 @@ export default ProfileScreen;
 
 const styles = StyleSheet.create({
 	img: {
-		height: 150,
-		width: 150,
-		borderRadius: 75,
-		borderWidth: 2,
-		borderColor: colors.lightGreen,
+		height: 80,
+		width: 80,
+		borderRadius: 40,
 	},
 	iconContainer: {
 		position: "absolute",

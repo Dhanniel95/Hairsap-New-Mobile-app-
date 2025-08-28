@@ -7,7 +7,13 @@ import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import KeyboardWrapper from "../Basics/KeyboardWrapper";
 import InputField from "../InputField";
 
-const UserForm = ({ onSubmit }: { onSubmit: (arg: any) => void }) => {
+const UserForm = ({
+	onSubmit,
+	userId,
+}: {
+	onSubmit: (arg: any) => void;
+	userId: string;
+}) => {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
@@ -18,8 +24,10 @@ const UserForm = ({ onSubmit }: { onSubmit: (arg: any) => void }) => {
 			let payload = {
 				name: name.trim(),
 				phone: phone.trim(),
-				password: name.trim().toUpperCase(),
-				role: "user",
+				email,
+				guestUserId: userId,
+				allowEmailUserExist: true,
+				allowPhoneNumberUserExist: true,
 			};
 			setLoad(true);
 			await authService.register(payload);

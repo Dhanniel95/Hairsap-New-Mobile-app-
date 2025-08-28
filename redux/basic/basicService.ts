@@ -25,12 +25,18 @@ const getBraidersAvailability = async (date: any, id: string) => {
 	return data?.data;
 };
 
+const createUser = async (obj: any) => {
+	const { data } = await apiRequest().post(`/consultant/create/user`, obj);
+	return data?.data;
+};
+
 const basicService = {
 	getDiscount,
 	getProStats,
 	getProTarget,
 	getReviews,
 	getBraidersAvailability,
+	createUser,
 };
 
 export default basicService;

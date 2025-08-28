@@ -273,6 +273,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 							chatInfo?.userType === "user" ? true : false
 						}
 						onSubmit={createdUserHandler}
+						userId={chatInfo.receiverId}
 					/>
 				)}
 				<InputToolbar

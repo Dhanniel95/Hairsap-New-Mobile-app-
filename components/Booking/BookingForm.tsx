@@ -3,16 +3,17 @@ import bookService from "@/redux/book/bookService";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
 import { formatTime } from "@/utils/datetime";
+import { displayError } from "@/utils/error";
 import { Feather } from "@expo/vector-icons";
 import { addHours, addMinutes, format } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import KeyboardWrapper from "../Basics/KeyboardWrapper";
 import DatePicker from "../DatePicker";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
 
-const BookingForm = () => {
+const BookingForm = ({ userId }: { userId: string }) => {
 	const [price, setPrice] = useState("");
 	const [service, setService] = useState("");
 	const [list, setList] = useState<any>([]);
@@ -21,6 +22,7 @@ const BookingForm = () => {
 	const [braiders, setBraiders] = useState<any>([]);
 	const [selectedBraiders, setSelectedBraiders] = useState([]);
 	const [dateTime, setDateTime] = useState("");
+	const [load, setLoad] = useState(false);
 
 	useEffect(() => {
 		listServices();
@@ -104,6 +106,26 @@ const BookingForm = () => {
 		}
 	};
 
+	const submitHandler = async () => {
+		try {
+			let payload = {
+				assignedProId: Number(selectedBraiders[0]),
+				subServiceIds: [service],
+				pinDate: new Date(dateTime).toISOString(),
+				userId,
+				address,
+				channel: "cash",
+			};
+			console.log(payload, "payload");
+			setLoad(true);
+			await bookService.createBooking(payload);
+			setLoad(false);
+		} catch (err) {
+			setLoad(false);
+			displayError(err, true);
+		}
+	};
+
 	return (
 		<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
 			<KeyboardWrapper>
@@ -152,16 +174,24 @@ const BookingForm = () => {
 				<TouchableOpacity
 					activeOpacity={0.8}
 					style={[formStyles.mainBtn, {}]}
+					disabled={load}
+					onPress={submitHandler}
 				>
-					<Feather name="plus" color={"#FFF"} size={20} />
-					<Text
-						style={[
-							textStyles.textMid,
-							{ marginLeft: 10, color: "#FFF" },
-						]}
-					>
-						Add Booking
-					</Text>
+					{load ? (
+						<ActivityIndicator color={"#FFF"} />
+					) : (
+						<>
+							<Feather name="plus" color={"#FFF"} size={20} />
+							<Text
+								style={[
+									textStyles.textMid,
+									{ marginLeft: 10, color: "#FFF" },
+								]}
+							>
+								Add Booking
+							</Text>
+						</>
+					)}
 				</TouchableOpacity>
 			</KeyboardWrapper>
 		</View>
