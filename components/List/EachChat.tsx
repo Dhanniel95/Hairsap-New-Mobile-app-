@@ -53,7 +53,7 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 							? { uri: chat.profilePhotoUrl }
 							: require("../../assets/images/profile.jpg")
 					}
-					style={{ height: 60, width: 60, borderRadius: 30 }}
+					style={{ height: 50, width: 50, borderRadius: 25 }}
 				/>
 			</View>
 			<View style={{ width: "80%" }}>
@@ -117,6 +117,19 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 		</TouchableOpacity>
 	) : (
 		<TouchableOpacity
+			onPress={() =>
+				router.push({
+					pathname: "/(app)/chat",
+					params: {
+						chatRoomId: chat.chatRoomId,
+						user: chat.name,
+						image: chat.profilePhotoUrl,
+						receiverId: chat.userId,
+						userType,
+						chatId: chat.chatId,
+					},
+				})
+			}
 			style={[
 				styles.body,
 				{

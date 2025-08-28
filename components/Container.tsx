@@ -1,6 +1,7 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import React from "react";
-import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Container = ({
 	children,
@@ -11,32 +12,18 @@ const Container = ({
 	bg?: string;
 	dark?: boolean;
 }) => {
+	const insets = useSafeAreaInsets();
+
 	return (
-		<>
-			<SafeAreaView
-				style={{
-					flex: 0,
-					backgroundColor: bg || "#FFF",
-				}}
-			/>
-			<SafeAreaView
-				style={[
-					styles.container,
-					{
-						backgroundColor: bg || "#FFF",
-					},
-				]}
-			>
-				{children}
-			</SafeAreaView>
-			<SafeAreaView
-				style={{
-					flex: 0,
-					backgroundColor: bg || "#FFF",
-				}}
-			/>
+		<View
+			style={[
+				styles.container,
+				{ backgroundColor: bg || "#FFF", paddingTop: insets.top },
+			]}
+		>
+			{children}
 			<ExpoStatusBar style={dark ? "dark" : "light"} />
-		</>
+		</View>
 	);
 };
 
@@ -46,6 +33,5 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#fff",
-		paddingTop: StatusBar.currentHeight,
 	},
 });

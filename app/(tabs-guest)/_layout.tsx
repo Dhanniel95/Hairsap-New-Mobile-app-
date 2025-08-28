@@ -1,5 +1,6 @@
 import Container from "@/components/Container";
 import { logOut } from "@/redux/auth/authSlice";
+import { saveChatId } from "@/redux/chat/chatSlice";
 import colors from "@/utils/colors";
 import { useAppDispatch } from "@/utils/hooks";
 import { Feather } from "@expo/vector-icons";
@@ -13,6 +14,7 @@ export default function TabLayout() {
 	const dispatch = useAppDispatch();
 
 	const logoutHandler = () => {
+		dispatch(saveChatId(""));
 		router.replace("/(auth)/login");
 		dispatch(logOut());
 	};

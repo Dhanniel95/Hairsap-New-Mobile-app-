@@ -42,7 +42,10 @@ const ProfileScreen = () => {
 				Profile
 			</Text>
 			<View style={{ flex: 1, paddingHorizontal: 25 }}>
-				<ScrollView showsVerticalScrollIndicator={false}>
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ paddingBottom: 30 }}
+				>
 					<View style={{ flex: 1 }}>
 						<View
 							style={{

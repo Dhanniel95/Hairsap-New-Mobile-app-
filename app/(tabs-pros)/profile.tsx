@@ -55,157 +55,176 @@ const ProfileScreen = () => {
 			>
 				Profile
 			</Text>
-			<ScrollView showsVerticalScrollIndicator={false}>
-				<View style={{ flex: 1, paddingHorizontal: 20 }}>
-					<View style={{ alignItems: "center", marginTop: 20 }}>
+			<View
+				style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 100 }}
+			>
+				<ScrollView showsVerticalScrollIndicator={false}>
+					<View style={{ flex: 1 }}>
+						<View style={{ alignItems: "center", marginTop: 20 }}>
+							<View
+								style={{
+									position: "relative",
+								}}
+							>
+								<Image
+									source={
+										user.faceIdPhotoUrl
+											? { uri: user.faceIdPhotoUrl }
+											: require("../../assets/images/profile.jpg")
+									}
+									style={styles.img}
+								/>
+							</View>
+							<Text
+								style={[
+									textStyles.textBold,
+									{ fontSize: 20, marginTop: 20 },
+								]}
+							>
+								{user.name}
+							</Text>
+						</View>
+						<TabProfile period={period} setPeriod={setPeriod} />
 						<View
 							style={{
-								position: "relative",
+								flexDirection: "row",
+								justifyContent: "space-between",
+								alignItems: "center",
+								marginVertical: 20,
 							}}
 						>
-							<Image
-								source={
-									user.faceIdPhotoUrl
-										? { uri: user.faceIdPhotoUrl }
-										: require("../../assets/images/profile.jpg")
-								}
-								style={styles.img}
-							/>
+							<View style={styles.statBox}>
+								<Text
+									style={[
+										textStyles.textBold,
+										{ fontSize: 18 },
+									]}
+								>
+									{period == "this_month"
+										? stats?.bookingsCount
+										: stats?.lastMonthStats?.bookingsCount}
+								</Text>
+								<Text
+									style={[
+										textStyles.textMid,
+										{ fontSize: 11 },
+									]}
+								>
+									All Bookings
+								</Text>
+							</View>
+							<View style={styles.statBox}>
+								<Text
+									style={[
+										textStyles.textBold,
+										{ fontSize: 18 },
+									]}
+								>
+									{period == "this_month"
+										? stats?.completedBookingCount
+										: stats?.lastMonthStats
+												?.completedBookingCount}
+								</Text>
+								<Text
+									style={[
+										textStyles.textMid,
+										{ fontSize: 11 },
+									]}
+								>
+									Completed Bookings
+								</Text>
+							</View>
 						</View>
-						<Text
-							style={[
-								textStyles.textBold,
-								{ fontSize: 20, marginTop: 20 },
-							]}
-						>
-							{user.name}
-						</Text>
-					</View>
-					<TabProfile period={period} setPeriod={setPeriod} />
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							alignItems: "center",
-							marginVertical: 20,
-						}}
-					>
-						<View style={styles.statBox}>
-							<Text
-								style={[textStyles.textBold, { fontSize: 18 }]}
-							>
-								{period == "this_month"
-									? stats?.bookingsCount
-									: stats?.lastMonthStats?.bookingsCount}
-							</Text>
-							<Text
-								style={[textStyles.textMid, { fontSize: 11 }]}
-							>
-								All Bookings
-							</Text>
-						</View>
-						<View style={styles.statBox}>
-							<Text
-								style={[textStyles.textBold, { fontSize: 18 }]}
-							>
-								{period == "this_month"
+						<TaskTarget />
+						<StatsBox
+							monthlyBooking={
+								period == "this_month"
+									? stats?.bookingAmount
+									: stats?.lastMonthStats
+											?.previousBookingAmount
+							}
+							completedBooking={
+								period == "this_month"
+									? stats?.completedBookingAmount
+									: stats?.lastMonthStats
+											?.CompletedBookingAmount
+							}
+						/>
+						<BookingRatioBox
+							totalBooking={
+								period == "this_month"
 									? stats?.completedBookingCount
 									: stats?.lastMonthStats
-											?.completedBookingCount}
+											?.completedBookingCount
+							}
+							newBooking={
+								period == "this_month"
+									? stats?.ratio?.newBookingCount || 0
+									: stats?.lastMonthStats?.ratio
+											?.newBookingCount || 0
+							}
+							returnedBooking={
+								period == "this_month"
+									? stats?.ratio?.returnedBookingCount || 0
+									: stats?.lastMonthStats?.ratio
+											?.returnedBookingCount || 0
+							}
+							progress={
+								period === "this_month"
+									? stats?.progress
+									: stats?.previousProgress
+							}
+							spending={
+								period === "this_month"
+									? stats?.spending
+									: stats?.previousSpending
+							}
+						/>
+						<TransportBox
+							transportAmount={
+								period === "this_month"
+									? stats?.transportAmount
+									: stats?.lastMonthStats?.transportAmount
+							}
+						/>
+						<View style={styles.row}>
+							<Text style={[textStyles.textMid]}>
+								Retirement Pension
 							</Text>
-							<Text
-								style={[textStyles.textMid, { fontSize: 11 }]}
-							>
-								Completed Bookings
+							<Text style={[textStyles.textBold]}>
+								₦{(stats?.pensionAmount / 100).toLocaleString()}
 							</Text>
 						</View>
+						<Text style={[textStyles.textBold, { marginTop: 30 }]}>
+							My Reviews
+						</Text>
+						{reviews.length > 0 ? (
+							reviews.map((item: any, index: number) => {
+								return (
+									<EachReview
+										key={index}
+										heading={item.user.name}
+										date={format(
+											parseISO(item.createdAt),
+											"do MMMM, yyyy"
+										)}
+										description={item.review}
+									/>
+								);
+							})
+						) : (
+							<Text
+								style={[
+									textStyles.text,
+									{ marginVertical: 20, textAlign: "center" },
+								]}
+							>
+								No reviews available
+							</Text>
+						)}
 					</View>
-					<TaskTarget />
-					<StatsBox
-						monthlyBooking={
-							period == "this_month"
-								? stats?.bookingAmount
-								: stats?.lastMonthStats?.previousBookingAmount
-						}
-						completedBooking={
-							period == "this_month"
-								? stats?.completedBookingAmount
-								: stats?.lastMonthStats?.CompletedBookingAmount
-						}
-					/>
-					<BookingRatioBox
-						totalBooking={
-							period == "this_month"
-								? stats?.completedBookingCount
-								: stats?.lastMonthStats?.completedBookingCount
-						}
-						newBooking={
-							period == "this_month"
-								? stats?.ratio?.newBookingCount || 0
-								: stats?.lastMonthStats?.ratio
-										?.newBookingCount || 0
-						}
-						returnedBooking={
-							period == "this_month"
-								? stats?.ratio?.returnedBookingCount || 0
-								: stats?.lastMonthStats?.ratio
-										?.returnedBookingCount || 0
-						}
-						progress={
-							period === "this_month"
-								? stats?.progress
-								: stats?.previousProgress
-						}
-						spending={
-							period === "this_month"
-								? stats?.spending
-								: stats?.previousSpending
-						}
-					/>
-					<TransportBox
-						transportAmount={
-							period === "this_month"
-								? stats?.transportAmount
-								: stats?.lastMonthStats?.transportAmount
-						}
-					/>
-					<View style={styles.row}>
-						<Text style={[textStyles.textMid]}>
-							Retirement Pension
-						</Text>
-						<Text style={[textStyles.textBold]}>
-							₦{(stats?.pensionAmount / 100).toLocaleString()}
-						</Text>
-					</View>
-					<Text style={[textStyles.textBold, { marginTop: 30 }]}>
-						My Reviews
-					</Text>
-					{reviews.length > 0 ? (
-						reviews.map((item: any, index: number) => {
-							return (
-								<EachReview
-									key={index}
-									heading={item.user.name}
-									date={format(
-										parseISO(item.createdAt),
-										"do MMMM, yyyy"
-									)}
-									description={item.review}
-								/>
-							);
-						})
-					) : (
-						<Text
-							style={[
-								textStyles.text,
-								{ marginVertical: 20, textAlign: "center" },
-							]}
-						>
-							No reviews available
-						</Text>
-					)}
-				</View>
-			</ScrollView>
+				</ScrollView>
+			</View>
 		</View>
 	);
 };

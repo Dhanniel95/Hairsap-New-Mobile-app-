@@ -1,5 +1,6 @@
 import ButtonSettings from "@/components/Basics/ButtonSettings";
 import { logOut } from "@/redux/auth/authSlice";
+import { saveChatId } from "@/redux/chat/chatSlice";
 import textStyles from "@/styles/textStyles";
 import { useAppDispatch } from "@/utils/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +14,7 @@ const SettingsScreen = () => {
 	const router = useRouter();
 
 	const logoutHandler = async () => {
+		dispatch(saveChatId(""));
 		dispatch(logOut());
 		await AsyncStorage.removeItem("@accesstoken");
 		router.replace("/(auth)/login");

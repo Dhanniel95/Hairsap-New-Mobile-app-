@@ -10,6 +10,7 @@ import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
 	ActivityIndicator,
+	Image,
 	KeyboardAvoidingView,
 	Platform,
 	ScrollView,
@@ -67,10 +68,9 @@ const Login = () => {
 							<View
 								style={{ alignItems: "center", marginTop: 20 }}
 							>
-								{/* <Logo
-							height={90}
-							width={150}
-						/> */}
+								<Image
+									source={require("../../assets/images/logo-dark.png")}
+								/>
 								<Text
 									style={[
 										textStyles.textBold,

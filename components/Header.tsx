@@ -7,7 +7,6 @@ const Header = () => {
 	return (
 		<View style={styles.header}>
 			<Image source={require("../assets/images/logo.png")} />
-
 			<TouchableOpacity style={{ position: "relative" }}>
 				<FontAwesome name="bell" size={24} color={"#000"} />
 				<View style={styles.badge}>

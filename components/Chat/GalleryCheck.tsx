@@ -1,11 +1,14 @@
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
+import { useAppSelector } from "@/utils/hooks";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 const GalleryCheck = () => {
 	const router = useRouter();
+
+	const { user } = useAppSelector((state) => state.auth);
 
 	return (
 		<View
@@ -24,7 +27,13 @@ const GalleryCheck = () => {
 				conversation
 			</Text>
 			<TouchableOpacity
-				onPress={() => router.push("/(tabs)")}
+				onPress={() =>
+					router.push(
+						user.role === "guest"
+							? "/(tabs-guest)/gallery"
+							: "/(tabs-user)/gallery"
+					)
+				}
 				style={[
 					formStyles.mainBtn,
 					{ marginTop: 25, borderRadius: 15 },
@@ -41,5 +50,3 @@ const GalleryCheck = () => {
 };
 
 export default GalleryCheck;
-
-const styles = StyleSheet.create({});

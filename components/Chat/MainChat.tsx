@@ -82,12 +82,13 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 			// receive messages
 			socket.on("message:new", (data) => {
-				console.log("New message received:", data);
 				fetchMessages();
 			});
 
 			socket.on("message:new:customer", (data) => {
-				console.log("New message received:", data);
+				fetchMessages();
+			});
+			socket.on("message:new:guest", (data) => {
 				fetchMessages();
 			});
 		};
@@ -104,14 +105,16 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	}, [chatInfo]);
 
 	const loadLastMessage = () => {
-		let payload = {
-			chatId: chatInfo.chatId,
-			message: chatInfo.message,
-			createdAt: chatInfo.createdAt,
-			senderId: chatInfo.receiverId,
-			messageType: chatInfo.messageType,
-		};
-		setMessages([mapChatToGifted(payload)]);
+		// if (chatInfo?.chatId && chatInfo?.message) {
+		// 	let payload = {
+		// 		chatId: chatInfo.chatId,
+		// 		message: chatInfo.message,
+		// 		createdAt: chatInfo.createdAt,
+		// 		senderId: chatInfo.receiverId,
+		// 		messageType: chatInfo.messageType,
+		// 	};
+		// 	setMessages([mapChatToGifted(payload)]);
+		// }
 	};
 
 	const fetchMessages = async () => {
@@ -141,7 +144,9 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				receiverId: chatInfo.receiverId
 					? Number(chatInfo.receiverId)
 					: undefined,
-				chatRoomId: Number(chatInfo.chatRoomId),
+				chatRoomId: chatInfo.chatRoomId
+					? Number(chatInfo.chatRoomId)
+					: undefined,
 			});
 		}
 		setMessages((previousMessages) =>
@@ -359,7 +364,11 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						paddingHorizontal: 20,
 					},
 					ListEmptyComponent: () =>
-						user.role === "user" ? <GalleryCheck /> : <></>,
+						user.role === "user" || user.role === "guest" ? (
+							<GalleryCheck />
+						) : (
+							<></>
+						),
 				}}
 				renderSend={renderSend}
 				renderComposer={renderComposer}

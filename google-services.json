@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "951131909872",
+    "project_id": "hairsap-1db9d",
+    "storage_bucket": "hairsap-1db9d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951131909872:android:0cb28e7665d45ea8c1dc35",
+        "android_client_info": {
+          "package_name": "com.igoni.Hairsap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8tkda9aY-TqR4UmeplibJ6Lc5fV8aS4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
