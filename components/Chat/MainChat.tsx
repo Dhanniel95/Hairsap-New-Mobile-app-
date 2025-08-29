@@ -29,6 +29,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { io, Socket } from "socket.io-client";
 import ChatVideo from "./ChatVideo";
 import ConsultantMenu from "./ConsultantMenu";
+import FileMenu from "./FileMenu";
 import GalleryCheck from "./GalleryCheck";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
@@ -281,6 +282,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						userId={chatInfo.receiverId}
 					/>
 				)}
+				{showDoc && <FileMenu />}
 				<InputToolbar
 					{...props}
 					containerStyle={styles.toolbarContainer}
@@ -319,9 +321,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						textInputStyle={styles.customComposer}
 						placeholder="Type a message..."
 					/>
-					<TouchableOpacity
-						onPress={() => console.log("File Upload")}
-					>
+					<TouchableOpacity onPress={() => setShowDoc(!showDoc)}>
 						<Ionicons
 							name="documents-outline"
 							size={24}
