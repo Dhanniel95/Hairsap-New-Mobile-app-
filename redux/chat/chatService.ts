@@ -35,6 +35,26 @@ const listBraidersChats = async () => {
 	return data;
 };
 
+const uploadImage = async (obj: any) => {
+	const { data } = await apiRequest(true).post(`/chats/photo`, obj);
+	return data;
+};
+
+const uploadVideo = async (obj: any) => {
+	const { data } = await apiRequest(true).post(`/chats/video`, obj);
+	return data;
+};
+
+const uploadAudio = async (obj: any) => {
+	const { data } = await apiRequest(true).post(`/chats/audio`, obj);
+	return data;
+};
+
+const markAsRead = async (id: string) => {
+	const { data } = await apiRequest(true).post(`/chats/${id}/read`, {});
+	return data;
+};
+
 const chatService = {
 	listChatRooms,
 	listChatMessages,
@@ -43,6 +63,10 @@ const chatService = {
 	listMyCustomersChats,
 	listMyGuestChats,
 	listBraidersChats,
+	uploadAudio,
+	uploadImage,
+	uploadVideo,
+	markAsRead,
 };
 
 export default chatService;

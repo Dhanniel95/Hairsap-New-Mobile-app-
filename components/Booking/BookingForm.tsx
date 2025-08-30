@@ -11,11 +11,11 @@ import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import KeyboardWrapper from "../Basics/KeyboardWrapper";
 import DatePicker from "../DatePicker";
 import InputField from "../InputField";
-import SelectField from "../SelectField";
+import MultipleSelect from "../MultipleSelect";
 
 const BookingForm = ({ userId }: { userId: string }) => {
 	const [price, setPrice] = useState("");
-	const [service, setService] = useState("");
+	const [service, setService] = useState<any>([]);
 	const [list, setList] = useState<any>([]);
 	const [duration, setDuration] = useState("");
 	const [address, setAddress] = useState("");
@@ -33,9 +33,7 @@ const BookingForm = ({ userId }: { userId: string }) => {
 	}, [service]);
 
 	useEffect(() => {
-		if (dateTime && service) {
-			listBraiders();
-		}
+		listBraiders();
 	}, [dateTime]);
 
 	const listServices = async () => {
@@ -48,8 +46,8 @@ const BookingForm = ({ userId }: { userId: string }) => {
 						services.map((s: any, i) => {
 							return {
 								...s,
-								key: `${s.subServiceId}`,
-								value: s.name,
+								value: `${s.subServiceId}`,
+								label: s.name,
 							};
 						})
 					);
@@ -60,14 +58,17 @@ const BookingForm = ({ userId }: { userId: string }) => {
 
 	const listBraiders = async () => {
 		try {
-			let res = await basicService.getBraidersAvailability("", "");
+			let res = await basicService.getBraidersAvailability(
+				dateTime,
+				service?.length > 0 ? service[0] : ""
+			);
 			if (Array.isArray(res)) {
 				setBraiders(
 					res.map((s: any) => {
 						return {
 							...s,
-							key: `${s.userId}`,
-							value: s.name,
+							value: `${s.userId}`,
+							label: s.name,
 						};
 					})
 				);
@@ -78,8 +79,8 @@ const BookingForm = ({ userId }: { userId: string }) => {
 	};
 
 	const updateFields = () => {
-		if (service) {
-			let find = list.find((val: any) => val.subServiceId == service);
+		if (service?.length > 0) {
+			let find = list.find((val: any) => val.subServiceId == service[0]);
 			if (find) {
 				setDuration(formatTime(find.duration));
 				setPrice(`₦${Number(find.price) / 100}`);
@@ -110,7 +111,7 @@ const BookingForm = ({ userId }: { userId: string }) => {
 		try {
 			let payload = {
 				assignedProId: Number(selectedBraiders[0]),
-				subServiceIds: [service],
+				subServiceIds: service,
 				pinDate: new Date(dateTime).toISOString(),
 				userId,
 				address,
@@ -129,11 +130,12 @@ const BookingForm = ({ userId }: { userId: string }) => {
 	return (
 		<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
 			<KeyboardWrapper>
-				<SelectField
+				<MultipleSelect
 					setValue={setService}
-					placeholder="Select Service"
+					value={service}
 					data={list}
 					label="Service"
+					placeholder="Select Service"
 					isLight={true}
 				/>
 				<InputField
@@ -163,13 +165,13 @@ const BookingForm = ({ userId }: { userId: string }) => {
 					isLight={true}
 					placeholder={showDateTime(dateTime)}
 				/>
-				<SelectField
+				<MultipleSelect
 					setValue={setSelectedBraiders}
 					placeholder="Add Braiders"
 					data={braiders}
 					label="Add Braiders"
 					isLight={true}
-					multiple={true}
+					value={selectedBraiders}
 				/>
 				<TouchableOpacity
 					activeOpacity={0.8}

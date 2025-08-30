@@ -2,11 +2,13 @@ import Header from "@/components/Header";
 import bookService from "@/redux/book/bookService";
 import colors from "@/utils/colors";
 import { FontAwesome } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const HomeScreen = () => {
-	const [load, setLoad] = useState(false);
+	const router = useRouter();
+
 	const [accepted, setAccepted] = useState<any>([]);
 	const [appointments, setAppointments] = useState<any>([]);
 
@@ -19,7 +21,6 @@ const HomeScreen = () => {
 
 	const listBookings = async () => {
 		try {
-			setLoad(true);
 			let res = await bookService.listBookings();
 			if (Array.isArray(res?.data)) {
 				let appoints = res.data.filter((item: any) => {
@@ -31,16 +32,26 @@ const HomeScreen = () => {
 				setAppointments(appoints);
 				setAccepted(pendings);
 			}
-		} catch (err) {
-			setLoad(false);
-		}
+		} catch (err) {}
 	};
 
 	return (
 		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
 			<Header />
 			<View style={{ paddingHorizontal: 20, paddingVertical: 25 }}>
-				<TouchableOpacity onPress={() => console.log("")}>
+				<TouchableOpacity
+					onPress={() =>
+						router.push({
+							pathname:
+								accepted.length === 1
+									? "/(app)/activitybooks"
+									: "/(app)/bookings",
+							params: {
+								type: "accepted",
+							},
+						})
+					}
+				>
 					<View style={styles.container}>
 						<View style={styles.innerTextContainer}>
 							<Text
@@ -70,7 +81,19 @@ const HomeScreen = () => {
 						</View>
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => console.log("")}>
+				<TouchableOpacity
+					onPress={() =>
+						router.push({
+							pathname:
+								appointments.length === 1
+									? "/(app)/activitybooks"
+									: "/(app)/bookings",
+							params: {
+								type: "pendings",
+							},
+						})
+					}
+				>
 					<View style={styles.container}>
 						<View style={styles.innerTextContainer}>
 							<Text

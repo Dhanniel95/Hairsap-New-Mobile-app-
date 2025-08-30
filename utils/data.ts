@@ -11,8 +11,9 @@ const mapChatToGifted = (chat: any) => ({
 		name: `User ${chat.senderId}`, // optional
 		avatar: "",
 	},
-	image: chat.messageType === "image" ? chat.media?.[0]?.url : undefined,
+	image: chat.messageType === "photo" ? chat.media?.[0]?.url : undefined,
 	video: chat.messageType === "video" ? chat.media?.[0]?.url : undefined,
+	thumbnail: chat.media?.length > 0 ? chat.media[0]?.thumbnail : "",
 });
 
 const generateString = (length: number) => {

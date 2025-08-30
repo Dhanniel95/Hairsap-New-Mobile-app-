@@ -5,6 +5,7 @@ import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import baseUrl from "@/utils/config";
 import { mapChatToGifted } from "@/utils/data";
+import { displayError } from "@/utils/error";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -105,17 +106,15 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		};
 	}, [chatInfo]);
 
-	const loadLastMessage = () => {
-		// if (chatInfo?.chatId && chatInfo?.message) {
-		// 	let payload = {
-		// 		chatId: chatInfo.chatId,
-		// 		message: chatInfo.message,
-		// 		createdAt: chatInfo.createdAt,
-		// 		senderId: chatInfo.receiverId,
-		// 		messageType: chatInfo.messageType,
-		// 	};
-		// 	setMessages([mapChatToGifted(payload)]);
-		// }
+	const loadLastMessage = async () => {
+		if (chatInfo?.chatId) {
+			try {
+				console.log(chatInfo.chatId, "ID");
+				await chatService.markAsRead(chatInfo.chatId);
+			} catch (err) {
+				console.log(displayError(err, true), "err");
+			}
+		}
 	};
 
 	const fetchMessages = async () => {
@@ -155,6 +154,43 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		);
 	}, []);
 
+	const fromMedia = (obj: any) => {
+		setShowDoc(false);
+		let payload = {
+			_id: Math.random().toString(36).substring(7),
+			text: obj.text,
+			createdAt: new Date(),
+			user: {
+				_id: user.userId,
+				name: user.name,
+				avatar: user.faceIdPhotoUrl,
+			},
+			video: obj.type === "videos" ? obj.url : undefined,
+			image: obj.type === "images" ? obj.url : undefined,
+		};
+		setMessages((previousMessages) =>
+			GiftedChat.append(previousMessages, [payload])
+		);
+		if (socketRef.current?.connected) {
+			socketRef.current.emit("message:new", {
+				message: obj.text,
+				messageType: obj.type === "videos" ? "video" : "photo",
+				media: [
+					{
+						thumbnail: obj.thumbnail,
+						url: obj.url,
+					},
+				],
+				receiverId: chatInfo.receiverId
+					? Number(chatInfo.receiverId)
+					: undefined,
+				chatRoomId: chatInfo.chatRoomId
+					? Number(chatInfo.chatRoomId)
+					: undefined,
+			});
+		}
+	};
+
 	const consultHandler = () => {
 		let payload = {
 			_id: Math.random().toString(36).substring(7),
@@ -185,7 +221,10 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				},
 				(response: any) => {
 					console.log(response, "RESPONSE");
-					if (response?.data) {
+					if (
+						response?.data &&
+						(user.role === "guest" || user.role === "user")
+					) {
 						dispatch(saveChatId(response.data?.chatRoomId));
 					}
 				}
@@ -282,7 +321,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						userId={chatInfo.receiverId}
 					/>
 				)}
-				{showDoc && <FileMenu />}
+				{showDoc && <FileMenu onSend={fromMedia} />}
 				<InputToolbar
 					{...props}
 					containerStyle={styles.toolbarContainer}
