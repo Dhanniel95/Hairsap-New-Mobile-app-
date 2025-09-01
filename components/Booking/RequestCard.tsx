@@ -20,7 +20,7 @@ const RequestCard = ({ book }: { book: any }) => {
 			onPress={() =>
 				router.push({
 					pathname: "/(app)/activitybooks",
-					params: { item: book },
+					params: { items: book },
 				})
 			}
 		>

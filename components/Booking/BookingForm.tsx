@@ -111,18 +111,20 @@ const BookingForm = ({ userId }: { userId: string }) => {
 		try {
 			let payload = {
 				assignedProId: Number(selectedBraiders[0]),
-				subServiceIds: service,
+				subServiceIds: [Number(service)],
 				pinDate: new Date(dateTime).toISOString(),
-				userId,
+				userId: Number(userId),
 				address,
 				channel: "cash",
+				assistantProIds: [Number(selectedBraiders[1])],
 			};
-			console.log(payload, "payload");
+			console.log(payload, "payloaxd");
 			setLoad(true);
 			await bookService.createBooking(payload);
 			setLoad(false);
 		} catch (err) {
 			setLoad(false);
+			console.log(err?.response?.data, "err");
 			displayError(err, true);
 		}
 	};

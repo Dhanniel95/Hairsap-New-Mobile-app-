@@ -85,7 +85,7 @@ const HomeScreen = () => {
 					onPress={() =>
 						router.push({
 							pathname:
-								appointments.length === 1
+								appointments.length === 0
 									? "/(app)/activitybooks"
 									: "/(app)/bookings",
 							params: {

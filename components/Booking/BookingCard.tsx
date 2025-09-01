@@ -31,7 +31,7 @@ const BookingCard = ({ books }: { books: any }) => {
 								onPress={() =>
 									router.push({
 										pathname: "/(app)/activitybooks",
-										params: { item: book },
+										params: { items: book },
 									})
 								}
 								activeOpacity={0.6}
