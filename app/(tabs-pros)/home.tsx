@@ -1,21 +1,60 @@
 import Header from "@/components/Header";
 import bookService from "@/redux/book/bookService";
 import colors from "@/utils/colors";
-import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Calendar } from "react-native-calendars";
 
 const HomeScreen = () => {
 	const router = useRouter();
 
-	const [accepted, setAccepted] = useState<any>([]);
 	const [appointments, setAppointments] = useState<any>([]);
+	const [markedDates, setMarkedDates] = useState({});
 
 	useEffect(() => {
 		updateLocation();
 		listBookings();
 	}, []);
+
+	useEffect(() => {
+		loadMarkedDates();
+	}, [appointments]);
+
+	const loadMarkedDates = () => {
+		const groupedByDateWithColor = appointments.reduce(
+			(acc: Record<string, { total: number }>, item: any) => {
+				const date = new Date(item.pinDate).toISOString().split("T")[0];
+				if (!acc[date]) {
+					acc[date] = { total: 0 };
+				}
+				acc[date].total += item?.invoice?.invoiceFees[0]?.price / 100;
+				return acc;
+			},
+			{}
+		);
+
+		const result = Object.entries(groupedByDateWithColor).reduce(
+			(
+				acc: Record<
+					string,
+					{ selected: boolean; selectedColor: string; total: number }
+				>,
+				[date, value]
+			) => {
+				const total = (value as { total: number }).total;
+				acc[date] = {
+					selected: total > 0 ? true : false,
+					selectedColor: total >= 50000 ? "green" : "red",
+					total: total,
+				};
+				return acc;
+			},
+			{}
+		);
+
+		setMarkedDates(result);
+	};
 
 	const updateLocation = async () => {};
 
@@ -26,101 +65,25 @@ const HomeScreen = () => {
 				let appoints = res.data.filter((item: any) => {
 					return item.pinStatus != null;
 				});
-				let pendings = res.data.filter((item: any) => {
-					return item.pinStatus == null;
-				});
 				setAppointments(appoints);
-				setAccepted(pendings);
 			}
 		} catch (err) {}
+	};
+
+	const scrollToDate = (selectedDate: any) => {
+		console.log(selectedDate, "dateSelected");
 	};
 
 	return (
 		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
 			<Header />
-			<View style={{ paddingHorizontal: 20, paddingVertical: 25 }}>
-				<TouchableOpacity
-					onPress={() =>
-						router.push({
-							pathname:
-								accepted.length === 1
-									? "/(app)/activitybooks"
-									: "/(app)/bookings",
-							params: {
-								type: "accepted",
-							},
-						})
-					}
-				>
-					<View style={styles.container}>
-						<View style={styles.innerTextContainer}>
-							<Text
-								style={{ fontFamily: "medium", fontSize: 17 }}
-							>
-								Appointment Bookings
-							</Text>
-						</View>
-						<Text style={[styles.text]}>
-							{appointments?.length > 0
-								? appointments[0]?.pinStatus === "waiting"
-									? "You have a booking awaiting admin confirmation"
-									: "You have an appointment booking"
-								: "You currently have no appointment bookings"}
-						</Text>
-						<View style={styles.bottomContainer}>
-							<Text style={[styles.text2, { width: "80%" }]}>
-								{appointments?.length > 0
-									? appointments[0]?.address
-									: ""}
-							</Text>
-							{appointments.length > 0 && (
-								<View style={styles.iconContainer}>
-									<FontAwesome name="angle-right" size={20} />
-								</View>
-							)}
-						</View>
-					</View>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() =>
-						router.push({
-							pathname:
-								appointments.length === 0
-									? "/(app)/activitybooks"
-									: "/(app)/bookings",
-							params: {
-								type: "pendings",
-							},
-						})
-					}
-				>
-					<View style={styles.container}>
-						<View style={styles.innerTextContainer}>
-							<Text
-								style={{ fontFamily: "medium", fontSize: 17 }}
-							>
-								Pending Bookings
-							</Text>
-						</View>
-						<Text style={[styles.text]}>
-							{accepted?.length > 0
-								? "You have a new booking"
-								: "You currently have no accepted booking"}
-						</Text>
-						<View style={styles.bottomContainer}>
-							<Text style={[styles.text2, { width: "80%" }]}>
-								{accepted?.length > 0
-									? accepted[0]?.address
-									: ""}
-							</Text>
-							{accepted.length > 0 && (
-								<View style={styles.iconContainer}>
-									<FontAwesome name="angle-right" size={20} />
-								</View>
-							)}
-						</View>
-					</View>
-				</TouchableOpacity>
+			<View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 40 }}>
+				<Calendar
+					onDayPress={(day) => {
+						scrollToDate(day.dateString);
+					}}
+					markedDates={markedDates}
+				/>
 			</View>
 		</View>
 	);

@@ -15,6 +15,11 @@ const registerGuest = async (obj: any) => {
 	return data?.data;
 };
 
+const consultantGuest = async (obj: any) => {
+	const { data } = await apiRequest().post(`/consultant/create/user`, obj);
+	return data?.data;
+};
+
 const uploadFaceId = async (obj: any) => {
 	const { data } = await apiRequest(true).post(`/users/faceid`, obj);
 	return data;
@@ -60,6 +65,11 @@ const fetchBraiderProfile = async () => {
 	return data;
 };
 
+const saveToken = async (token: string) => {
+	const { data } = await apiRequest().post(`/pushtoken/${token}`, {});
+	return data;
+};
+
 const authService = {
 	login,
 	register,
@@ -73,6 +83,8 @@ const authService = {
 	changePassword,
 	fetchBraiderProfile,
 	fetchConsultantProfile,
+	consultantGuest,
+	saveToken,
 };
 
 export default authService;

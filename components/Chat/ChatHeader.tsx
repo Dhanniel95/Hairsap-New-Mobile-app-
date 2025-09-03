@@ -73,7 +73,7 @@ const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 							setOpenMenu(false);
 							router.push({
 								pathname: "/(app)/booksumaries",
-								params: { userId: "93" },
+								params: { userId: headerInfo?.receiverId },
 							});
 						}}
 					>

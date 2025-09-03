@@ -41,7 +41,14 @@ const ChatRooms = () => {
 		try {
 			let res = await chatService.listGuestChats();
 			if (Array.isArray(res?.data)) {
-				setGuestList(res.data);
+				setGuestList(
+					res.data?.sort(
+						(a: any, b: any) =>
+							new Date(b.updatedAt).getTime() -
+							new Date(a.updatedAt).getTime()
+					)
+				);
+				console.log(res.data.length);
 			}
 		} catch (err) {}
 	};

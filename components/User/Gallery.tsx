@@ -1,6 +1,7 @@
 import bookService from "@/redux/book/bookService";
 import textStyles from "@/styles/textStyles";
 import { displayError } from "@/utils/error";
+import { useDebounce } from "@/utils/search";
 import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
@@ -17,6 +18,8 @@ import EachGallery from "../List/EachGallery";
 const Gallery = () => {
 	const [search, setSearch] = useState("");
 
+	const debouncedSearch = useDebounce(search);
+
 	const { width } = Dimensions.get("window");
 
 	const viewWidth = width - 40;
@@ -27,35 +30,53 @@ const Gallery = () => {
 	const videos = [
 		{
 			id: 1,
-			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+			thumbnail: "UDGcGgtR00xu}ao2NaoL00WB-pR*f7fQj[j[",
+			description: "",
+			mediaUrl:
+				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
 		},
 		{
 			id: 2,
 			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+			description: "",
+			mediaUrl:
+				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
 		},
 		{
 			id: 3,
 			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+			description: "",
+			mediaUrl:
+				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
 		},
 		{
 			id: 4,
 			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+			description: "",
+			mediaUrl:
+				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
 		},
 		{
 			id: 5,
 			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+			description: "",
+			mediaUrl:
+				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
 		},
 		{
 			id: 6,
 			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+			description: "",
+			mediaUrl:
+				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
 		},
 	];
+
+	useEffect(() => {
+		if (debouncedSearch) {
+			filterSearch(debouncedSearch);
+		}
+	}, [debouncedSearch]);
 
 	useEffect(() => {
 		listServices();
@@ -64,10 +85,18 @@ const Gallery = () => {
 	const listServices = async () => {
 		try {
 			let res = await bookService.listServices();
-			console.log(res?.data[0]?.items, "RES");
+			console.log(res?.data[0]?.items?.length, "RES");
 		} catch (err) {
 			displayError(err, true);
 		}
+	};
+
+	const filterSearch = (val: string) => {
+		const lowerQuery = val.toLowerCase();
+
+		return videos.filter((video) =>
+			video.description.toLowerCase().includes(lowerQuery)
+		);
 	};
 
 	return (

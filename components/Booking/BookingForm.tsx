@@ -2,22 +2,30 @@ import basicService from "@/redux/basic/basicService";
 import bookService from "@/redux/book/bookService";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
+import { formatCommas } from "@/utils/currency";
 import { formatTime } from "@/utils/datetime";
 import { displayError } from "@/utils/error";
 import { Feather } from "@expo/vector-icons";
 import { addHours, addMinutes, format } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import {
+	ActivityIndicator,
+	Alert,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import KeyboardWrapper from "../Basics/KeyboardWrapper";
 import DatePicker from "../DatePicker";
 import InputField from "../InputField";
-import MultipleSelect from "../MultipleSelect";
+import SelectField from "../SelectField";
 
 const BookingForm = ({ userId }: { userId: string }) => {
 	const [price, setPrice] = useState("");
-	const [service, setService] = useState<any>([]);
+	const [selectedService, setSelectedService] = useState<any>([]);
 	const [list, setList] = useState<any>([]);
 	const [duration, setDuration] = useState("");
+	const [durationCount, setDurationCount] = useState(0);
 	const [address, setAddress] = useState("");
 	const [braiders, setBraiders] = useState<any>([]);
 	const [selectedBraiders, setSelectedBraiders] = useState([]);
@@ -30,7 +38,7 @@ const BookingForm = ({ userId }: { userId: string }) => {
 
 	useEffect(() => {
 		updateFields();
-	}, [service]);
+	}, [selectedService, selectedBraiders]);
 
 	useEffect(() => {
 		listBraiders();
@@ -46,8 +54,9 @@ const BookingForm = ({ userId }: { userId: string }) => {
 						services.map((s: any, i) => {
 							return {
 								...s,
-								value: `${s.subServiceId}`,
+								value: s.name,
 								label: s.name,
+								key: s.subServiceId,
 							};
 						})
 					);
@@ -60,15 +69,15 @@ const BookingForm = ({ userId }: { userId: string }) => {
 		try {
 			let res = await basicService.getBraidersAvailability(
 				dateTime,
-				service?.length > 0 ? service[0] : ""
+				selectedService?.length > 0 ? selectedService[0] : ""
 			);
 			if (Array.isArray(res)) {
 				setBraiders(
 					res.map((s: any) => {
 						return {
 							...s,
-							value: `${s.userId}`,
-							label: s.name,
+							key: s.userId,
+							value: s.name,
 						};
 					})
 				);
@@ -79,27 +88,43 @@ const BookingForm = ({ userId }: { userId: string }) => {
 	};
 
 	const updateFields = () => {
-		if (service?.length > 0) {
-			let find = list.find((val: any) => val.subServiceId == service[0]);
-			if (find) {
-				setDuration(formatTime(find.duration));
-				setPrice(`₦${Number(find.price) / 100}`);
-			}
+		if (selectedService?.length > 0) {
+			const selectedServices = list.filter((val: any) =>
+				selectedService.includes(val.subServiceId)
+			);
+
+			const totalPrice = selectedServices.reduce(
+				(sum: number, item: any) => sum + Number(item.price),
+				0
+			);
+			const totalDuration = selectedServices.reduce(
+				(sum: number, item: any) => sum + Number(item.duration),
+				0
+			);
+
+			const braiderCount =
+				selectedBraiders.length > 0 ? selectedBraiders.length : 1;
+			setDurationCount(totalDuration * braiderCount);
+			setDuration(formatTime(totalDuration * braiderCount));
+			setPrice(`₦${formatCommas((totalPrice * braiderCount) / 100)}`);
+		} else {
+			setDuration("");
+			setPrice("");
 		}
 	};
 
 	const showDateTime = (val: any) => {
 		if (val) {
-			let timeDuration = list.find(
-				(val: any) => val.subServiceId == service
-			)?.duration;
 			let valDate = new Date(val);
 			let realDate = format(valDate, "yyyy/MM/dd HH:mm");
 			let addTime;
-			if (timeDuration < 60) {
-				addTime = format(addMinutes(valDate, timeDuration), "HH:mm");
+			if (durationCount < 60) {
+				addTime = format(addMinutes(valDate, durationCount), "HH:mm");
 			} else {
-				addTime = format(addHours(valDate, timeDuration / 60), "HH:mm");
+				addTime = format(
+					addHours(valDate, durationCount / 60),
+					"HH:mm"
+				);
 			}
 			return `${realDate} - ${addTime}`;
 		} else {
@@ -108,35 +133,46 @@ const BookingForm = ({ userId }: { userId: string }) => {
 	};
 
 	const submitHandler = async () => {
-		try {
-			let payload = {
-				assignedProId: Number(selectedBraiders[0]),
-				subServiceIds: [Number(service)],
-				pinDate: new Date(dateTime).toISOString(),
-				userId: Number(userId),
-				address,
-				channel: "cash",
-				assistantProIds: [Number(selectedBraiders[1])],
-			};
-			console.log(payload, "payloaxd");
-			setLoad(true);
-			await bookService.createBooking(payload);
-			setLoad(false);
-		} catch (err) {
-			setLoad(false);
-			console.log(err?.response?.data, "err");
-			displayError(err, true);
+		if (
+			selectedBraiders?.length > 0 &&
+			selectedService?.length > 0 &&
+			dateTime
+		) {
+			try {
+				const assistantProIds =
+					selectedBraiders.length > 1
+						? selectedBraiders.slice(1).map(Number)
+						: [selectedBraiders[0]];
+				let payload = {
+					assignedProId: Number(selectedBraiders[0]),
+					subServiceIds: selectedService,
+					pinDate: new Date(dateTime).toISOString(),
+					userId: Number(userId),
+					address,
+					channel: "cash",
+					assistantProIds,
+				};
+				console.log(payload, "payloaxd");
+				setLoad(true);
+				await bookService.createBooking(payload);
+				setLoad(false);
+			} catch (err) {
+				let msg = displayError(err, false);
+				console.log(msg, "msg");
+				setLoad(false);
+				Alert.alert("Error", msg.toString());
+			}
 		}
 	};
 
 	return (
 		<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
 			<KeyboardWrapper>
-				<MultipleSelect
-					setValue={setService}
-					value={service}
-					data={list}
+				<SelectField
+					multiple={true}
+					setValue={setSelectedService}
 					label="Service"
+					data={list}
 					placeholder="Select Service"
 					isLight={true}
 				/>
@@ -167,13 +203,13 @@ const BookingForm = ({ userId }: { userId: string }) => {
 					isLight={true}
 					placeholder={showDateTime(dateTime)}
 				/>
-				<MultipleSelect
+				<SelectField
 					setValue={setSelectedBraiders}
 					placeholder="Add Braiders"
 					data={braiders}
 					label="Add Braiders"
 					isLight={true}
-					value={selectedBraiders}
+					multiple={true}
 				/>
 				<TouchableOpacity
 					activeOpacity={0.8}

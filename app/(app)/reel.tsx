@@ -54,13 +54,16 @@ const Reel = () => {
 
 	const [active, setActive] = useState(startFrom);
 
-	const flatListRef = useRef(null);
+	const flatListRef = useRef<any>(null);
 
 	const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+		console.log("Okay?");
 		if (viewableItems.length > 0) {
 			setActive(viewableItems[0].index);
 		}
 	}).current;
+
+	console.log(active, "activeFrom", startFrom);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -70,7 +73,7 @@ const Reel = () => {
 			<FlatList
 				ref={flatListRef}
 				data={videos}
-				initialScrollIndex={1}
+				initialScrollIndex={Number(active)}
 				keyExtractor={(item) => item.id.toString()}
 				renderItem={({ item, index }) => (
 					<EachVideo

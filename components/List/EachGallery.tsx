@@ -1,8 +1,8 @@
 import { Entypo, FontAwesome } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-	Image,
 	Pressable,
 	StyleSheet,
 	Text,
@@ -27,7 +27,12 @@ const EachGallery = ({
 	return (
 		<>
 			<Pressable
-				onPress={() => setOpen(true)}
+				onPress={() =>
+					router.push({
+						pathname: "/(app)/reel",
+						params: { startFrom: gallery.id, videos },
+					})
+				}
 				style={{
 					width: itemSize,
 					height: 180,
@@ -38,7 +43,7 @@ const EachGallery = ({
 				<Image
 					source={{ uri: gallery.thumbnail }}
 					style={{ width: "100%", height: "100%", borderRadius: 10 }}
-					resizeMode="stretch"
+					placeholder={{ blurhash: gallery.thumbnail }}
 				/>
 				<View style={styles.pos}>
 					<Entypo name="video" color={"#FFF"} />

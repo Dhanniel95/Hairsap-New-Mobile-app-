@@ -3,10 +3,13 @@ import Container from "@/components/Container";
 import GoBack from "@/components/GoBack";
 import bookService from "@/redux/book/bookService";
 import colors from "@/utils/colors";
+import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 const BookingSummaries = () => {
+	const params = useLocalSearchParams();
+
 	const [pendings, setPendings] = useState([]);
 	const [accepted, setAccepted] = useState([]);
 	const [activeTab, setActiveTab] = useState(1);
@@ -19,7 +22,10 @@ const BookingSummaries = () => {
 	const listBookings = async () => {
 		try {
 			setLoad(true);
-			let res = await bookService.listBookings();
+			let res = await bookService.listBookingSummaries(
+				params?.userId || ""
+			);
+			console.log(res, "res");
 			if (Array.isArray(res?.data)) {
 				let appoints = res.data.filter((item: any) => {
 					return item.pinStatus != null;
@@ -30,7 +36,8 @@ const BookingSummaries = () => {
 				setPendings(pendings);
 				setAccepted(appoints);
 			}
-		} catch (err) {
+		} catch (err: any) {
+			console.log(err?.response?.data, "err");
 			setLoad(false);
 		}
 	};

@@ -44,8 +44,7 @@ const SelectField = ({
 					setSelected={(val: any) => setValue(val)}
 					data={data}
 					save="key"
-					boxStyles={{ backgroundColor: "#FFF", height: 50 }}
-					inputStyles={{ height: 50 }}
+					boxStyles={{ backgroundColor: "#FFF" }}
 					placeholder={placeholder}
 					dropdownStyles={{ backgroundColor: "#FFF" }}
 					arrowicon={
@@ -56,6 +55,7 @@ const SelectField = ({
 						/>
 					}
 					fontFamily="medium"
+					label="Selected"
 				/>
 			) : (
 				<SelectList

@@ -25,14 +25,14 @@ const registerForPushNotificationsAsync = async () => {
 
 	// 	// ✅ Get Expo Push Token
 	// 	token = (await Notifications.getExpoPushTokenAsync()).data;
-	// 	console.log("Expo Push Token:", token);
+
+	// 	await authService.saveToken(token)
 	// } else {
 	// 	alert("Must use physical device for Push Notifications");
 	// }
 
 	// ✅ Get Device ID (installation ID)
 	const deviceId = Device.osInternalBuildId || Device.osBuildId;
-	console.log("Device ID:", deviceId);
 
 	if (Platform.OS === "android") {
 		await Notifications.setNotificationChannelAsync("default", {

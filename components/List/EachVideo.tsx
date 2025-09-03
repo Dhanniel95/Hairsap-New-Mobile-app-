@@ -1,23 +1,29 @@
 import { Ionicons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
+import { useRouter } from "expo-router";
 import { useVideoPlayer, VideoView } from "expo-video";
 import React, { useCallback, useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	Pressable,
 	StyleSheet,
+	Text,
+	TouchableOpacity,
 	TouchableWithoutFeedback,
 	useWindowDimensions,
 	View,
 } from "react-native";
 
 const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
-	const { height, width } = useWindowDimensions();
+	const router = useRouter();
 
-	const [currentIndex, setCurrentIndex] = useState(0);
+	const { height } = useWindowDimensions();
+
 	const [isMuted, setIsMuted] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(true);
 	const [duration, setDuration] = useState(0);
 	const [position, setPosition] = useState(0);
+	const [load, setLoad] = useState(false);
 
 	const player = useVideoPlayer(video.video, (player) => {
 		player.loop = true;
@@ -39,7 +45,6 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 	}, [isMuted]);
 
 	const togglePlay = useCallback(() => {
-		console.log("first");
 		if (isPlaying) {
 			player.pause();
 		} else {
@@ -48,13 +53,43 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 		setIsPlaying(!isPlaying);
 	}, [isPlaying]);
 
-	player.addListener("timeUpdate", () => {
-		setPosition(player.currentTime * 1000);
-		setDuration(player.duration * 1000);
-	});
+	useEffect(() => {
+		const handleChange = () => {
+			if (player.status === "loading") {
+				setLoad(true);
+			} else if (player.status === "readyToPlay") {
+				setLoad(false);
+			}
+		};
+
+		player.addListener("statusChange", handleChange); // video data loaded
+
+		return () => {
+			player.removeListener("statusChange", handleChange);
+		};
+	}, [player]);
+
+	useEffect(() => {
+		if (player.status !== "readyToPlay") return;
+		const onTimeUpdate = () => {
+			console.log("timeUpdate", player.currentTime);
+			setPosition(player.currentTime * 1000);
+			setDuration(player.duration * 1000);
+		};
+
+		player.addListener("timeUpdate", onTimeUpdate);
+
+		return () => {
+			player.removeListener("timeUpdate", onTimeUpdate);
+		};
+	}, [player, player.status]);
 
 	const onSliderValueChange = (value: number) => {
-		player.currentTime = value / 1000; // convert ms to seconds
+		setPosition(value);
+	};
+
+	const onSlidingComplete = (value: number) => {
+		player.currentTime = value / 1000; // actually seek video
 	};
 
 	return (
@@ -69,13 +104,52 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 					nativeControls={false}
 				/>
 			</TouchableWithoutFeedback>
+			<View style={styles.textArea}>
+				<View
+					style={{
+						marginVertical: 15,
+						backgroundColor: "#000",
+						paddingVertical: 15,
+						alignItems: "center",
+						borderRadius: 5,
+					}}
+				>
+					<Text style={{ fontFamily: "bold", color: "#4ADE80" }}>
+						14+ All-back Cornrow
+					</Text>
+				</View>
+				<TouchableOpacity
+					onPress={() => {
+						router.push({
+							pathname: "/(app)/chat",
+							params: {
+								thumbnail: video.thumbnail,
+								video: video.video,
+								text: `Service Name: 14+ All-Back Cornrows \n Regular Service: ₦26,500 • Duration: 4 hrs \n VIP Service: ₦53,000 • Duration: 2 hrs \n Description: One pack of lush extensions included`,
+							},
+						});
+					}}
+					activeOpacity={0.8}
+					style={{
+						backgroundColor: "#14A79F",
+						alignItems: "center",
+						paddingVertical: 15,
+						borderRadius: 10,
+					}}
+				>
+					<Text style={{ fontFamily: "regular", color: "#FFF" }}>
+						Seek Consultations
+					</Text>
+				</TouchableOpacity>
+			</View>
 			<View style={styles.controlsContainer}>
 				<Slider
 					style={{ flex: 1 }}
 					value={position}
 					minimumValue={0}
 					maximumValue={duration}
-					onSlidingComplete={onSliderValueChange}
+					onValueChange={onSliderValueChange}
+					onSlidingComplete={onSlidingComplete}
 					minimumTrackTintColor="#fff"
 					maximumTrackTintColor="rgba(255,255,255,0.4)"
 					thumbTintColor="#fff"
@@ -91,6 +165,18 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 					/>
 				</Pressable>
 			</View>
+			{load && (
+				<View
+					style={{
+						...StyleSheet.absoluteFillObject,
+						alignItems: "center",
+						justifyContent: "center",
+						backgroundColor: "rgba(0,0,0,0.3)",
+					}}
+				>
+					<ActivityIndicator size="large" color="#fff" />
+				</View>
+			)}
 		</View>
 	);
 };
@@ -109,5 +195,11 @@ const styles = StyleSheet.create({
 	muteButton: {
 		marginLeft: 10,
 		padding: 5,
+	},
+	textArea: {
+		position: "absolute",
+		bottom: 80,
+		width: "100%",
+		paddingHorizontal: 30,
 	},
 });

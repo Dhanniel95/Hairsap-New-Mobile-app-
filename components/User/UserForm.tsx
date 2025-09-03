@@ -3,7 +3,13 @@ import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
 import { displayError } from "@/utils/error";
 import React, { useState } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import {
+	ActivityIndicator,
+	Alert,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import KeyboardWrapper from "../Basics/KeyboardWrapper";
 import InputField from "../InputField";
 
@@ -25,17 +31,20 @@ const UserForm = ({
 				name: name.trim(),
 				phone: phone.trim(),
 				email,
-				guestUserId: userId,
+				guestUserId: Number(userId),
 				allowEmailUserExist: true,
 				allowPhoneNumberUserExist: true,
 			};
+			console.log(payload, "pa");
 			setLoad(true);
-			await authService.register(payload);
+			await authService.consultantGuest(payload);
 			setLoad(false);
 			onSubmit(payload);
-		} catch (err) {
+		} catch (err: any) {
 			setLoad(false);
-			displayError(err, true);
+			let msg = displayError(err, false);
+			console.log(err?.response?.data, "MSGGG");
+			Alert.alert("Error", msg?.toString());
 		}
 	};
 

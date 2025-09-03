@@ -23,6 +23,15 @@ const listBookings = async () => {
 	return data;
 };
 
+const listBookingSummaries = async (id: any) => {
+	const { data } = await apiRequest().get(`/consultant/userbookings`, {
+		userId: Number(id),
+		page: 1,
+		perPage: 10,
+	});
+	return data;
+};
+
 const serviceList = async () => {
 	const { data } = await apiRequest().get(`/services`);
 	return data;
@@ -70,6 +79,7 @@ const bookService = {
 	completeBooking,
 	cancelBooking,
 	transportInfo,
+	listBookingSummaries,
 };
 
 export default bookService;
