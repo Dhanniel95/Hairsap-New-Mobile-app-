@@ -35,15 +35,24 @@ const UserForm = ({
 				allowEmailUserExist: true,
 				allowPhoneNumberUserExist: true,
 			};
-			console.log(payload, "pa");
+
+			let payload2 = {
+				name: name.trim(),
+				phone: phone.trim(),
+				password: name.trim().toUpperCase().replace(/ /g, ""),
+				role: "user",
+			};
 			setLoad(true);
-			await authService.consultantGuest(payload);
+			if (userId) {
+				await authService.consultantGuest(payload);
+			} else {
+				await authService.register(payload2);
+			}
 			setLoad(false);
 			onSubmit(payload);
 		} catch (err: any) {
 			setLoad(false);
 			let msg = displayError(err, false);
-			console.log(err?.response?.data, "MSGGG");
 			Alert.alert("Error", msg?.toString());
 		}
 	};

@@ -30,6 +30,11 @@ const createUser = async (obj: any) => {
 	return data?.data;
 };
 
+const listNotifications = async () => {
+	const { data } = await apiRequest().get(`/notifications`);
+	return data?.data;
+};
+
 const basicService = {
 	getDiscount,
 	getProStats,
@@ -37,6 +42,7 @@ const basicService = {
 	getReviews,
 	getBraidersAvailability,
 	createUser,
+	listNotifications,
 };
 
 export default basicService;

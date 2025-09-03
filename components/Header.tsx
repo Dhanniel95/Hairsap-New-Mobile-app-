@@ -1,16 +1,27 @@
 import colors from "@/utils/colors";
+import { useAppSelector } from "@/utils/hooks";
 import { FontAwesome } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const Header = () => {
+	const router = useRouter();
+
+	const { notiList } = useAppSelector((state) => state.basic);
+
 	return (
 		<View style={styles.header}>
 			<Image source={require("../assets/images/logo.png")} />
-			<TouchableOpacity style={{ position: "relative" }}>
+			<TouchableOpacity
+				style={{ position: "relative" }}
+				onPress={() => router.push("/(app)/notification")}
+			>
 				<FontAwesome name="bell" size={24} color={"#000"} />
 				<View style={styles.badge}>
-					<Text style={{ color: colors.white, fontSize: 9 }}>0</Text>
+					<Text style={{ color: colors.white, fontSize: 9 }}>
+						{notiList?.length || 0}
+					</Text>
 				</View>
 			</TouchableOpacity>
 		</View>

@@ -1,6 +1,8 @@
 import Header from "@/components/Header";
+import { listNotifications } from "@/redux/basic/basicSlice";
 import bookService from "@/redux/book/bookService";
 import colors from "@/utils/colors";
+import { useAppDispatch } from "@/utils/hooks";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -9,10 +11,13 @@ import { Calendar } from "react-native-calendars";
 const HomeScreen = () => {
 	const router = useRouter();
 
+	const dispatch = useAppDispatch();
+
 	const [appointments, setAppointments] = useState<any>([]);
 	const [markedDates, setMarkedDates] = useState({});
 
 	useEffect(() => {
+		dispatch(listNotifications());
 		updateLocation();
 		listBookings();
 	}, []);

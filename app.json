@@ -22,8 +22,20 @@
 			}
 		},
 		"android": {
+			"permissions": [
+				"CAMERA",
+				"ACCESS_FINE_LOCATION",
+				"ACCESS_COARSE_LOCATION",
+				"CAMERA_ROLL",
+				"RECEIVE_BOOT_COMPLETED",
+				"READ_EXTERNAL_STORAGE",
+				"android.permission.CAMERA",
+				"android.permission.ACCESS_COARSE_LOCATION",
+				"android.permission.ACCESS_FINE_LOCATION",
+				"android.permission.RECORD_AUDIO"
+			],
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/images/adaptive-icon.png",
+				"foregroundImage": "./assets/images/icon.png",
 				"backgroundColor": "#ffffff"
 			},
 			"edgeToEdgeEnabled": true,
@@ -60,6 +72,7 @@
 				"projectId": "71d45a98-6411-4e92-b7bf-adcc13f4ee66"
 			}
 		},
+		"description": "App for connecting users to hairstylists",
 		"owner": "hairsap"
 	}
 }

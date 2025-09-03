@@ -5,6 +5,7 @@ import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import { registerForPushNotificationsAsync } from "@/utils/notification";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -34,7 +35,9 @@ const Login = () => {
 			let res = await dispatch(
 				loginUser({ phone: phone.trim(), password: pass.trim() })
 			).unwrap();
-			console.log(res, "RES");
+
+			registerForPushNotificationsAsync();
+
 			if (res?.userId && !res.faceIdPhotoUrl && res.role === "user") {
 				router.push({ pathname: "/(auth)/faceverify", params: res });
 			} else if (res?.userId) {

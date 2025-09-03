@@ -1,13 +1,26 @@
 import Tab from "@/components/Basics/Tab";
 import Header from "@/components/Header";
 import EachChat from "@/components/List/EachChat";
+import ModalComponent from "@/components/ModalComponent";
+import UserForm from "@/components/User/UserForm";
+import { listNotifications } from "@/redux/basic/basicSlice";
 import chatService from "@/redux/chat/chatService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import { displaySuccess } from "@/utils/error";
+import { useAppDispatch } from "@/utils/hooks";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, RefreshControl, Text, View } from "react-native";
+import {
+	FlatList,
+	RefreshControl,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 
 const ChatRooms = () => {
+	const dispatch = useAppDispatch();
+
 	const [activeTab, setActiveTab] = useState(1);
 	const [guestList, setGuestList] = useState<any>([]);
 	const [myGuestList, setMyGuestList] = useState<any>([]);
@@ -15,8 +28,10 @@ const ChatRooms = () => {
 	const [customersList, setCustomersList] = useState<any>([]);
 	const [braidersList, setBraidersList] = useState<any>([]);
 	const [refreshing, setRefreshing] = useState<any>(false);
+	const [openModal, setOpenModal] = useState(false);
 
 	useEffect(() => {
+		dispatch(listNotifications());
 		listChats();
 	}, []);
 
@@ -32,7 +47,13 @@ const ChatRooms = () => {
 		try {
 			let res = await chatService.listMyGuestChats();
 			if (Array.isArray(res?.data)) {
-				setMyGuestList(res.data);
+				setMyGuestList(
+					res.data?.sort(
+						(a: any, b: any) =>
+							new Date(b.chat?.updatedAt).getTime() -
+							new Date(a.chat?.updatedAt).getTime()
+					)
+				);
 			}
 		} catch (err) {}
 	};
@@ -44,11 +65,10 @@ const ChatRooms = () => {
 				setGuestList(
 					res.data?.sort(
 						(a: any, b: any) =>
-							new Date(b.updatedAt).getTime() -
-							new Date(a.updatedAt).getTime()
+							new Date(b.chat?.updatedAt).getTime() -
+							new Date(a.chat?.updatedAt).getTime()
 					)
 				);
-				console.log(res.data.length);
 			}
 		} catch (err) {}
 	};
@@ -57,7 +77,13 @@ const ChatRooms = () => {
 		try {
 			let res = await chatService.listCustomersChats();
 			if (Array.isArray(res?.data)) {
-				setCustomersList(res.data);
+				setCustomersList(
+					res.data?.sort(
+						(a: any, b: any) =>
+							new Date(b.chat?.updatedAt).getTime() -
+							new Date(a.chat?.updatedAt).getTime()
+					)
+				);
 			}
 		} catch (err) {}
 	};
@@ -100,10 +126,36 @@ const ChatRooms = () => {
 			<View
 				style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 15 }}
 			>
-				<View style={{ paddingTop: 15 }}>
-					<Text style={[textStyles.textBold, { fontSize: 17 }]}>
+				<View
+					style={{
+						paddingTop: 15,
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+						marginBottom: 10,
+					}}
+				>
+					<Text style={[textStyles.textBold, { fontSize: 18 }]}>
 						Consultations
 					</Text>
+					<TouchableOpacity
+						onPress={() => setOpenModal(true)}
+						style={{
+							backgroundColor: colors.secondary,
+							paddingHorizontal: 15,
+							paddingVertical: 10,
+							borderRadius: 4,
+						}}
+					>
+						<Text
+							style={[
+								textStyles.textMid,
+								{ color: "#FFF", fontSize: 14 },
+							]}
+						>
+							New User
+						</Text>
+					</TouchableOpacity>
 				</View>
 				<View style={{ marginBottom: 20, marginTop: 15 }}>
 					<Tab
@@ -181,6 +233,23 @@ const ChatRooms = () => {
 					/>
 				</View>
 			</View>
+			<ModalComponent
+				open={openModal}
+				closeModal={() => setOpenModal(false)}
+				centered
+				bg="#334155"
+			>
+				<UserForm
+					onSubmit={() => {
+						displaySuccess(
+							"Congrats!",
+							"The User has been Created. Password will be the name in CAPS without spaces."
+						);
+						setOpenModal(false);
+					}}
+					userId=""
+				/>
+			</ModalComponent>
 		</View>
 	);
 };
