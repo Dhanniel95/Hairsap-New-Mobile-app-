@@ -79,7 +79,10 @@ const ConsultantMenu = ({
 				bg="#334155"
 			>
 				{forBooking ? (
-					<BookingForm userId={userId} />
+					<BookingForm
+						userId={userId}
+						onClose={() => setOpenModal(false)}
+					/>
 				) : (
 					<UserForm onSubmit={onSubmit} userId={userId} />
 				)}

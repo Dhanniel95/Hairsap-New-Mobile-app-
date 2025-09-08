@@ -24,12 +24,12 @@ const listBookings = async () => {
 };
 
 const listBookingSummaries = async (id: any) => {
-	const { data } = await apiRequest().get(`/consultant/userbookings`, {
+	const { data } = await apiRequest().post(`/consultant/userbookings`, {
 		userId: Number(id),
 		page: 1,
 		perPage: 10,
 	});
-	return data;
+	return data?.data;
 };
 
 const serviceList = async () => {

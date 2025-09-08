@@ -138,8 +138,6 @@ const AcceptedList = ({ items }: { items: any }) => {
 		setShowCalendar(false);
 	};
 
-	console.log(showCalendar);
-
 	return (
 		<View style={{ flex: 1 }}>
 			<FlatList

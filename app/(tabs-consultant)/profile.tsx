@@ -1,6 +1,8 @@
+import SkeletonLoad from "@/components/SkeletonLoad";
 import consultantService from "@/redux/consultant/consultantService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import { formatCommas } from "@/utils/currency";
 import { useAppSelector } from "@/utils/hooks";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -23,11 +25,10 @@ const ProfileScreen = () => {
 		try {
 			setLoad(true);
 			let res = await consultantService.profileDetails(user.userId);
-			console.log(res, "res");
+			setProfile(res?.data);
 			setLoad(false);
 		} catch (err) {
 			setLoad(false);
-			console.log(err, "err");
 		}
 	};
 
@@ -70,198 +71,245 @@ const ProfileScreen = () => {
 								</Text>
 							</View>
 						</View>
-						<View style={{ marginTop: 30 }}>
-							<Text
-								style={[
-									textStyles.textBold,
-									{ color: colors.mediumGray, fontSize: 14 },
-								]}
-							>
-								Key Performance Summary
-							</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									justifyContent: "space-between",
-									marginVertical: 20,
-								}}
-							>
-								<View
-									style={{
-										width: "32%",
-										alignItems: "center",
-									}}
-								>
-									<Entypo
-										name="bar-graph"
-										color={colors.primary}
-										size={25}
-									/>
+						{load ? (
+							<View style={{ marginTop: 30 }}>
+								<SkeletonLoad count={6} />
+							</View>
+						) : (
+							profile?.salesPerformance && (
+								<>
+									<View style={{ marginTop: 30 }}>
+										<Text
+											style={[
+												textStyles.textBold,
+												{
+													color: colors.mediumGray,
+													fontSize: 14,
+												},
+											]}
+										>
+											Key Performance Summary
+										</Text>
+										<View
+											style={{
+												flexDirection: "row",
+												alignItems: "center",
+												justifyContent: "space-between",
+												marginVertical: 20,
+											}}
+										>
+											<View
+												style={{
+													width: "32%",
+													alignItems: "center",
+												}}
+											>
+												<Entypo
+													name="bar-graph"
+													color={colors.primary}
+													size={25}
+												/>
+												<Text
+													style={[
+														textStyles.textBold,
+														{
+															marginTop: 10,
+															fontSize: 16,
+														},
+													]}
+												>
+													₦
+													{formatCommas(
+														profile.bookingAmount
+													)}
+												</Text>
+												<Text
+													style={[
+														textStyles.textMid,
+														{
+															color: colors.mediumGray,
+															fontSize: 14,
+														},
+													]}
+												>
+													Monthly Sales
+												</Text>
+											</View>
+											<View
+												style={{
+													width: "32%",
+													alignItems: "center",
+												}}
+											>
+												<AntDesign
+													name="calendar"
+													size={25}
+													color={colors.primary}
+												/>
+												<Text
+													style={[
+														textStyles.textBold,
+														{
+															marginTop: 10,
+															fontSize: 16,
+														},
+													]}
+												>
+													{profile.bookingsCount}
+												</Text>
+												<Text
+													style={[
+														textStyles.textMid,
+														{
+															color: colors.mediumGray,
+															fontSize: 14,
+														},
+													]}
+												>
+													Bookings
+												</Text>
+											</View>
+											<View
+												style={{
+													width: "32%",
+													alignItems: "center",
+												}}
+											>
+												<Entypo
+													name="bar-graph"
+													color={"lightgreen"}
+													size={25}
+												/>
+												<Text
+													style={[
+														textStyles.textBold,
+														{
+															marginTop: 10,
+															fontSize: 16,
+														},
+													]}
+												>
+													{profile.salesPerformance
+														.actualThisMonth /
+														profile.salesPerformance
+															.targetAmount}
+													%
+												</Text>
+												<Text
+													style={[
+														textStyles.textMid,
+														{
+															color: colors.mediumGray,
+															fontSize: 14,
+														},
+													]}
+												>
+													Achievement
+												</Text>
+											</View>
+										</View>
+									</View>
 									<Text
 										style={[
 											textStyles.textBold,
-											{ marginTop: 10, fontSize: 16 },
-										]}
-									>
-										₦100,000
-									</Text>
-									<Text
-										style={[
-											textStyles.textMid,
 											{
 												color: colors.mediumGray,
 												fontSize: 14,
 											},
 										]}
 									>
-										Monthly Sales
+										Sales Target
 									</Text>
-								</View>
-								<View
-									style={{
-										width: "32%",
-										alignItems: "center",
-									}}
-								>
-									<AntDesign
-										name="calendar"
-										size={25}
-										color={colors.primary}
-									/>
-									<Text
-										style={[
-											textStyles.textBold,
-											{ marginTop: 10, fontSize: 16 },
-										]}
+									<View style={{ alignItems: "center" }}>
+										<View style={styles.round}>
+											<Text
+												style={[
+													textStyles.textBold,
+													{ fontSize: 18 },
+												]}
+											>
+												{profile.salesPerformance
+													.actualThisMonth /
+													profile.salesPerformance
+														.targetAmount}
+												%
+											</Text>
+											<Text
+												style={[
+													textStyles.text,
+													{ fontSize: 13 },
+												]}
+											>
+												of target
+											</Text>
+										</View>
+									</View>
+									<View
+										style={{
+											flexDirection: "row",
+											alignItems: "center",
+											justifyContent: "space-between",
+											marginTop: 20,
+										}}
 									>
-										32
-									</Text>
-									<Text
-										style={[
-											textStyles.textMid,
-											{
-												color: colors.mediumGray,
-												fontSize: 14,
-											},
-										]}
-									>
-										Bookings
-									</Text>
-								</View>
-								<View
-									style={{
-										width: "32%",
-										alignItems: "center",
-									}}
-								>
-									<Entypo
-										name="bar-graph"
-										color={"lightgreen"}
-										size={25}
-									/>
-									<Text
-										style={[
-											textStyles.textBold,
-											{ marginTop: 10, fontSize: 16 },
-										]}
-									>
-										78%
-									</Text>
-									<Text
-										style={[
-											textStyles.textMid,
-											{
-												color: colors.mediumGray,
-												fontSize: 14,
-											},
-										]}
-									>
-										Achievement
-									</Text>
-								</View>
-							</View>
-						</View>
-						<Text
-							style={[
-								textStyles.textBold,
-								{ color: colors.mediumGray, fontSize: 14 },
-							]}
-						>
-							June Target
-						</Text>
-						<View style={{ alignItems: "center" }}>
-							<View style={styles.round}>
-								<Text
-									style={[
-										textStyles.textBold,
-										{ fontSize: 18 },
-									]}
-								>
-									78%
-								</Text>
-								<Text
-									style={[textStyles.text, { fontSize: 13 }]}
-								>
-									of target
-								</Text>
-							</View>
-						</View>
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								justifyContent: "space-between",
-								marginTop: 20,
-							}}
-						>
-							<View style={{ alignItems: "center" }}>
-								<Text
-									style={[
-										textStyles.textMid,
-										{
-											fontSize: 16,
-											color: colors.mediumGray,
-										},
-									]}
-								>
-									Current
-								</Text>
-								<Text
-									style={[
-										textStyles.textBold,
-										{
-											fontSize: 16,
-										},
-									]}
-								>
-									₦100,000
-								</Text>
-							</View>
-							<View style={{ alignItems: "center" }}>
-								<Text
-									style={[
-										textStyles.textMid,
-										{
-											fontSize: 16,
-											color: colors.mediumGray,
-										},
-									]}
-								>
-									Target
-								</Text>
-								<Text
-									style={[
-										textStyles.textBold,
-										{
-											fontSize: 16,
-										},
-									]}
-								>
-									₦100,000
-								</Text>
-							</View>
-						</View>
+										<View style={{ alignItems: "center" }}>
+											<Text
+												style={[
+													textStyles.textMid,
+													{
+														fontSize: 16,
+														color: colors.mediumGray,
+													},
+												]}
+											>
+												Current
+											</Text>
+											<Text
+												style={[
+													textStyles.textBold,
+													{
+														fontSize: 16,
+													},
+												]}
+											>
+												₦
+												{formatCommas(
+													profile.salesPerformance
+														?.actualThisMonth / 100
+												)}
+											</Text>
+										</View>
+										<View style={{ alignItems: "center" }}>
+											<Text
+												style={[
+													textStyles.textMid,
+													{
+														fontSize: 16,
+														color: colors.mediumGray,
+													},
+												]}
+											>
+												Target
+											</Text>
+											<Text
+												style={[
+													textStyles.textBold,
+													{
+														fontSize: 16,
+													},
+												]}
+											>
+												₦
+												{formatCommas(
+													profile.salesPerformance
+														?.targetAmount / 100
+												)}
+											</Text>
+										</View>
+									</View>
+								</>
+							)
+						)}
 					</View>
 				</ScrollView>
 			</View>
@@ -282,7 +330,7 @@ const styles = StyleSheet.create({
 		width: 180,
 		borderRadius: 90,
 		borderWidth: 5,
-		borderColor: colors.primary,
+		borderColor: colors.appGray,
 		alignItems: "center",
 		justifyContent: "center",
 	},

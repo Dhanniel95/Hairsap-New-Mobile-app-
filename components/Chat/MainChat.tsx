@@ -32,6 +32,7 @@ import ChatVideo from "./ChatVideo";
 import ConsultantMenu from "./ConsultantMenu";
 import FileMenu from "./FileMenu";
 import GalleryCheck from "./GalleryCheck";
+import ReceiptChat from "./ReceiptChat";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const dispatch = useAppDispatch();
@@ -413,31 +414,38 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				renderComposer={renderComposer}
 				renderInputToolbar={renderInputToolbar}
 				renderMessageVideo={renderMessageVideo}
-				renderBubble={(props) => (
-					<Bubble
-						{...props}
-						wrapperStyle={{
-							right: {
-								backgroundColor: colors.primary,
-								borderRadius: 12,
-								padding: 5,
-							},
-							left: {
-								backgroundColor: "#F2F7FB",
-								borderRadius: 12,
-								padding: 5,
-							},
-						}}
-						textStyle={{
-							right: {
-								color: "#fff",
-							},
-							left: {
-								color: "#000",
-							},
-						}}
-					/>
-				)}
+				renderBubble={(props: any) =>
+					props.currentMessage.messageType === "receipt" ? (
+						<ReceiptChat
+							metadata={props.currentMessage.metaData}
+							isUser={props.position === "right"}
+						/>
+					) : (
+						<Bubble
+							{...props}
+							wrapperStyle={{
+								right: {
+									backgroundColor: colors.primary,
+									borderRadius: 12,
+									padding: 5,
+								},
+								left: {
+									backgroundColor: "#F2F7FB",
+									borderRadius: 12,
+									padding: 5,
+								},
+							}}
+							textStyle={{
+								right: {
+									color: "#fff",
+								},
+								left: {
+									color: "#000",
+								},
+							}}
+						/>
+					)
+				}
 				keyboardShouldPersistTaps="handled"
 				bottomOffset={Platform.OS === "ios" ? 30 : 0}
 				onPress={() => {

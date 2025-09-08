@@ -2,6 +2,7 @@ import Tab from "@/components/Basics/Tab";
 import Header from "@/components/Header";
 import EachChat from "@/components/List/EachChat";
 import ModalComponent from "@/components/ModalComponent";
+import SkeletonLoad from "@/components/SkeletonLoad";
 import UserForm from "@/components/User/UserForm";
 import { listNotifications } from "@/redux/basic/basicSlice";
 import chatService from "@/redux/chat/chatService";
@@ -22,6 +23,7 @@ const ChatRooms = () => {
 	const dispatch = useAppDispatch();
 
 	const [activeTab, setActiveTab] = useState(1);
+	const [load, setLoad] = useState(false);
 	const [guestList, setGuestList] = useState<any>([]);
 	const [myGuestList, setMyGuestList] = useState<any>([]);
 	const [myCustomersList, setMyCustomersList] = useState<any>([]);
@@ -60,6 +62,7 @@ const ChatRooms = () => {
 
 	const listGuests = async () => {
 		try {
+			setLoad(true);
 			let res = await chatService.listGuestChats();
 			if (Array.isArray(res?.data)) {
 				setGuestList(
@@ -70,7 +73,10 @@ const ChatRooms = () => {
 					)
 				);
 			}
-		} catch (err) {}
+			setLoad(false);
+		} catch (err) {
+			setLoad(false);
+		}
 	};
 
 	const listCustomers = async () => {
@@ -191,46 +197,50 @@ const ChatRooms = () => {
 					/>
 				</View>
 				<View style={{ flex: 1 }}>
-					<FlatList
-						data={
-							activeTab === 1
-								? guestList
-								: activeTab === 2
-								? customersList
-								: activeTab === 3
-								? myGuestList
-								: activeTab === 4
-								? myCustomersList
-								: braidersList
-						}
-						keyExtractor={(item: any) =>
-							activeTab === 5
-								? item.userId
-								: item.chat?.chatId?.toString()
-						}
-						renderItem={({ item }) => (
-							<EachChat
-								chat={item}
-								userType={
-									activeTab === 1 || activeTab === 3
-										? "guest"
-										: activeTab === 2 || activeTab === 4
-										? "user"
-										: "pro"
-								}
-							/>
-						)}
-						contentContainerStyle={{ paddingBottom: 100 }}
-						showsVerticalScrollIndicator={false}
-						refreshControl={
-							<RefreshControl
-								refreshing={refreshing}
-								onRefresh={onRefresh}
-								tintColor={colors.dark}
-								colors={[colors.dark]}
-							/>
-						}
-					/>
+					{load ? (
+						<SkeletonLoad count={5} />
+					) : (
+						<FlatList
+							data={
+								activeTab === 1
+									? guestList
+									: activeTab === 2
+									? customersList
+									: activeTab === 3
+									? myGuestList
+									: activeTab === 4
+									? myCustomersList
+									: braidersList
+							}
+							keyExtractor={(item: any) =>
+								activeTab === 5
+									? item.userId
+									: item.chat?.chatId?.toString()
+							}
+							renderItem={({ item }) => (
+								<EachChat
+									chat={item}
+									userType={
+										activeTab === 1 || activeTab === 3
+											? "guest"
+											: activeTab === 2 || activeTab === 4
+											? "user"
+											: "pro"
+									}
+								/>
+							)}
+							contentContainerStyle={{ paddingBottom: 100 }}
+							showsVerticalScrollIndicator={false}
+							refreshControl={
+								<RefreshControl
+									refreshing={refreshing}
+									onRefresh={onRefresh}
+									tintColor={colors.dark}
+									colors={[colors.dark]}
+								/>
+							}
+						/>
+					)}
 				</View>
 			</View>
 			<ModalComponent

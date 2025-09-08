@@ -20,7 +20,13 @@ import DatePicker from "../DatePicker";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
 
-const BookingForm = ({ userId }: { userId: string }) => {
+const BookingForm = ({
+	userId,
+	onClose,
+}: {
+	userId: string;
+	onClose: () => void;
+}) => {
 	const [price, setPrice] = useState("");
 	const [selectedService, setSelectedService] = useState<any>([]);
 	const [list, setList] = useState<any>([]);
@@ -152,10 +158,10 @@ const BookingForm = ({ userId }: { userId: string }) => {
 					channel: "cash",
 					assistantProIds,
 				};
-				console.log(payload, "payloaxd");
 				setLoad(true);
 				await bookService.createBooking(payload);
 				setLoad(false);
+				onClose();
 			} catch (err) {
 				let msg = displayError(err, false);
 				console.log(msg, "msg");

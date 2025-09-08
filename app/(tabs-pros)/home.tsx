@@ -66,6 +66,7 @@ const HomeScreen = () => {
 	const listBookings = async () => {
 		try {
 			let res = await bookService.listBookings();
+			console.log(res, "RES");
 			if (Array.isArray(res?.data)) {
 				let appoints = res.data.filter((item: any) => {
 					return item.pinStatus != null;
