@@ -49,7 +49,7 @@ const ActivityBookings = () => {
 	const loadBookingInfo = async () => {
 		try {
 			setLoad(true);
-			let res = await bookService.loadBookingData("3");
+			let res = await bookService.loadBookingData(params?.itemId || "");
 			if (res?.user) {
 				setService(res?.bookedSubServices[0]?.subService);
 				setBookingData(res);

@@ -42,7 +42,7 @@ const createBooking = async (obj: any) => {
 	return data;
 };
 
-const loadBookingData = async (id: string) => {
+const loadBookingData = async (id: any) => {
 	const { data } = await apiRequest().get(`/bookings/${id}`);
 	return data?.data;
 };
