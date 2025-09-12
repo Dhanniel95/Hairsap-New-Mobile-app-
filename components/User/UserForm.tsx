@@ -34,9 +34,7 @@ const UserForm = ({
 				guestUserId: Number(userId),
 				allowEmailUserExist: true,
 				allowPhoneNumberUserExist: true,
-				user: userId,
 			};
-			console.log(payload, "payload");
 			let payload2 = {
 				name: name.trim(),
 				phone: phone.trim(),

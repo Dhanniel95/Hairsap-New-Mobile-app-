@@ -84,7 +84,13 @@ const ConsultantMenu = ({
 						onClose={() => setOpenModal(false)}
 					/>
 				) : (
-					<UserForm onSubmit={onSubmit} userId={userId} />
+					<UserForm
+						onSubmit={(arg) => {
+							setOpenModal(false);
+							onSubmit(arg);
+						}}
+						userId={userId}
+					/>
 				)}
 			</ModalComponent>
 		</View>

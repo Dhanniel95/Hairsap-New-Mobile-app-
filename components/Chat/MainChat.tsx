@@ -246,9 +246,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	};
 
 	const createdUserHandler = (arg: any) => {
-		let message = `An account has been created for you. Login with ${
-			arg?.phone
-		} as Phone Number and use ${arg?.name?.toUpperCase()} as Password.`;
+		let message = `An account has been created for you. Login with ${arg?.phone} as Phone Number.`;
 		let payload = {
 			_id: Math.random().toString(36).substring(7),
 			text: message,
