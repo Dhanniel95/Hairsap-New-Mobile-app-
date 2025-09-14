@@ -23,9 +23,11 @@ import SelectField from "../SelectField";
 const BookingForm = ({
 	userId,
 	onClose,
+	detail,
 }: {
 	userId: string;
 	onClose: () => void;
+	detail?: any;
 }) => {
 	const [price, setPrice] = useState("");
 	const [selectedService, setSelectedService] = useState<any>([]);
@@ -39,12 +41,25 @@ const BookingForm = ({
 	const [load, setLoad] = useState(false);
 
 	useEffect(() => {
+		if (detail?.bookingId) {
+			setSelectedService(
+				detail.bookedSubServices.map((b: any) => {
+					return b.subService?.subServiceId;
+				})
+			);
+			setAddress(detail.address);
+			setDateTime(detail.arrivalAt);
+			// setBraiders([detail.pro])
+		}
+	}, [detail]);
+
+	useEffect(() => {
 		listServices();
 	}, []);
 
 	useEffect(() => {
 		updateFields();
-	}, [selectedService, selectedBraiders]);
+	}, [selectedService, selectedBraiders, list]);
 
 	useEffect(() => {
 		listBraiders();
@@ -159,7 +174,11 @@ const BookingForm = ({
 					assistantProIds,
 				};
 				setLoad(true);
-				await bookService.createBooking(payload);
+				if (detail?.bookingId) {
+					await bookService.updateBooking(payload, detail.bookingId);
+				} else {
+					await bookService.createBooking(payload);
+				}
 				setLoad(false);
 				onClose();
 			} catch (err) {
@@ -227,14 +246,16 @@ const BookingForm = ({
 						<ActivityIndicator color={"#FFF"} />
 					) : (
 						<>
-							<Feather name="plus" color={"#FFF"} size={20} />
+							{!detail && (
+								<Feather name="plus" color={"#FFF"} size={20} />
+							)}
 							<Text
 								style={[
 									textStyles.textMid,
 									{ marginLeft: 10, color: "#FFF" },
 								]}
 							>
-								Add Booking
+								{detail?.bookingId ? "Update" : "Add"} Booking
 							</Text>
 						</>
 					)}

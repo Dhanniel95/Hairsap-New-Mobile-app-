@@ -1,18 +1,25 @@
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { formatCurrency } from "@/utils/currency";
+import { formatTime } from "@/utils/datetime";
 import { Feather } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import BookingForm from "../Booking/BookingForm";
+import ModalComponent from "../ModalComponent";
 
 const EachBooking = ({ booking }: { booking: any }) => {
+	const [openModal, setOpenModal] = useState(false);
+
+	console.log(booking);
+
 	return (
 		<View style={styles.card}>
 			<View style={styles.top}>
 				<Text style={[textStyles.textMid, { fontSize: 14 }]}>
 					Booking Summary
 				</Text>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => setOpenModal(true)}>
 					<Feather name="edit" size={20} color={colors.dark} />
 				</TouchableOpacity>
 			</View>
@@ -25,6 +32,7 @@ const EachBooking = ({ booking }: { booking: any }) => {
 									flexDirection: "row",
 									alignItems: "center",
 									marginBottom: 10,
+									flexWrap: "wrap",
 								}}
 							>
 								<Text
@@ -104,12 +112,24 @@ const EachBooking = ({ booking }: { booking: any }) => {
 										{ color: "#FFF", fontSize: 14 },
 									]}
 								>
-									{book.subService?.duration}
+									{formatTime(book.subService?.duration)}
 								</Text>
 							</View>
 						</View>
 					))}
 			</View>
+			<ModalComponent
+				open={openModal}
+				closeModal={() => setOpenModal(false)}
+				centered
+				bg="#334155"
+			>
+				<BookingForm
+					userId={booking.userId}
+					onClose={() => setOpenModal(false)}
+					detail={booking}
+				/>
+			</ModalComponent>
 		</View>
 	);
 };

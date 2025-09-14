@@ -1,11 +1,8 @@
 import chatService from "@/redux/chat/chatService";
 import { saveChatId } from "@/redux/chat/chatSlice";
-import formStyles from "@/styles/formStyles";
-import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import baseUrl from "@/utils/config";
 import { mapChatToGifted } from "@/utils/data";
-import { displayError } from "@/utils/error";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,7 +11,6 @@ import {
 	ActivityIndicator,
 	Platform,
 	StyleSheet,
-	Text,
 	TouchableOpacity,
 	View,
 } from "react-native";
@@ -69,6 +65,10 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				if (chatInfo?.video) {
 					consultHandler();
 				}
+
+				if (chatInfo?.newMsg === "0" && user?.role === "consultant") {
+					joinRoom();
+				}
 			});
 
 			socket.on("disconnect", () => {
@@ -85,14 +85,42 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 			// receive messages
 			socket.on("message:new", (data) => {
-				fetchMessages();
+				//fetchMessages();
+				let chatInfo = data?.data;
+				if (chatInfo?.chatId) {
+					setMessages((previousMessages) =>
+						GiftedChat.append(previousMessages, [
+							mapChatToGifted(chatInfo),
+						])
+					);
+				} else {
+					fetchMessages();
+				}
 			});
 
 			socket.on("message:new:customer", (data) => {
-				fetchMessages();
+				let chatInfo = data?.data?.chat;
+				if (chatInfo?.chatId) {
+					setMessages((previousMessages) =>
+						GiftedChat.append(previousMessages, [
+							mapChatToGifted(data?.data?.chat),
+						])
+					);
+				} else {
+					fetchMessages();
+				}
 			});
 			socket.on("message:new:guest", (data) => {
-				fetchMessages();
+				let chatInfo = data?.data?.chat;
+				if (chatInfo?.chatId) {
+					setMessages((previousMessages) =>
+						GiftedChat.append(previousMessages, [
+							mapChatToGifted(data?.data?.chat),
+						])
+					);
+				} else {
+					fetchMessages();
+				}
 			});
 		};
 
@@ -113,7 +141,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				console.log(chatInfo.chatId, "ID");
 				await chatService.markAsRead(chatInfo.chatId);
 			} catch (err) {
-				console.log(displayError(err, true), "err");
+				console.log(err, "err");
 			}
 		}
 	};
@@ -221,7 +249,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					],
 				},
 				(response: any) => {
-					console.log(response, "RESPONSE");
 					if (
 						response?.data &&
 						(user.role === "guest" || user.role === "user")
@@ -237,9 +264,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		if (socketRef.current?.connected) {
 			socketRef.current.emit(
 				"chatroom:join",
-				{
-					chatRoomId: Number(chatInfo.chatRoomId),
-				},
+				Number(chatInfo.chatRoomId),
 				(response: any) => console.log(response, "reponse__")
 			);
 		}
@@ -294,42 +319,28 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		);
 	};
 
-	const renderInputToolbar = (props: any) =>
-		chatInfo?.newMsg === "0" && user?.role === "consultan" ? (
-			<View style={{ paddingHorizontal: 20 }}>
-				<TouchableOpacity
-					style={[formStyles.mainBtn]}
-					onPress={joinRoom}
-				>
-					<Text style={[textStyles.textBold, { color: "#FFF" }]}>
-						Join Chat
-					</Text>
-				</TouchableOpacity>
-			</View>
-		) : (
-			<>
-				{showMenu && (
-					<ConsultantMenu
-						allowUserCreate={
-							chatInfo?.userType === "guest" ? true : false
-						}
-						allowBooking={
-							chatInfo?.userType === "user" ? true : false
-						}
-						onSubmit={createdUserHandler}
-						userId={chatInfo.receiverId}
-					/>
-				)}
-				{showDoc && <FileMenu onSend={fromMedia} />}
-				<InputToolbar
-					{...props}
-					containerStyle={styles.toolbarContainer}
-					primaryStyle={{
-						alignItems: "center",
-					}}
+	const renderInputToolbar = (props: any) => (
+		<>
+			{showMenu && (
+				<ConsultantMenu
+					allowUserCreate={
+						chatInfo?.userType === "guest" ? true : false
+					}
+					allowBooking={chatInfo?.userType === "user" ? true : false}
+					onSubmit={createdUserHandler}
+					userId={chatInfo.receiverId}
 				/>
-			</>
-		);
+			)}
+			{showDoc && <FileMenu onSend={fromMedia} />}
+			<InputToolbar
+				{...props}
+				containerStyle={styles.toolbarContainer}
+				primaryStyle={{
+					alignItems: "center",
+				}}
+			/>
+		</>
+	);
 
 	const renderComposer = (props: any) => {
 		return (

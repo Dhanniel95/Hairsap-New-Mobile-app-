@@ -2,6 +2,7 @@ import EachChat from "@/components/List/EachChat";
 import chatService from "@/redux/chat/chatService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 
@@ -9,9 +10,13 @@ const ChatScreen = () => {
 	const [list, setList] = useState<any>([]);
 	const [refreshing, setRefreshing] = useState(false);
 
+	const isFocused = useIsFocused();
+
 	useEffect(() => {
-		listChats();
-	}, []);
+		if (isFocused) {
+			listChats();
+		}
+	}, [isFocused]);
 
 	const listChats = async () => {
 		try {

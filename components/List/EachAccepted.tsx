@@ -48,6 +48,7 @@ const EachAccepted = ({ booking }: { booking: any }) => {
 						flexDirection: "row",
 						alignItems: "center",
 						marginBottom: 10,
+						flexWrap: "wrap",
 					}}
 				>
 					<Text
@@ -65,7 +66,7 @@ const EachAccepted = ({ booking }: { booking: any }) => {
 					<Text
 						style={[
 							textStyles.textMid,
-							{ color: "#FFF", fontSize: 14 },
+							{ color: "#FFF", fontSize: 14, flexWrap: "wrap" },
 						]}
 					>
 						{booking?.invoice?.invoiceFees[0].name}
@@ -76,6 +77,7 @@ const EachAccepted = ({ booking }: { booking: any }) => {
 						flexDirection: "row",
 						alignItems: "center",
 						marginBottom: 20,
+						flexWrap: "wrap",
 					}}
 				>
 					<Text

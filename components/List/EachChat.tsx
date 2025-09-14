@@ -13,8 +13,30 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 
 	let chatInfo = chat?.chat;
 
+	let newMsg = chat.participants?.find((c: any) => c.userId == user.userId)
+		? "1"
+		: "0";
+
+	let isBtnAllowed =
+		newMsg === "1"
+			? true
+			: newMsg == "0" && chat.participants?.length === 1
+			? true
+			: false;
+
+	const getInitials = (fullName: string) => {
+		if (!fullName) return "";
+
+		const parts = fullName.trim().split(/\s+/).filter(Boolean);
+
+		const initials = parts.map((word) => word[0].toUpperCase()).join("");
+
+		return initials;
+	};
+
 	return chat?.chat ? (
 		<TouchableOpacity
+			disabled={!isBtnAllowed}
 			onPress={() =>
 				router.push({
 					pathname: "/(app)/chat",
@@ -22,11 +44,7 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 						chatRoomId: chatInfo?.chatRoomId,
 						user: chat.name,
 						image: chat.profilePhotoUrl,
-						newMsg: chat.participants?.find(
-							(c: any) => c.userId == user.userId
-						)
-							? "1"
-							: "0",
+						newMsg,
 						receiverId: chat.userId,
 						userType,
 						chatId: chatInfo.chatId,
@@ -47,14 +65,27 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 			]}
 		>
 			<View style={{ marginRight: 10 }}>
-				<Image
-					source={
-						chat.profilePhotoUrl
-							? { uri: chat.profilePhotoUrl }
-							: require("../../assets/images/profile.jpg")
-					}
-					style={{ height: 50, width: 50, borderRadius: 25 }}
-				/>
+				{chat.profilePhotoUrl ? (
+					<Image
+						source={{ uri: chat.profilePhotoUrl }}
+						style={{ height: 50, width: 50, borderRadius: 25 }}
+					/>
+				) : (
+					<View
+						style={{
+							height: 50,
+							width: 50,
+							borderRadius: 25,
+							backgroundColor: colors.secondary,
+							alignItems: "center",
+							justifyContent: "center",
+						}}
+					>
+						<Text style={[textStyles.textBold, { color: "#FFF" }]}>
+							{getInitials(chat.name)}
+						</Text>
+					</View>
+				)}
 			</View>
 			<View style={{ width: "80%" }}>
 				<View

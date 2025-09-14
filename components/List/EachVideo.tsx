@@ -25,7 +25,7 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 	const [position, setPosition] = useState(0);
 	const [load, setLoad] = useState(false);
 
-	const player = useVideoPlayer(video.video, (player) => {
+	const player = useVideoPlayer(video.mediaUrl, (player) => {
 		player.loop = true;
 		player.play();
 	});
@@ -115,7 +115,7 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 					}}
 				>
 					<Text style={{ fontFamily: "bold", color: "#4ADE80" }}>
-						14+ All-back Cornrow
+						{video.title}
 					</Text>
 				</View>
 				<TouchableOpacity
@@ -124,8 +124,8 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 							pathname: "/(app)/chat",
 							params: {
 								thumbnail: video.thumbnail,
-								video: video.video,
-								text: `Service Name: 14+ All-Back Cornrows \n Regular Service: ₦26,500 • Duration: 4 hrs \n VIP Service: ₦53,000 • Duration: 2 hrs \n Description: One pack of lush extensions included`,
+								video: video.mediaUrl,
+								text: video.description,
 							},
 						});
 					}}

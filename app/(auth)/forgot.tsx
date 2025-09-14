@@ -3,6 +3,7 @@ import ResetForm from "@/components/Auth/ResetForm";
 import Container from "@/components/Container";
 import GoBack from "@/components/GoBack";
 import textStyles from "@/styles/textStyles";
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
@@ -36,10 +37,11 @@ const Forgot = () => {
 							<View
 								style={{ alignItems: "center", marginTop: 20 }}
 							>
-								{/* <Logo
-							height={90}
-							width={150}
-						/> */}
+								<Image
+									source={require("../../assets/images/logo.svg")}
+									style={{ width: 150, height: 50 }}
+									contentFit="contain"
+								/>
 								<Text
 									style={[
 										textStyles.textBold,

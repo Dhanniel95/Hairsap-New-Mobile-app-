@@ -4,6 +4,7 @@ import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
 import { generateString } from "@/utils/data";
 import { displayError } from "@/utils/error";
+import { Image } from "expo-image";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
@@ -17,11 +18,9 @@ const Landing = () => {
 				message: generateString(8),
 				role: "guest",
 			};
-			console.log(payload, "payload");
 			setLoad(true);
 			let res = await authService.registerGuest(payload);
 			setLoad(false);
-			console.log(res, "RES");
 		} catch (err) {
 			setLoad(false);
 			displayError(err, true);
@@ -42,7 +41,11 @@ const Landing = () => {
 					paddingHorizontal: "10%",
 				}}
 			>
-				{/* <Logo height={90} width={190} /> */}
+				<Image
+					source={require("../../assets/images/logo.svg")}
+					style={{ width: 150, height: 50 }}
+					contentFit="contain"
+				/>
 				<Text
 					style={[
 						textStyles.textMid,

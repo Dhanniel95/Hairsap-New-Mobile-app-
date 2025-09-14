@@ -186,18 +186,6 @@ const ActivityBookings = () => {
 									>
 										{item?.subService?.name}
 									</Text>
-									<TouchableOpacity>
-										<Text
-											style={[
-												{
-													fontFamily: "regular",
-													color: colors.danger,
-												},
-											]}
-										>
-											Remove
-										</Text>
-									</TouchableOpacity>
 								</View>
 							);
 						})}
@@ -206,7 +194,6 @@ const ActivityBookings = () => {
 						title="Transportation"
 						value={"₦" + formatCurrency(transportation)}
 					/>
-
 					<RequestList
 						title="Discount"
 						value={
@@ -231,6 +218,10 @@ const ActivityBookings = () => {
 												100
 								  ))
 						}
+					/>
+					<RequestList
+						title="Description"
+						value={bookingData?.description}
 					/>
 					{pinState == "paid" && (
 						<View style={{ marginTop: 10 }}>

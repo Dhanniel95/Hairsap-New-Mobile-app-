@@ -1,9 +1,11 @@
+import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
 import { FontAwesome } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const Header = () => {
 	const router = useRouter();
@@ -12,7 +14,16 @@ const Header = () => {
 
 	return (
 		<View style={styles.header}>
-			<Image source={require("../assets/images/logo.png")} />
+			<View style={{ alignItems: "center" }}>
+				<Image
+					source={require("../assets/images/logo-dark.svg")}
+					style={{ width: 120, height: 40 }}
+					contentFit="contain"
+				/>
+				<Text style={[textStyles.text, { fontSize: 11 }]}>
+					Home Beauty Service
+				</Text>
+			</View>
 			<TouchableOpacity
 				style={{ position: "relative" }}
 				onPress={() => router.push("/(app)/notification")}

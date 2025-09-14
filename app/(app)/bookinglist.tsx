@@ -5,6 +5,7 @@ import SkeletonLoad from "@/components/SkeletonLoad";
 import bookService from "@/redux/book/bookService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import { format } from "date-fns";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
@@ -47,14 +48,18 @@ const BookingListScreen = () => {
 			<View
 				style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 25 }}
 			>
-				<Text
-					style={[
-						textStyles.textMid,
-						{ textAlign: "center", marginBottom: 25 },
-					]}
-				>
-					{params?.date}
-				</Text>
+				{params?.date ? (
+					<Text
+						style={[
+							textStyles.textMid,
+							{ textAlign: "center", marginBottom: 25 },
+						]}
+					>
+						{format(params?.date, "do MMMM, yyyy")}
+					</Text>
+				) : (
+					<></>
+				)}
 				{load ? (
 					<SkeletonLoad count={5} />
 				) : (

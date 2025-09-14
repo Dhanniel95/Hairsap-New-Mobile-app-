@@ -1,4 +1,5 @@
 import EachVideo from "@/components/List/EachVideo";
+import { useAppSelector } from "@/utils/hooks";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
@@ -11,38 +12,7 @@ import {
 } from "react-native";
 
 const Reel = () => {
-	const videos = [
-		{
-			id: 1,
-			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 2,
-			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 3,
-			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 4,
-			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 5,
-			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 6,
-			thumbnail: "https://picsum.photos/200/300",
-			video: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-	];
+	const { videos } = useAppSelector((state) => state.book);
 
 	const { height } = useWindowDimensions();
 
@@ -57,7 +27,6 @@ const Reel = () => {
 	const flatListRef = useRef<any>(null);
 
 	const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
-		console.log("Okay?");
 		if (viewableItems.length > 0) {
 			setActive(viewableItems[0].index);
 		}
@@ -74,7 +43,7 @@ const Reel = () => {
 				ref={flatListRef}
 				data={videos}
 				initialScrollIndex={Number(active)}
-				keyExtractor={(item) => item.id.toString()}
+				keyExtractor={(item) => item.itemId.toString()}
 				renderItem={({ item, index }) => (
 					<EachVideo
 						video={item}
@@ -90,7 +59,7 @@ const Reel = () => {
 				onViewableItemsChanged={onViewableItemsChanged}
 				viewabilityConfig={{ itemVisiblePercentThreshold: 80 }}
 				showsVerticalScrollIndicator={false}
-				getItemLayout={(_, index) => ({
+				getItemLayout={(_: any, index: any) => ({
 					length: height,
 					offset: height * index,
 					index,

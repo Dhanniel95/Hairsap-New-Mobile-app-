@@ -1,4 +1,5 @@
 import authService from "@/redux/auth/authService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
@@ -20,14 +21,17 @@ const registerForPushNotificationsAsync = async () => {
 		}
 
 		if (finalStatus !== "granted") {
-			alert("Failed to get push token for push notification!");
-			return;
+			return {
+				deviceId: Device.osInternalBuildId || Device.osBuildId,
+				token: undefined,
+			};
 		}
 
 		// ✅ Get Expo Push Token
 		token = (await Notifications.getExpoPushTokenAsync()).data;
 		try {
 			await authService.saveToken(token);
+			AsyncStorage.setItem("@savedPush", "yes");
 		} catch (err) {}
 	} else {
 		console.log("Must use physical device for Push Notifications");

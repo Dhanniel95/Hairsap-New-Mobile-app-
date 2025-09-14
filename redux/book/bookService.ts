@@ -42,6 +42,14 @@ const createBooking = async (obj: any) => {
 	return data;
 };
 
+const updateBooking = async (obj: any, id: string) => {
+	const { data } = await apiRequest().patch(
+		`/consultant/service/book/${id}`,
+		obj
+	);
+	return data;
+};
+
 const loadBookingData = async (id: any) => {
 	const { data } = await apiRequest().get(`/bookings/${id}`);
 	return data?.data;
@@ -74,6 +82,7 @@ const bookService = {
 	listBookings,
 	serviceList,
 	createBooking,
+	updateBooking,
 	loadBookingData,
 	bookingArrival,
 	completeBooking,

@@ -1,6 +1,6 @@
-import bookService from "@/redux/book/bookService";
+import { listGallery } from "@/redux/book/bookSlice";
 import textStyles from "@/styles/textStyles";
-import { displayError } from "@/utils/error";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { useDebounce } from "@/utils/search";
 import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -14,9 +14,13 @@ import {
 } from "react-native";
 import Header from "../Header";
 import EachGallery from "../List/EachGallery";
+import GalleryLoad from "../Load/GalleryLoad";
 
 const Gallery = () => {
+	const dispatch = useAppDispatch();
+
 	const [search, setSearch] = useState("");
+	const [searchList, setSearchList] = useState<any>([]);
 
 	const debouncedSearch = useDebounce(search);
 
@@ -27,50 +31,11 @@ const Gallery = () => {
 	const spacing = 5;
 	const itemSize = (viewWidth - spacing * (numColumns - 1)) / numColumns;
 
-	const videos = [
-		{
-			id: 1,
-			thumbnail: "UDGcGgtR00xu}ao2NaoL00WB-pR*f7fQj[j[",
-			description: "",
-			mediaUrl:
-				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 2,
-			thumbnail: "https://picsum.photos/200/300",
-			description: "",
-			mediaUrl:
-				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 3,
-			thumbnail: "https://picsum.photos/200/300",
-			description: "",
-			mediaUrl:
-				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 4,
-			thumbnail: "https://picsum.photos/200/300",
-			description: "",
-			mediaUrl:
-				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 5,
-			thumbnail: "https://picsum.photos/200/300",
-			description: "",
-			mediaUrl:
-				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-		{
-			id: 6,
-			thumbnail: "https://picsum.photos/200/300",
-			description: "",
-			mediaUrl:
-				"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-		},
-	];
+	const { videos } = useAppSelector((state) => state.book);
+
+	useEffect(() => {
+		dispatch(listGallery());
+	}, []);
 
 	useEffect(() => {
 		if (debouncedSearch) {
@@ -78,24 +43,15 @@ const Gallery = () => {
 		}
 	}, [debouncedSearch]);
 
-	useEffect(() => {
-		listServices();
-	}, []);
-
-	const listServices = async () => {
-		try {
-			let res = await bookService.listServices();
-			console.log(res?.data[0]?.items?.length, "RES");
-		} catch (err) {
-			displayError(err, true);
-		}
-	};
-
 	const filterSearch = (val: string) => {
 		const lowerQuery = val.toLowerCase();
 
-		return videos.filter((video) =>
-			video.description.toLowerCase().includes(lowerQuery)
+		setSearchList(
+			videos.filter(
+				(video: any) =>
+					video.description.toLowerCase().includes(lowerQuery) ||
+					video.title.toLowerCase().includes(lowerQuery)
+			)
 		);
 	};
 
@@ -123,23 +79,27 @@ const Gallery = () => {
 						/>
 					</View>
 				</View>
-				<FlatList
-					data={videos}
-					numColumns={3}
-					columnWrapperStyle={{ gap: spacing }}
-					contentContainerStyle={{
-						gap: spacing,
-						paddingBottom: spacing,
-					}}
-					keyExtractor={(item) => item.id.toString()}
-					renderItem={({ item }) => (
-						<EachGallery
-							gallery={item}
-							itemSize={itemSize}
-							videos={videos}
-						/>
-					)}
-				/>
+				{videos.length > 0 ? (
+					<FlatList
+						data={searchList.length > 0 ? searchList : videos}
+						numColumns={3}
+						columnWrapperStyle={{ gap: spacing }}
+						contentContainerStyle={{
+							gap: spacing,
+							paddingBottom: spacing,
+						}}
+						keyExtractor={(item) => item.itemId.toString()}
+						renderItem={({ item }) => (
+							<EachGallery
+								gallery={item}
+								itemSize={itemSize}
+								videos={videos}
+							/>
+						)}
+					/>
+				) : (
+					<GalleryLoad />
+				)}
 			</View>
 		</View>
 	);

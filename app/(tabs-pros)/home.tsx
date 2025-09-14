@@ -1,7 +1,9 @@
 import Header from "@/components/Header";
+import basicService from "@/redux/basic/basicService";
 import { listNotifications } from "@/redux/basic/basicSlice";
 import bookService from "@/redux/book/bookService";
-import { useAppDispatch } from "@/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
@@ -14,6 +16,8 @@ const HomeScreen = () => {
 
 	const [appointments, setAppointments] = useState<any>([]);
 	const [markedDates, setMarkedDates] = useState({});
+
+	const { user } = useAppSelector((state) => state.auth);
 
 	useEffect(() => {
 		dispatch(listNotifications());
@@ -60,7 +64,23 @@ const HomeScreen = () => {
 		setMarkedDates(result);
 	};
 
-	const updateLocation = async () => {};
+	const updateLocation = async () => {
+		try {
+			let { status } = await Location.requestForegroundPermissionsAsync();
+			if (status !== "granted") {
+				alert("Permission to access location was denied");
+				return;
+			}
+			let location = await Location.getCurrentPositionAsync({});
+			if (location.coords) {
+				await basicService.updateLocation({
+					longitude: location.coords.longitude,
+					latitude: location.coords.latitude,
+					phone: user.phone,
+				});
+			}
+		} catch (err) {}
+	};
 
 	const listBookings = async () => {
 		try {

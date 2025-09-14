@@ -33,7 +33,6 @@ export const loginGuest = createAsyncThunk(
 			if (res?.token) {
 				await AsyncStorage.setItem("@accesstoken", res.token);
 			}
-			console.log(res, "RES");
 			return res?.guest;
 		} catch (error: any) {
 			let message = displayError(error, true);

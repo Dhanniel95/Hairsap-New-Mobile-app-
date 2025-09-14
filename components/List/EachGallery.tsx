@@ -30,7 +30,7 @@ const EachGallery = ({
 				onPress={() =>
 					router.push({
 						pathname: "/(app)/reel",
-						params: { startFrom: gallery.id, videos },
+						params: { startFrom: gallery.itemId },
 					})
 				}
 				style={{
@@ -66,7 +66,7 @@ const EachGallery = ({
 							setOpen(false);
 							router.push({
 								pathname: "/(app)/reel",
-								params: { startFrom: gallery.id, videos },
+								params: { startFrom: gallery.itemId, videos },
 							});
 						}}
 					>

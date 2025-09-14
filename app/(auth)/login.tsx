@@ -6,12 +6,12 @@ import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { registerForPushNotificationsAsync } from "@/utils/notification";
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
 	ActivityIndicator,
-	Image,
 	KeyboardAvoidingView,
 	Platform,
 	ScrollView,
@@ -72,7 +72,9 @@ const Login = () => {
 								style={{ alignItems: "center", marginTop: 20 }}
 							>
 								<Image
-									source={require("../../assets/images/logo-dark.png")}
+									source={require("../../assets/images/logo.svg")}
+									style={{ width: 150, height: 50 }}
+									contentFit="contain"
 								/>
 								<Text
 									style={[

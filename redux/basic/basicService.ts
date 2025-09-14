@@ -35,6 +35,11 @@ const listNotifications = async () => {
 	return data?.data;
 };
 
+const updateLocation = async (obj: any) => {
+	const { data } = await apiRequest().patch(`/pros`, obj);
+	return data?.data;
+};
+
 const basicService = {
 	getDiscount,
 	getProStats,
@@ -43,6 +48,7 @@ const basicService = {
 	getBraidersAvailability,
 	createUser,
 	listNotifications,
+	updateLocation,
 };
 
 export default basicService;

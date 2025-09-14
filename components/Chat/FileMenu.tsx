@@ -69,7 +69,6 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 				res = await chatService.uploadVideo(formData);
 			}
 			setLoad(false);
-			console.log(res, "RES");
 			if (res?.data?.url) {
 				setSavedFile(res.data);
 			}

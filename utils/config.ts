@@ -5,4 +5,6 @@ const config = {
 
 const baseUrl = __DEV__ ? config.development : config.production;
 
+// const baseUrl = config.production;
+
 export default baseUrl;
