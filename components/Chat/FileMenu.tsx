@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import {
 	ActivityIndicator,
 	Image,
+	KeyboardAvoidingView,
 	Platform,
 	StyleSheet,
 	Text,
@@ -45,7 +46,8 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 						? assets[0].uri.replace("file://", "")
 						: assets[0].uri;
 				setMedia(imgUrl);
-				saveFile(imgUrl, type);
+				setOpenMedia(true);
+				//saveFile(imgUrl, type);
 			}
 		} catch (error) {
 			console.log("there was an error loading image", error);
@@ -54,7 +56,6 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 
 	const saveFile = async (uri: string, type: string) => {
 		try {
-			setOpenMedia(true);
 			const formData = new FormData();
 			formData.append(type == "images" ? "chatphoto" : "chatvideo", {
 				uri: uri,
@@ -149,65 +150,74 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 				closeModal={() => setOpenMedia(false)}
 				centered
 			>
-				<View>
-					<View style={{ position: "relative", height: 300 }}>
-						{mediaType === "images" ? (
-							<Image
-								source={{ uri: media }}
-								style={{ width: "100%", height: 300 }}
-							/>
-						) : (
-							player && (
-								<VideoView
-									style={{
-										width: "100%",
-										height: 300,
-										backgroundColor: "black",
-									}}
-									player={player}
-									nativeControls
-									allowsFullscreen
-									allowsPictureInPicture
+				<KeyboardAvoidingView
+					behavior={Platform.OS === "ios" ? "padding" : undefined}
+					keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+				>
+					<View style={{ width: "100%", height: 300 }}>
+						<View style={{ position: "relative", height: 300 }}>
+							{mediaType === "images" ? (
+								<Image
+									source={{ uri: media }}
+									style={{ width: "100%", height: 200 }}
 								/>
-							)
-						)}
-						{load && (
-							<ActivityIndicator
-								style={{
-									position: "absolute",
-									top: "50%",
-									left: "47%",
-								}}
-								color={colors.primary}
-								size={"large"}
-							/>
-						)}
-					</View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							justifyContent: "center",
-							marginTop: 20,
-						}}
-					>
-						<View style={{ width: "80%" }}>
-							<InputField
-								val={text}
-								setVal={setText}
-								placeholder="Type Message"
-							/>
+							) : (
+								player && (
+									<VideoView
+										style={{
+											width: "100%",
+											height: 300,
+											backgroundColor: "black",
+										}}
+										player={player}
+										nativeControls
+										allowsFullscreen
+										allowsPictureInPicture
+									/>
+								)
+							)}
+							{load && (
+								<ActivityIndicator
+									style={{
+										position: "absolute",
+										top: "50%",
+										left: "47%",
+									}}
+									color={colors.primary}
+									size={"large"}
+								/>
+							)}
 						</View>
-						<View style={{ marginLeft: 10, marginBottom: 20 }}>
-							<TouchableOpacity
-								style={styles.sendBtn}
-								onPress={sendHandler}
-							>
-								<Ionicons name="send" size={20} color="#fff" />
-							</TouchableOpacity>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "center",
+								marginTop: 20,
+							}}
+						>
+							<View style={{ width: "80%" }}>
+								<InputField
+									val={text}
+									setVal={setText}
+									placeholder="Type Message"
+								/>
+							</View>
+							<View style={{ marginLeft: 10, marginBottom: 20 }}>
+								<TouchableOpacity
+									style={styles.sendBtn}
+									onPress={sendHandler}
+								>
+									<Ionicons
+										name="send"
+										size={20}
+										color="#fff"
+									/>
+								</TouchableOpacity>
+							</View>
 						</View>
 					</View>
-				</View>
+				</KeyboardAvoidingView>
 			</ModalComponent>
 		</View>
 	);

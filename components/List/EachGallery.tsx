@@ -24,13 +24,15 @@ const EachGallery = ({
 
 	const [open, setOpen] = useState(false);
 
-	return (
+	const item = gallery?.items[0];
+
+	return item.itemId ? (
 		<>
 			<Pressable
 				onPress={() =>
 					router.push({
 						pathname: "/(app)/reel",
-						params: { startFrom: gallery.itemId },
+						params: { startFrom: item.itemId },
 					})
 				}
 				style={{
@@ -41,9 +43,9 @@ const EachGallery = ({
 				}}
 			>
 				<Image
-					source={{ uri: gallery.thumbnail }}
+					source={{ uri: item.thumbnail }}
 					style={{ width: "100%", height: "100%", borderRadius: 10 }}
-					placeholder={{ blurhash: gallery.thumbnail }}
+					placeholder={{ blurhash: item.thumbnail }}
 				/>
 				<View style={styles.pos}>
 					<Entypo name="video" color={"#FFF"} />
@@ -66,12 +68,15 @@ const EachGallery = ({
 							setOpen(false);
 							router.push({
 								pathname: "/(app)/reel",
-								params: { startFrom: gallery.itemId, videos },
+								params: {
+									startFrom: gallery.galleryId,
+									videos,
+								},
 							});
 						}}
 					>
 						<Image
-							source={{ uri: gallery.thumbnail }}
+							source={{ uri: item.thumbnail }}
 							style={{
 								height: "100%",
 								width: "100%",
@@ -104,8 +109,8 @@ const EachGallery = ({
 							router.push({
 								pathname: "/(app)/chat",
 								params: {
-									thumbnail: gallery.thumbnail,
-									video: gallery.video,
+									thumbnail: item.thumbnail,
+									video: item.video,
 									text: `Service Name: 14+ All-Back Cornrows \n Regular Service: ₦26,500 • Duration: 4 hrs \n VIP Service: ₦53,000 • Duration: 2 hrs \n Description: One pack of lush extensions included`,
 								},
 							});
@@ -125,6 +130,8 @@ const EachGallery = ({
 				</View>
 			</ModalComponent>
 		</>
+	) : (
+		<></>
 	);
 };
 

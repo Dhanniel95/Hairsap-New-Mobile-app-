@@ -32,7 +32,9 @@ const Reel = () => {
 		}
 	}).current;
 
-	console.log(active, "activeFrom", startFrom);
+	const initialIndex = videos.findIndex(
+		(item: any) => item.galleryId === Number(active)
+	);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -42,11 +44,11 @@ const Reel = () => {
 			<FlatList
 				ref={flatListRef}
 				data={videos}
-				initialScrollIndex={Number(active)}
-				keyExtractor={(item) => item.itemId.toString()}
+				initialScrollIndex={initialIndex >= 0 ? initialIndex : 0}
+				keyExtractor={(item) => item.galleryId.toString()}
 				renderItem={({ item, index }) => (
 					<EachVideo
-						video={item}
+						video={item?.items[0]}
 						isActive={
 							Number(index) === Number(active) ? true : false
 						}

@@ -9,12 +9,8 @@ const initialState = {
 export const listGallery = createAsyncThunk("book/gallery", async () => {
 	try {
 		let res = await bookService.listServices();
-		if (
-			Array.isArray(res?.data) &&
-			res?.data?.length > 0 &&
-			Array.isArray(res?.data[0]?.items)
-		) {
-			return res.data[0].items;
+		if (Array.isArray(res?.data) && res?.data?.length > 0) {
+			return res.data;
 		} else {
 			return [];
 		}

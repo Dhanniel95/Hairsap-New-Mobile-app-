@@ -52,7 +52,9 @@ const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 						{headerInfo.user}
 					</Text>
 					<Text style={[textStyles.text, { fontSize: 13 }]}>
-						Active Now
+						{user.role === "user" || user.role === "guest"
+							? "Active Now (7am - 7pm)"
+							: "Active"}
 					</Text>
 				</View>
 			</View>

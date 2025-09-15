@@ -76,7 +76,7 @@ const FaceVerify = () => {
 			let res = await dispatch(getUserInfo()).unwrap();
 			setLoad(false);
 			if (res) {
-				router.replace("/(tabs)");
+				router.replace("/(tabs-user)/gallery");
 			}
 		} catch (err) {
 			setLoad(false);

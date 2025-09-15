@@ -33,6 +33,8 @@ const Gallery = () => {
 
 	const { videos } = useAppSelector((state) => state.book);
 
+	//console.log(videos);
+
 	useEffect(() => {
 		dispatch(listGallery());
 	}, []);
@@ -88,7 +90,7 @@ const Gallery = () => {
 							gap: spacing,
 							paddingBottom: spacing,
 						}}
-						keyExtractor={(item) => item.itemId.toString()}
+						keyExtractor={(item) => item.galleryId.toString()}
 						renderItem={({ item }) => (
 							<EachGallery
 								gallery={item}

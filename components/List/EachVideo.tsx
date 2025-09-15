@@ -105,19 +105,6 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 				/>
 			</TouchableWithoutFeedback>
 			<View style={styles.textArea}>
-				<View
-					style={{
-						marginVertical: 15,
-						backgroundColor: "#000",
-						paddingVertical: 15,
-						alignItems: "center",
-						borderRadius: 5,
-					}}
-				>
-					<Text style={{ fontFamily: "bold", color: "#4ADE80" }}>
-						{video.title}
-					</Text>
-				</View>
 				<TouchableOpacity
 					onPress={() => {
 						router.push({

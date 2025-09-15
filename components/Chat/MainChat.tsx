@@ -423,6 +423,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				renderComposer={renderComposer}
 				renderInputToolbar={renderInputToolbar}
 				renderMessageVideo={renderMessageVideo}
+				isKeyboardInternallyHandled={true}
 				renderBubble={(props: any) =>
 					props.currentMessage.messageType === "receipt" ? (
 						<ReceiptChat
