@@ -12,6 +12,7 @@ const ReceiptChat = ({
 	metadata: any;
 	isUser: boolean;
 }) => {
+	console.log(metadata.invoice);
 	return (
 		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }}>
 			<View style={[styles.card]}>

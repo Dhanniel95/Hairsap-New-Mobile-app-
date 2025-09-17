@@ -77,10 +77,10 @@ const UserForm = ({
 				<InputField
 					val={phone}
 					setVal={setPhone}
-					label="Whatsapp Number"
+					label="Phone Number"
 					isLight={true}
 					number={true}
-					placeholder="Add Whatsapp Number"
+					placeholder="Add Phone Number"
 				/>
 				<TouchableOpacity
 					activeOpacity={0.8}

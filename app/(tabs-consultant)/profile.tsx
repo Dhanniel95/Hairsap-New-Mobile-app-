@@ -120,7 +120,8 @@ const ProfileScreen = () => {
 												>
 													₦
 													{formatCommas(
-														profile.bookingAmount
+														profile.completedBookingAmount /
+															100
 													)}
 												</Text>
 												<Text

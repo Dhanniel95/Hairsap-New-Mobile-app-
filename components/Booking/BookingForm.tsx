@@ -163,7 +163,7 @@ const BookingForm = ({
 				const assistantProIds =
 					selectedBraiders.length > 1
 						? selectedBraiders.slice(1).map(Number)
-						: [selectedBraiders[0]];
+						: [];
 				let payload = {
 					assignedProId: Number(selectedBraiders[0]),
 					subServiceIds: selectedService,

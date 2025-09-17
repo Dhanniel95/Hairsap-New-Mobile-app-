@@ -5,7 +5,6 @@ import bookService from "@/redux/book/bookService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { formatCurrency } from "@/utils/currency";
-import { displayError } from "@/utils/error";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { format, parseISO } from "date-fns";
 import { useLocalSearchParams } from "expo-router";
@@ -74,7 +73,6 @@ const ActivityBookings = () => {
 			}
 		} catch (err) {
 			setLoad(false);
-			console.log(displayError(err, false));
 		}
 	};
 

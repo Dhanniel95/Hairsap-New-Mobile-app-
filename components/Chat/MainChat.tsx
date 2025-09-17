@@ -138,11 +138,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const loadLastMessage = async () => {
 		if (chatInfo?.chatId) {
 			try {
-				console.log(chatInfo.chatId, "ID");
 				await chatService.markAsRead(chatInfo.chatId);
-			} catch (err) {
-				console.log(err, "err");
-			}
+			} catch (err) {}
 		}
 	};
 
@@ -457,7 +454,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					)
 				}
 				keyboardShouldPersistTaps="handled"
-				bottomOffset={Platform.OS === "ios" ? 30 : 0}
+				bottomOffset={Platform.OS === "ios" ? 0 : 0}
 				onPress={() => {
 					setShowDoc(false);
 					setShowMenu(false);

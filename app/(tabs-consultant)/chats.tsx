@@ -1,4 +1,4 @@
-import Tab from "@/components/Basics/Tab";
+import ChatTabs from "@/components/Consultant/ChatTabs";
 import Header from "@/components/Header";
 import EachChat from "@/components/List/EachChat";
 import ModalComponent from "@/components/ModalComponent";
@@ -196,36 +196,14 @@ const ChatRooms = () => {
 					</TouchableOpacity>
 				</View>
 				<View style={{ marginBottom: 20, marginTop: 15 }}>
-					<Tab
-						tabs={[
-							{
-								id: 1,
-								name: "All Guests",
-								sub: guestList.length,
-							},
-							{
-								id: 2,
-								name: "All Customers",
-								sub: customersList.length,
-							},
-							{
-								id: 3,
-								name: "My Guests",
-								sub: myGuestList.length,
-							},
-							{
-								id: 4,
-								name: "My Customers",
-								sub: myCustomersList.length,
-							},
-							{
-								id: 5,
-								name: "Braiders",
-								sub: braidersList.length,
-							},
-						]}
+					<ChatTabs
 						activeTab={activeTab}
 						setActiveTab={setActiveTab}
+						guestList={guestList.length}
+						braidersList={braidersList.length}
+						customersList={customersList.length}
+						myCustomersList={myCustomersList.length}
+						myGuestList={myGuestList.length}
 					/>
 				</View>
 				{activeTab === 2 && (
