@@ -35,6 +35,7 @@ const BookingForm = ({
 	const [duration, setDuration] = useState("");
 	const [durationCount, setDurationCount] = useState(0);
 	const [address, setAddress] = useState("");
+	const [description, setDescription] = useState("");
 	const [braiders, setBraiders] = useState<any>([]);
 	const [selectedBraiders, setSelectedBraiders] = useState([]);
 	const [dateTime, setDateTime] = useState("");
@@ -172,6 +173,7 @@ const BookingForm = ({
 					address,
 					channel: "cash",
 					assistantProIds,
+					description,
 				};
 				setLoad(true);
 				if (detail?.bookingId) {
@@ -183,7 +185,6 @@ const BookingForm = ({
 				onClose();
 			} catch (err) {
 				let msg = displayError(err, false);
-				console.log(msg, "msg");
 				setLoad(false);
 				Alert.alert("Error", msg.toString());
 			}
@@ -235,6 +236,12 @@ const BookingForm = ({
 					label="Add Braiders"
 					isLight={true}
 					multiple={true}
+				/>
+				<InputField
+					val={description}
+					setVal={setDescription}
+					label="Description"
+					isLight={true}
 				/>
 				<TouchableOpacity
 					activeOpacity={0.8}

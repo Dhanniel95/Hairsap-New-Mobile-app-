@@ -1,4 +1,3 @@
-import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
 import { FontAwesome } from "@expo/vector-icons";
@@ -20,9 +19,6 @@ const Header = () => {
 					style={{ width: 120, height: 40 }}
 					contentFit="contain"
 				/>
-				<Text style={[textStyles.text, { fontSize: 11 }]}>
-					Home Beauty Service
-				</Text>
 			</View>
 			<TouchableOpacity
 				style={{ position: "relative" }}
