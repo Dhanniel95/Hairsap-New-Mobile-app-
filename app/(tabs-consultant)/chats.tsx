@@ -147,8 +147,8 @@ const ChatRooms = () => {
 		setSearchList(
 			customersList.filter(
 				(user: any) =>
-					user.name.toLowerCase().includes(lowerQuery) ||
-					user.phone.includes(lowerQuery)
+					user?.name?.toLowerCase().includes(lowerQuery) ||
+					user?.phone?.includes(lowerQuery)
 			)
 		);
 	};
@@ -229,7 +229,7 @@ const ChatRooms = () => {
 							activeTab === 1
 								? guestList
 								: activeTab === 2
-								? searchList?.length > 0
+								? search
 									? searchList
 									: customersList
 								: activeTab === 3

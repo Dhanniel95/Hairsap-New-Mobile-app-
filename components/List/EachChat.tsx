@@ -34,23 +34,23 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 		return initials;
 	};
 
-	return chat?.chat ? (
+	return (
 		<TouchableOpacity
 			disabled={!isBtnAllowed}
 			onPress={() =>
 				router.push({
 					pathname: "/(app)/chat",
 					params: {
-						chatRoomId: chatInfo?.chatRoomId,
+						chatRoomId: chatInfo?.chatRoomId || chat.chatRoomId,
 						user: chat.name,
 						image: chat.profilePhotoUrl,
 						newMsg,
 						receiverId: chat.userId,
 						userType,
-						chatId: chatInfo.chatId,
+						chatId: chatInfo?.chatId || chat.chatId,
 						createdAt: chatInfo?.createdAt,
-						messageType: chatInfo.messageType,
-						message: chatInfo.message,
+						messageType: chatInfo?.messageType || "",
+						message: chatInfo?.message || "",
 					},
 				})
 			}
@@ -114,7 +114,7 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 							{ color: "#000E08", fontSize: 12 },
 						]}
 					>
-						{chatInfo.updatedAt
+						{chatInfo?.updatedAt
 							? formatChatDate(chatInfo.updatedAt)
 							: ""}
 					</Text>
@@ -136,91 +136,15 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 							},
 						]}
 					>
-						{chatInfo?.message?.substring(0, 40)}...
+						{chatInfo?.message
+							? `${chatInfo?.message?.substring(0, 40)}...`
+							: `Click to Chat`}
 					</Text>
 					<View style={styles.count}>
 						<Text style={[textStyles.textMid, { color: "#FFF" }]}>
 							{chat.unreadMessages}
 						</Text>
 					</View>
-				</View>
-			</View>
-		</TouchableOpacity>
-	) : (
-		<TouchableOpacity
-			onPress={() =>
-				router.push({
-					pathname: "/(app)/chat",
-					params: {
-						chatRoomId: chat.chatRoomId,
-						user: chat.name,
-						image: chat.profilePhotoUrl,
-						receiverId: chat.userId,
-						userType,
-						chatId: chat.chatId,
-					},
-				})
-			}
-			style={[
-				styles.body,
-				{
-					backgroundColor:
-						chat.involvedUsers?.length > 0
-							? colors.white
-							: "#CCFBF180",
-				},
-			]}
-		>
-			<View style={{ marginRight: 10 }}>
-				<Image
-					source={
-						chat.profilePhotoUrl
-							? { uri: chat.profilePhotoUrl }
-							: require("../../assets/images/profile.jpg")
-					}
-					style={{ height: 60, width: 60, borderRadius: 30 }}
-				/>
-			</View>
-			<View style={{ maxWidth: "80%" }}>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						justifyContent: "space-between",
-						marginBottom: 5,
-					}}
-				>
-					<Text
-						style={[
-							textStyles.textBold,
-							{
-								color: "#000E08",
-								fontSize: 15,
-								textTransform: "capitalize",
-							},
-						]}
-					>
-						{chat.name}
-					</Text>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						justifyContent: "space-between",
-					}}
-				>
-					<Text
-						style={[
-							textStyles.text,
-							{
-								fontSize: 13,
-								color: "#797C7B",
-							},
-						]}
-					>
-						Click to Chat
-					</Text>
 				</View>
 			</View>
 		</TouchableOpacity>

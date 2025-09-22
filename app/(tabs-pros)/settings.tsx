@@ -42,7 +42,10 @@ const SettingsScreen = () => {
 				Settings
 			</Text>
 			<View style={{ flex: 1, paddingHorizontal: "8%" }}>
-				<ScrollView showsVerticalScrollIndicator={false}>
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ paddingBottom: 150 }}
+				>
 					<View style={{ flex: 1, paddingTop: 20 }}>
 						<ButtonSettings
 							name="Transaction History"
