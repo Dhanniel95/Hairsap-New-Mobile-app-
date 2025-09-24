@@ -10,7 +10,7 @@ const formatCurrency = (value: any) => {
 };
 
 const formatCommas = (value: any) => {
-	value = value.toString();
+	value = value?.toString() || "0";
 	let numerics =
 		value.includes(".") == true ? value.split(".") : [value, null];
 	let worker = (num: any, equiv: any) => {

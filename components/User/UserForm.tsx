@@ -10,20 +10,24 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import KeyboardWrapper from "../Basics/KeyboardWrapper";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import InputField from "../InputField";
 
 const UserForm = ({
 	onSubmit,
 	userId,
+	inChat,
 }: {
-	onSubmit: (arg: any) => void;
+	onSubmit: () => void;
 	userId: string;
+	inChat?: boolean;
 }) => {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
 	const [load, setLoad] = useState(false);
+	const [details, setDetails] = useState<any>({});
+	const [magicLink, setMagicLink] = useState("");
 
 	const submitHandler = async () => {
 		try {
@@ -32,23 +36,35 @@ const UserForm = ({
 				phone: phone.trim(),
 				email,
 				guestUserId: Number(userId),
-				allowEmailUserExist: true,
-				allowPhoneNumberUserExist: true,
-			};
-			let payload2 = {
-				name: name.trim(),
-				phone: phone.trim(),
-				password: name.trim().toUpperCase().replace(/ /g, ""),
-				role: "user",
 			};
 			setLoad(true);
-			if (userId) {
-				await authService.consultantGuest(payload);
-			} else {
-				await authService.register(payload2);
-			}
+			let res = await authService.consultantGuest(payload);
 			setLoad(false);
-			onSubmit(payload);
+			if (res?.user) {
+				setDetails(res.user);
+			}
+		} catch (err: any) {
+			setLoad(false);
+			let msg = displayError(err, false);
+			Alert.alert("Error", msg?.toString());
+		}
+	};
+
+	const linkHandler = async () => {
+		try {
+			setLoad(true);
+			if (inChat) {
+				await authService.linkUser({
+					userId: details.userId,
+					guestUserId: Number(userId),
+				});
+				await authService.exchangeToken(details.userId, userId);
+			} else {
+				let res = await authService.generateToken(details.userId);
+				console.log(res, "RES");
+				setMagicLink(res);
+			}
+			onSubmit();
 		} catch (err: any) {
 			setLoad(false);
 			let msg = displayError(err, false);
@@ -58,50 +74,79 @@ const UserForm = ({
 	};
 
 	return (
-		<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
-			<KeyboardWrapper>
-				<InputField
-					val={name}
-					setVal={setName}
-					label="Name"
-					isLight={true}
-					placeholder="Add User's Name"
-				/>
-				<InputField
-					val={email}
-					setVal={setEmail}
-					label="Email"
-					isLight={true}
-					placeholder="Add User's email"
-				/>
-				<InputField
-					val={phone}
-					setVal={setPhone}
-					label="Phone Number"
-					isLight={true}
-					number={true}
-					placeholder="Add Phone Number"
-				/>
-				<TouchableOpacity
-					activeOpacity={0.8}
-					onPress={submitHandler}
-					style={[formStyles.mainBtn, { marginTop: 20 }]}
-				>
-					{load ? (
-						<ActivityIndicator color={"#FFF"} />
-					) : (
-						<Text
-							style={[
-								textStyles.textMid,
-								{ marginLeft: 10, color: "#FFF" },
-							]}
-						>
-							Create User
-						</Text>
-					)}
-				</TouchableOpacity>
-			</KeyboardWrapper>
-		</View>
+		<KeyboardAwareScrollView
+			enableAutomaticScroll={true}
+			showsVerticalScrollIndicator={false}
+			enableOnAndroid={true}
+			keyboardShouldPersistTaps="handled"
+			contentContainerStyle={{}}
+		>
+			{details?.userId ? (
+				<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
+					<Text style={[textStyles.text, { color: "#FFF" }]}>
+						The customer account, {details.name} has been saved.
+					</Text>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						onPress={linkHandler}
+						style={[formStyles.mainBtn, { marginTop: 20 }]}
+					>
+						{load ? (
+							<ActivityIndicator color={"#FFF"} />
+						) : (
+							<Text
+								style={[textStyles.textMid, { color: "#FFF" }]}
+							>
+								{inChat ? "Link User" : "Get Login Link"}
+							</Text>
+						)}
+					</TouchableOpacity>
+				</View>
+			) : (
+				<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
+					<InputField
+						val={name}
+						setVal={setName}
+						label="Name"
+						isLight={true}
+						placeholder="Add User's Name"
+					/>
+					<InputField
+						val={email}
+						setVal={setEmail}
+						label="Email"
+						isLight={true}
+						placeholder="Add User's email"
+					/>
+					<InputField
+						val={phone}
+						setVal={setPhone}
+						label="Phone Number"
+						isLight={true}
+						number={true}
+						placeholder="Add Phone Number"
+					/>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						onPress={submitHandler}
+						style={[formStyles.mainBtn, { marginTop: 20 }]}
+					>
+						{load ? (
+							<ActivityIndicator color={"#FFF"} />
+						) : (
+							<Text
+								style={[
+									textStyles.textMid,
+									{ marginLeft: 10, color: "#FFF" },
+								]}
+							>
+								Create User
+							</Text>
+						)}
+					</TouchableOpacity>
+				</View>
+			)}
+		</KeyboardAwareScrollView>
 	);
 };
 

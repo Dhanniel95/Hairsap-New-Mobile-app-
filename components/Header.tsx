@@ -1,10 +1,10 @@
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
 import { FontAwesome } from "@expo/vector-icons";
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Logo from "../assets/images/logo-dark.svg";
 
 const Header = () => {
 	const router = useRouter();
@@ -14,11 +14,7 @@ const Header = () => {
 	return (
 		<View style={styles.header}>
 			<View style={{ alignItems: "center" }}>
-				<Image
-					source={require("../assets/images/logo-dark.svg")}
-					style={{ width: 120, height: 40 }}
-					contentFit="contain"
-				/>
+				<Logo height={50} width={130} />
 			</View>
 			<TouchableOpacity
 				style={{ position: "relative" }}

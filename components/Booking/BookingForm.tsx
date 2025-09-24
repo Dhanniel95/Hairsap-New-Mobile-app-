@@ -19,7 +19,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import DatePicker from "../DatePicker";
 import InputField from "../InputField";
 import MultipleSelect from "../MultipleSelect";
-import SelectField from "../SelectField";
 
 const BookingForm = ({
 	userId,
@@ -38,7 +37,7 @@ const BookingForm = ({
 	const [address, setAddress] = useState("");
 	const [description, setDescription] = useState("");
 	const [braiders, setBraiders] = useState<any>([]);
-	const [selectedBraiders, setSelectedBraiders] = useState([]);
+	const [selectedBraiders, setSelectedBraiders] = useState<any>([]);
 	const [dateTime, setDateTime] = useState("");
 	const [load, setLoad] = useState(false);
 	const [referralCode, setReferralCode] = useState("");
@@ -52,7 +51,7 @@ const BookingForm = ({
 			);
 			setAddress(detail.address);
 			setDateTime(detail.arrivalAt);
-			// setBraiders([detail.pro])
+			setSelectedBraiders([detail.proId]);
 		}
 	}, [detail]);
 
@@ -101,7 +100,8 @@ const BookingForm = ({
 						return {
 							...s,
 							key: s.userId,
-							value: s.name,
+							value: s.userId,
+							label: s.name,
 						};
 					})
 				);
@@ -203,14 +203,6 @@ const BookingForm = ({
 			contentContainerStyle={{}}
 		>
 			<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
-				{/* <SelectField
-					multiple={true}
-					setValue={setSelectedService}
-					label="Service"
-					data={list}
-					placeholder="Select Service"
-					isLight={true}
-				/> */}
 				<MultipleSelect
 					data={list}
 					value={selectedService}
@@ -246,13 +238,13 @@ const BookingForm = ({
 					isLight={true}
 					placeholder={showDateTime(dateTime)}
 				/>
-				<SelectField
+				<MultipleSelect
+					data={braiders}
+					value={selectedBraiders}
 					setValue={setSelectedBraiders}
 					placeholder="Add Braiders"
-					data={braiders}
-					label="Add Braiders"
 					isLight={true}
-					multiple={true}
+					label="Add Braiders"
 				/>
 				<InputField
 					val={description}

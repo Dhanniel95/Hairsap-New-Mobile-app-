@@ -9,12 +9,10 @@ import UserForm from "../User/UserForm";
 const ConsultantMenu = ({
 	allowBooking,
 	allowUserCreate,
-	onSubmit,
 	userId,
 }: {
 	allowBooking?: boolean;
 	allowUserCreate?: boolean;
-	onSubmit: (arg: any) => void;
 	userId: string;
 }) => {
 	const [openModal, setOpenModal] = useState(false);
@@ -86,11 +84,11 @@ const ConsultantMenu = ({
 					/>
 				) : (
 					<UserForm
-						onSubmit={(arg) => {
+						onSubmit={() => {
 							setOpenModal(false);
-							onSubmit(arg);
 						}}
 						userId={userId}
+						inChat={true}
 					/>
 				)}
 			</ModalComponent>

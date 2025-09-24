@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginTop: 10,
+		marginRight: 5,
 	},
 	selectedTextStyle: {
 		fontSize: 12,

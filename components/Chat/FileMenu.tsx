@@ -9,13 +9,13 @@ import React, { useState } from "react";
 import {
 	ActivityIndicator,
 	Image,
-	KeyboardAvoidingView,
 	Platform,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
 	View,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import InputField from "../InputField";
 import ModalComponent from "../ModalComponent";
 
@@ -47,7 +47,7 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 						: assets[0].uri;
 				setMedia(imgUrl);
 				setOpenMedia(true);
-				//saveFile(imgUrl, type);
+				saveFile(imgUrl, type);
 			}
 		} catch (error) {
 			console.log("there was an error loading image", error);
@@ -150,16 +150,19 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 				closeModal={() => setOpenMedia(false)}
 				centered
 			>
-				<KeyboardAvoidingView
-					behavior={Platform.OS === "ios" ? "padding" : undefined}
-					keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+				<KeyboardAwareScrollView
+					enableAutomaticScroll={true}
+					showsVerticalScrollIndicator={false}
+					enableOnAndroid={true}
+					keyboardShouldPersistTaps="handled"
+					contentContainerStyle={{}}
 				>
-					<View style={{ width: "100%", height: 300 }}>
-						<View style={{ position: "relative", height: 300 }}>
+					<View style={{ width: "100%", height: 350 }}>
+						<View style={{ position: "relative", height: 250 }}>
 							{mediaType === "images" ? (
 								<Image
 									source={{ uri: media }}
-									style={{ width: "100%", height: 200 }}
+									style={{ width: "100%", height: 250 }}
 								/>
 							) : (
 								player && (
@@ -217,7 +220,7 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 							</View>
 						</View>
 					</View>
-				</KeyboardAvoidingView>
+				</KeyboardAwareScrollView>
 			</ModalComponent>
 		</View>
 	);

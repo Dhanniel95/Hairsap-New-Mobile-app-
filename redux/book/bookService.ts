@@ -75,6 +75,11 @@ const transportInfo = async () => {
 	return data?.data;
 };
 
+const seekConsultation = async (obj: any) => {
+	const { data } = await apiRequest().post(`/users/seek-consultation`, obj);
+	return data;
+};
+
 const bookService = {
 	listServices,
 	listTransactionHistory,
@@ -89,6 +94,7 @@ const bookService = {
 	cancelBooking,
 	transportInfo,
 	listBookingSummaries,
+	seekConsultation,
 };
 
 export default bookService;

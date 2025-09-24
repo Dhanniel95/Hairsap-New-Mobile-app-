@@ -1,3 +1,5 @@
+import bookService from "@/redux/book/bookService";
+import { useAppSelector } from "@/utils/hooks";
 import { Ionicons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { useRouter } from "expo-router";
@@ -17,6 +19,8 @@ import {
 const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 	const router = useRouter();
 
+	const { user } = useAppSelector((state) => state.auth);
+
 	const { height } = useWindowDimensions();
 
 	const [isMuted, setIsMuted] = useState(false);
@@ -24,6 +28,7 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 	const [duration, setDuration] = useState(0);
 	const [position, setPosition] = useState(0);
 	const [load, setLoad] = useState(false);
+	const [loadC, setLoadC] = useState(false);
 
 	const player = useVideoPlayer(video.mediaUrl, (player) => {
 		player.loop = true;
@@ -91,6 +96,26 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 		player.currentTime = value / 1000; // actually seek video
 	};
 
+	const seekHandler = async () => {
+		try {
+			setLoadC(true);
+			let res = await bookService.seekConsultation({
+				userId: user.userId,
+				galleryId: video.galleryId,
+				galleryItemId: video.galleryId,
+			});
+			console.log(res, "RES");
+			setLoadC(false);
+			router.push(
+				user.role === "guest"
+					? "/(tabs-guest)/consult"
+					: "/(tabs-user)/consult"
+			);
+		} catch (err) {
+			setLoadC(false);
+		}
+	};
+
 	return (
 		<View style={{ height, backgroundColor: "#000", flex: 1 }}>
 			<TouchableWithoutFeedback onPress={togglePlay}>
@@ -106,16 +131,18 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 			<View style={styles.textArea}>
 				<TouchableOpacity
 					onPress={() => {
-						router.push({
-							pathname: "/(app)/chat",
-							params: {
-								thumbnail: video.thumbnail,
-								video: video.mediaUrl,
-								text: video.description,
-							},
-						});
+						// router.push({
+						// 	pathname: "/(app)/chat",
+						// 	params: {
+						// 		thumbnail: video.thumbnail,
+						// 		video: video.mediaUrl,
+						// 		text: video.description,
+						// 	},
+						// });
+						seekHandler();
 					}}
 					activeOpacity={0.8}
+					disabled={loadC}
 					style={{
 						backgroundColor: "#14A79F",
 						alignItems: "center",
@@ -123,9 +150,13 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 						borderRadius: 10,
 					}}
 				>
-					<Text style={{ fontFamily: "regular", color: "#FFF" }}>
-						Seek Consultations
-					</Text>
+					{loadC ? (
+						<ActivityIndicator />
+					) : (
+						<Text style={{ fontFamily: "regular", color: "#FFF" }}>
+							Seek Consultations
+						</Text>
+					)}
 				</TouchableOpacity>
 			</View>
 			<View style={styles.controlsContainer}>

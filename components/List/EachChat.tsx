@@ -17,12 +17,13 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 		? "1"
 		: "0";
 
-	let isBtnAllowed =
-		newMsg === "1"
+	let isBtnAllowed = chatInfo
+		? newMsg === "1"
 			? true
 			: newMsg == "0" && chat.participants?.length === 1
 			? true
-			: false;
+			: false
+		: true;
 
 	const getInitials = (fullName: string) => {
 		if (!fullName) return "";
@@ -33,8 +34,6 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 
 		return initials;
 	};
-
-	console.log(isBtnAllowed, "vv");
 
 	return (
 		<TouchableOpacity

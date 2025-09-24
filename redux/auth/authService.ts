@@ -70,6 +70,25 @@ const saveToken = async (token: string) => {
 	return data;
 };
 
+const linkUser = async (obj: any) => {
+	const { data } = await apiRequest().post(`/users/link-guest`, obj);
+	return data;
+};
+
+const exchangeToken = async (userId: string, guestId: string) => {
+	const { data } = await apiRequest().post(`/auth/${userId}/token-exchange`, {
+		guestId,
+	});
+	return data;
+};
+
+const generateToken = async (userId: string) => {
+	const { data } = await apiRequest().post(`/auth/generatelogintoken`, {
+		userId,
+	});
+	return data;
+};
+
 const authService = {
 	login,
 	register,
@@ -85,6 +104,9 @@ const authService = {
 	fetchConsultantProfile,
 	consultantGuest,
 	saveToken,
+	linkUser,
+	exchangeToken,
+	generateToken,
 };
 
 export default authService;

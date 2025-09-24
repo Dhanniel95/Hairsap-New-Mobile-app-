@@ -33,8 +33,6 @@ const Gallery = () => {
 
 	const { videos } = useAppSelector((state) => state.book);
 
-	//console.log(videos);
-
 	useEffect(() => {
 		dispatch(listGallery());
 	}, []);

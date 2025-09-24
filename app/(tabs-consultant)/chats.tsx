@@ -115,8 +115,6 @@ const ChatRooms = () => {
 		} catch (err) {}
 	};
 
-	console.log(customersList, "li");
-
 	const listMyCustomers = async () => {
 		try {
 			let res = await chatService.listMyCustomersChats();
@@ -274,6 +272,7 @@ const ChatRooms = () => {
 				closeModal={() => setOpenModal(false)}
 				centered
 				bg="#334155"
+				onlyCancel={true}
 			>
 				<UserForm
 					onSubmit={() => {

@@ -12,8 +12,7 @@ const ReceiptChat = ({
 	metadata: any;
 	isUser: boolean;
 }) => {
-	console.log(metadata.invoice);
-	return (
+	return metadata?.serviceBooked ? (
 		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }}>
 			<View style={[styles.card]}>
 				<View style={styles.top}>
@@ -38,43 +37,39 @@ const ReceiptChat = ({
 							paddingRight: 5,
 						}}
 					>
-						{metadata?.invoice?.invoiceFees?.map(
-							(invoice: any, i: number) => (
-								<View key={i + 1}>
-									<Text
-										style={[
-											textStyles.textBold,
-											{
-												color: "#FFF",
-												fontSize: 14,
-												marginBottom: 5,
-											},
-										]}
-									>
-										STYLE:{" "}
-										<Text style={{ fontFamily: "regular" }}>
-											{invoice.name}
-										</Text>
-									</Text>
-									<Text
-										style={[
-											textStyles.textBold,
-											{
-												color: "#FFF",
-												fontSize: 14,
-												marginBottom: 5,
-											},
-										]}
-									>
-										PRICE:{" "}
-										<Text style={{ fontFamily: "regular" }}>
-											₦
-											{formatCommas(invoice?.price / 100)}
-										</Text>
-									</Text>
-								</View>
-							)
-						)}
+						<View>
+							<Text
+								style={[
+									textStyles.textBold,
+									{
+										color: "#FFF",
+										fontSize: 14,
+										marginBottom: 5,
+									},
+								]}
+							>
+								STYLE:{" "}
+								<Text style={{ fontFamily: "regular" }}>
+									{metadata.serviceBooked}
+								</Text>
+							</Text>
+							<Text
+								style={[
+									textStyles.textBold,
+									{
+										color: "#FFF",
+										fontSize: 14,
+										marginBottom: 5,
+									},
+								]}
+							>
+								PRICE:{" "}
+								<Text style={{ fontFamily: "regular" }}>
+									₦
+									{formatCommas((metadata?.price || 0) / 100)}
+								</Text>
+							</Text>
+						</View>
 					</View>
 				</View>
 				<BorderDashed color="#FFF" width={2} />
@@ -92,8 +87,7 @@ const ReceiptChat = ({
 						DATE:{" "}
 						<Text style={{ fontFamily: "regular" }}>
 							{format(
-								metadata.invoice?.invoiceFees[0]?.createdAt ||
-									new Date(),
+								metadata?.createdAt || new Date(),
 								"MMMM do, yyyy"
 							)}
 						</Text>
@@ -110,8 +104,7 @@ const ReceiptChat = ({
 						TIME:{" "}
 						<Text style={{ fontFamily: "regular" }}>
 							{format(
-								metadata.invoice?.invoiceFees[0]?.createdAt ||
-									new Date(),
+								metadata?.createdAt || new Date(),
 								"h:mm a"
 							)}
 						</Text>
@@ -165,7 +158,7 @@ const ReceiptChat = ({
 								textTransform: "uppercase",
 							}}
 						>
-							{metadata.invoice?.invoiceId}
+							{metadata.bookingCode}
 						</Text>
 					</Text>
 				</View>
@@ -185,10 +178,7 @@ const ReceiptChat = ({
 						<Text style={{ fontFamily: "regular" }}>
 							₦
 							{formatCommas(
-								metadata.invoice?.invoiceFees?.reduce(
-									(a: any, b: any) => a + b.price / 100,
-									0
-								) / 2
+								(metadata.appointmentBalance || 0) / 100
 							)}
 						</Text>
 					</Text>
@@ -206,10 +196,7 @@ const ReceiptChat = ({
 						<Text style={{ fontFamily: "regular" }}>
 							₦
 							{formatCommas(
-								metadata.invoice?.invoiceFees?.reduce(
-									(a: any, b: any) => a + b.price / 100,
-									0
-								) / 2
+								(metadata.appointmentDeposit || 0) / 100
 							)}
 						</Text>
 					</Text>
@@ -235,17 +222,13 @@ const ReceiptChat = ({
 						Total Service Price
 					</Text>
 					<Text style={[textStyles.textBold, { color: "#FFF" }]}>
-						₦
-						{formatCommas(
-							metadata.invoice?.invoiceFees?.reduce(
-								(a: any, b: any) => a + b.price / 100,
-								0
-							)
-						)}
+						₦{formatCommas((metadata?.price || 0) / 100)}
 					</Text>
 				</View>
 			</View>
 		</View>
+	) : (
+		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }} />
 	);
 };
 
@@ -279,7 +262,5 @@ const styles = StyleSheet.create({
 		borderStyle: "dashed",
 		borderRadius: 2,
 		borderLeftWidth: 0,
-		// borderRightWidth: 0,
-		// borderBottomWidth: 0,
 	},
 });

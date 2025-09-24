@@ -29,6 +29,7 @@ import ChatVideo from "./ChatVideo";
 import ConsultantMenu from "./ConsultantMenu";
 import FileMenu from "./FileMenu";
 import GalleryCheck from "./GalleryCheck";
+import ItemChat from "./ItemChat";
 import ReceiptChat from "./ReceiptChat";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
@@ -268,37 +269,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		}
 	};
 
-	const createdUserHandler = (arg: any) => {
-		let message = `An account has been created for you. Login with ${arg?.phone} as Phone Number.`;
-		let payload = {
-			_id: Math.random().toString(36).substring(7),
-			text: message,
-			createdAt: new Date(),
-			user: {
-				_id: user.userId,
-				name: user.name,
-				avatar: user.faceIdPhotoUrl,
-			},
-		};
-		setMessages((previousMessages) =>
-			GiftedChat.append(previousMessages, [payload])
-		);
-		if (socketRef.current?.connected) {
-			socketRef.current.emit(
-				"message:new",
-				{
-					message,
-					messageType: "text",
-					receiverId: Number(chatInfo.receiverId),
-					chatRoomId: Number(chatInfo.chatRoomId),
-				},
-				(response: any) => {
-					fetchMessages();
-				}
-			);
-		}
-	};
-
 	const renderSend = (props: any) => {
 		return (
 			<View
@@ -325,7 +295,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						chatInfo?.userType === "guest" ? true : false
 					}
 					allowBooking={chatInfo?.userType === "user" ? true : false}
-					onSubmit={createdUserHandler}
 					userId={chatInfo.receiverId}
 				/>
 			)}
@@ -435,6 +404,11 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						renderBubble={(props: any) =>
 							props.currentMessage.messageType === "receipt" ? (
 								<ReceiptChat
+									metadata={props.currentMessage.metaData}
+									isUser={props.position === "right"}
+								/>
+							) : props.currentMessage.messageType === "item" ? (
+								<ItemChat
 									metadata={props.currentMessage.metaData}
 									isUser={props.position === "right"}
 								/>
