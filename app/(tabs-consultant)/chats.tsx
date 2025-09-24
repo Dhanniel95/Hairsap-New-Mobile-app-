@@ -115,6 +115,8 @@ const ChatRooms = () => {
 		} catch (err) {}
 	};
 
+	console.log(customersList, "li");
+
 	const listMyCustomers = async () => {
 		try {
 			let res = await chatService.listMyCustomersChats();
@@ -239,9 +241,8 @@ const ChatRooms = () => {
 								: braidersList
 						}
 						keyExtractor={(item: any) =>
-							activeTab === 5
-								? item.userId
-								: item.chat?.chatId?.toString()
+							item.chat?.chatId?.toString() ||
+							item.userId?.toString()
 						}
 						renderItem={({ item }) => (
 							<EachChat

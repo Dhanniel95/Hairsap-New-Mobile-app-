@@ -14,6 +14,7 @@ const InputField = ({
 	password,
 	isLight,
 	editable,
+	multi,
 }: {
 	val: string;
 	setVal: (arg: string) => void;
@@ -24,6 +25,7 @@ const InputField = ({
 	maxLength?: number;
 	isLight?: boolean;
 	editable?: boolean;
+	multi?: boolean;
 }) => {
 	return (
 		<View style={{ marginBottom: 20 }}>
@@ -44,13 +46,15 @@ const InputField = ({
 			<TextInput
 				value={val}
 				onChangeText={setVal}
-				style={[formStyles.input]}
+				style={[formStyles.input, { height: multi ? 80 : 50 }]}
 				placeholder={placeholder || ""}
 				placeholderTextColor={"rgba(0,0,0,0.6)"}
 				keyboardType={number ? "number-pad" : "default"}
 				secureTextEntry={password}
 				maxLength={maxLength || 200}
 				editable={editable}
+				multiline={multi ? true : false}
+				numberOfLines={4}
 			/>
 		</View>
 	);

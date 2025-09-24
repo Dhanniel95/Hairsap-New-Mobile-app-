@@ -15,9 +15,10 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import KeyboardWrapper from "../Basics/KeyboardWrapper";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DatePicker from "../DatePicker";
 import InputField from "../InputField";
+import MultipleSelect from "../MultipleSelect";
 import SelectField from "../SelectField";
 
 const BookingForm = ({
@@ -40,6 +41,7 @@ const BookingForm = ({
 	const [selectedBraiders, setSelectedBraiders] = useState([]);
 	const [dateTime, setDateTime] = useState("");
 	const [load, setLoad] = useState(false);
+	const [referralCode, setReferralCode] = useState("");
 
 	useEffect(() => {
 		if (detail?.bookingId) {
@@ -76,7 +78,7 @@ const BookingForm = ({
 						services.map((s: any, i) => {
 							return {
 								...s,
-								value: s.name,
+								value: s.subServiceId,
 								label: s.name,
 								key: s.subServiceId,
 							};
@@ -138,7 +140,7 @@ const BookingForm = ({
 	const showDateTime = (val: any) => {
 		if (val) {
 			let valDate = new Date(val);
-			let realDate = format(valDate, "yyyy/MM/dd HH:mm");
+			let realDate = format(valDate, "dd/MM/yyyy HH:mm");
 			let addTime;
 			if (durationCount < 60) {
 				addTime = format(addMinutes(valDate, durationCount), "HH:mm");
@@ -174,6 +176,7 @@ const BookingForm = ({
 					channel: "cash",
 					assistantProIds,
 					description,
+					referralCode,
 				};
 				setLoad(true);
 				if (detail?.bookingId) {
@@ -192,15 +195,29 @@ const BookingForm = ({
 	};
 
 	return (
-		<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
-			<KeyboardWrapper>
-				<SelectField
+		<KeyboardAwareScrollView
+			enableAutomaticScroll={true}
+			showsVerticalScrollIndicator={false}
+			enableOnAndroid={true}
+			keyboardShouldPersistTaps="handled"
+			contentContainerStyle={{}}
+		>
+			<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
+				{/* <SelectField
 					multiple={true}
 					setValue={setSelectedService}
 					label="Service"
 					data={list}
 					placeholder="Select Service"
 					isLight={true}
+				/> */}
+				<MultipleSelect
+					data={list}
+					value={selectedService}
+					setValue={setSelectedService}
+					placeholder="Select Service"
+					isLight={true}
+					label="Service"
 				/>
 				<InputField
 					val={price}
@@ -242,6 +259,13 @@ const BookingForm = ({
 					setVal={setDescription}
 					label="Description"
 					isLight={true}
+					multi={true}
+				/>
+				<InputField
+					val={referralCode}
+					setVal={setReferralCode}
+					label="Referral Code"
+					isLight={true}
 				/>
 				<TouchableOpacity
 					activeOpacity={0.8}
@@ -267,8 +291,8 @@ const BookingForm = ({
 						</>
 					)}
 				</TouchableOpacity>
-			</KeyboardWrapper>
-		</View>
+			</View>
+		</KeyboardAwareScrollView>
 	);
 };
 

@@ -34,6 +34,8 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 		return initials;
 	};
 
+	console.log(isBtnAllowed, "vv");
+
 	return (
 		<TouchableOpacity
 			disabled={!isBtnAllowed}

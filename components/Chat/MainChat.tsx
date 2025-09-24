@@ -12,6 +12,7 @@ import {
 	Platform,
 	StyleSheet,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	View,
 } from "react-native";
 import {
@@ -393,76 +394,87 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 			style={{ flex: 1, backgroundColor: "#fff" }}
 			edges={["bottom"]}
 		>
-			<GiftedChat
-				messages={messages}
-				onSend={onSend}
-				user={{
-					_id: user.userId,
-					name: user.name,
-					avatar: user.faceIdPhotoUrl,
-				}}
-				showUserAvatar
-				alwaysShowSend
-				scrollToBottom
-				inverted={messages.length > 0 ? true : false}
-				listViewProps={{
-					contentContainerStyle: {
-						paddingHorizontal: 20,
-					},
-					ListEmptyComponent: () =>
-						user.role === "user" || user.role === "guest" ? (
-							<GalleryCheck />
-						) : (
-							<></>
-						),
-				}}
-				renderSend={renderSend}
-				renderComposer={renderComposer}
-				renderInputToolbar={renderInputToolbar}
-				renderMessageVideo={renderMessageVideo}
-				isKeyboardInternallyHandled={true}
-				renderBubble={(props: any) =>
-					props.currentMessage.messageType === "receipt" ? (
-						<ReceiptChat
-							metadata={props.currentMessage.metaData}
-							isUser={props.position === "right"}
-						/>
-					) : (
-						<Bubble
-							{...props}
-							wrapperStyle={{
-								right: {
-									backgroundColor: colors.primary,
-									borderRadius: 12,
-									padding: 5,
-								},
-								left: {
-									backgroundColor: "#F2F7FB",
-									borderRadius: 12,
-									padding: 5,
-								},
-							}}
-							textStyle={{
-								right: {
-									color: "#fff",
-								},
-								left: {
-									color: "#000",
-								},
-							}}
-						/>
-					)
-				}
-				keyboardShouldPersistTaps="handled"
-				bottomOffset={Platform.OS === "ios" ? 0 : 0}
+			<TouchableWithoutFeedback
+				style={{ flex: 1 }}
 				onPress={() => {
 					setShowDoc(false);
 					setShowMenu(false);
 				}}
-				renderLoading={() => (
-					<ActivityIndicator size="large" color={colors.primary} />
-				)}
-			/>
+				accessible={false}
+			>
+				<View style={{ flex: 1 }}>
+					<GiftedChat
+						messages={messages}
+						onSend={onSend}
+						user={{
+							_id: user.userId,
+							name: user.name,
+							avatar: user.faceIdPhotoUrl,
+						}}
+						showUserAvatar
+						alwaysShowSend
+						scrollToBottom
+						inverted={messages.length > 0 ? true : false}
+						listViewProps={{
+							contentContainerStyle: {
+								paddingHorizontal: 20,
+							},
+							ListEmptyComponent: () =>
+								user.role === "user" ||
+								user.role === "guest" ? (
+									<GalleryCheck />
+								) : (
+									<></>
+								),
+						}}
+						renderSend={renderSend}
+						renderComposer={renderComposer}
+						renderInputToolbar={renderInputToolbar}
+						renderMessageVideo={renderMessageVideo}
+						isKeyboardInternallyHandled={true}
+						renderBubble={(props: any) =>
+							props.currentMessage.messageType === "receipt" ? (
+								<ReceiptChat
+									metadata={props.currentMessage.metaData}
+									isUser={props.position === "right"}
+								/>
+							) : (
+								<Bubble
+									{...props}
+									wrapperStyle={{
+										right: {
+											backgroundColor: colors.primary,
+											borderRadius: 12,
+											padding: 5,
+										},
+										left: {
+											backgroundColor: "#F2F7FB",
+											borderRadius: 12,
+											padding: 5,
+										},
+									}}
+									textStyle={{
+										right: {
+											color: "#fff",
+										},
+										left: {
+											color: "#000",
+										},
+									}}
+								/>
+							)
+						}
+						keyboardShouldPersistTaps="handled"
+						bottomOffset={Platform.OS === "ios" ? 0 : 0}
+						renderLoading={() => (
+							<ActivityIndicator
+								size="large"
+								color={colors.primary}
+							/>
+						)}
+					/>
+				</View>
+			</TouchableWithoutFeedback>
 		</SafeAreaView>
 	);
 };

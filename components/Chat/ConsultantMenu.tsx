@@ -77,6 +77,7 @@ const ConsultantMenu = ({
 				closeModal={() => setOpenModal(false)}
 				centered
 				bg="#334155"
+				onlyCancel={true}
 			>
 				{forBooking ? (
 					<BookingForm

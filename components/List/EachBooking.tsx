@@ -121,6 +121,7 @@ const EachBooking = ({ booking }: { booking: any }) => {
 				closeModal={() => setOpenModal(false)}
 				centered
 				bg="#334155"
+				onlyCancel={true}
 			>
 				<BookingForm
 					userId={booking.userId}

@@ -52,6 +52,7 @@ const MultipleSelect = ({
 				onChange={(item) => {
 					setValue(item);
 				}}
+				confirmSelectItem={true}
 				renderRightIcon={() => (
 					<Entypo
 						name="chevron-with-circle-down"
@@ -61,6 +62,24 @@ const MultipleSelect = ({
 					/>
 				)}
 				selectedStyle={styles.selectedStyle}
+				alwaysRenderSelectedItem={true}
+				itemTextStyle={{ fontSize: 13 }}
+				renderSelectedItem={(item, unSelect) => (
+					<View style={styles.selectedStyle}>
+						<Text
+							style={styles.selectedTextStyle}
+							numberOfLines={1}
+							ellipsizeMode="tail"
+						>
+							{item.label}
+						</Text>
+						<Entypo
+							name="circle-with-cross"
+							color={"#134E4A"}
+							size={15}
+						/>
+					</View>
+				)}
 			/>
 		</View>
 	);
@@ -70,11 +89,6 @@ export default MultipleSelect;
 
 const styles = StyleSheet.create({
 	container: { marginBottom: 20 },
-	selectedTextStyle: {
-		fontSize: 14,
-		color: "#134E4A",
-		fontFamily: "medium",
-	},
 	iconStyle: {
 		width: 20,
 		height: 20,
@@ -84,7 +98,21 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 	},
 	selectedStyle: {
-		borderRadius: 12,
+		borderRadius: 18,
 		backgroundColor: "#E2FFCF",
+		fontSize: 9,
+		paddingHorizontal: 10,
+		paddingVertical: 8,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginTop: 10,
+	},
+	selectedTextStyle: {
+		fontSize: 12,
+		color: "#134E4A",
+		fontFamily: "bold",
+		maxWidth: 150,
+		marginRight: 20,
 	},
 });

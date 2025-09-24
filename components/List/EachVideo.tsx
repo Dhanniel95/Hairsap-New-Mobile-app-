@@ -72,7 +72,6 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 	useEffect(() => {
 		if (player.status !== "readyToPlay") return;
 		const onTimeUpdate = () => {
-			console.log("timeUpdate", player.currentTime);
 			setPosition(player.currentTime * 1000);
 			setDuration(player.duration * 1000);
 		};

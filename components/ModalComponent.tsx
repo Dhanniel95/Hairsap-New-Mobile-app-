@@ -15,6 +15,7 @@ const ModalComponent = ({
 	centered,
 	bg,
 	maxHeight,
+	onlyCancel,
 }: {
 	open: boolean;
 	closeModal: () => void;
@@ -22,6 +23,7 @@ const ModalComponent = ({
 	centered?: boolean;
 	bg?: string;
 	maxHeight?: number;
+	onlyCancel?: boolean;
 }) => {
 	return (
 		<Modal
@@ -32,7 +34,9 @@ const ModalComponent = ({
 		>
 			<Pressable
 				onPress={(event) =>
-					event.target == event.currentTarget && closeModal()
+					event.target == event.currentTarget &&
+					!onlyCancel &&
+					closeModal()
 				}
 				style={{
 					flex: 1,
