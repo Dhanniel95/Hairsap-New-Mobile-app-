@@ -1,14 +1,24 @@
 import Container from "@/components/Container";
-import { logOut } from "@/redux/auth/authSlice";
+import ModalComponent from "@/components/ModalComponent";
+import GuestToUser from "@/components/User/GuestToUser";
+import { logOut, saveUserData } from "@/redux/auth/authSlice";
 import { saveChatId } from "@/redux/chat/chatSlice";
+import { setSocketStatus } from "@/redux/socket/socketSlice";
 import colors from "@/utils/colors";
-import { useAppDispatch } from "@/utils/hooks";
+import baseUrl from "@/utils/config";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import { connectSocket } from "@/utils/socket";
 import { Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Tabs, useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Platform, TouchableOpacity } from "react-native";
 
 export default function TabLayout() {
+	const { user } = useAppSelector((state) => state.auth);
+
+	const [openUser, setOpenUser] = useState(false);
+
 	const router = useRouter();
 
 	const dispatch = useAppDispatch();
@@ -17,6 +27,39 @@ export default function TabLayout() {
 		dispatch(saveChatId(""));
 		router.replace("/(auth)/login");
 		dispatch(logOut());
+	};
+
+	useEffect(() => {
+		connectToSocket();
+	}, []);
+
+	const connectToSocket = async () => {
+		const token = (await AsyncStorage.getItem("@accesstoken")) || "";
+
+		const socket = connectSocket(baseUrl, token, user.role);
+
+		socket.on("connect", () => {
+			console.log("Connected");
+			dispatch(setSocketStatus("connected"));
+		});
+
+		socket.on("auth:new-token", async (data) => {
+			if (data?.data?.token) {
+				await AsyncStorage.setItem("@accesstoken", data.data.token);
+				dispatch(saveUserData(data.data.user));
+				setOpenUser(true);
+			}
+		});
+
+		socket.on("disconnect", () => {
+			console.log("Disconnected");
+			dispatch(setSocketStatus("disconnected"));
+		});
+
+		socket.on("connect_error", (err) => {
+			console.log("Error With Connection", err);
+			dispatch(setSocketStatus("disconnected"));
+		});
 	};
 
 	return (
@@ -96,6 +139,9 @@ export default function TabLayout() {
 					}}
 				/>
 			</Tabs>
+			<ModalComponent open={openUser} closeModal={() => console.log("")}>
+				<GuestToUser closeModal={() => setOpenUser(false)} />
+			</ModalComponent>
 		</Container>
 	);
 }

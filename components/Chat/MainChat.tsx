@@ -1,12 +1,10 @@
 import chatService from "@/redux/chat/chatService";
-import { saveChatId } from "@/redux/chat/chatSlice";
 import colors from "@/utils/colors";
-import baseUrl from "@/utils/config";
 import { mapChatToGifted } from "@/utils/data";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import { getSocket } from "@/utils/socket";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	Platform,
@@ -24,7 +22,6 @@ import {
 	Send,
 } from "react-native-gifted-chat";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { io, Socket } from "socket.io-client";
 import ChatVideo from "./ChatVideo";
 import ConsultantMenu from "./ConsultantMenu";
 import FileMenu from "./FileMenu";
@@ -39,7 +36,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const [showMenu, setShowMenu] = useState(false);
 	const [showDoc, setShowDoc] = useState(false);
 
-	const socketRef = useRef<Socket | null>(null);
+	const socket = getSocket();
 
 	const { user } = useAppSelector((state) => state.auth);
 	const { userChatRoomId } = useAppSelector((state) => state.chat);
@@ -47,95 +44,145 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	useEffect(() => {
 		loadLastMessage();
 	}, []);
+	// 	let socket: Socket;
+
+	// 	const connectSocket = async () => {
+	// 		const token = (await AsyncStorage.getItem("@accesstoken")) || "";
+
+	// 		socket = io(baseUrl, {
+	// 			query: { token, role: user.role },
+	// 			transports: ["websocket"],
+	// 		});
+
+	// 		socketRef.current = socket;
+
+	// 		socket.on("connect", () => {
+	// 			console.log("Connected to socket:", socket.id);
+
+	// 			if (chatInfo?.video) {
+	// 				consultHandler();
+	// 			}
+
+	// 			if (chatInfo?.newMsg === "0" && user?.role === "consultant") {
+	// 				joinRoom();
+	// 			}
+	// 		});
+
+	// 		socket.on("disconnect", () => {
+	// 			console.log("Disconnected from socket");
+	// 		});
+
+	// 		socket.on("connect_error", (err) => {
+	// 			console.log(" Socket connection error:", err.message);
+	// 		});
+
+	// 		socket.onAny((event, ...args) => {
+	// 			console.log("Got event:", event, args);
+	// 		});
+
+	// 		// receive messages
+	// 		socket.on("message:new", (data) => {
+	// 			//fetchMessages();
+	// 			let chatInfo = data?.data;
+	// 			if (chatInfo?.chatId) {
+	// 				setMessages((previousMessages) =>
+	// 					GiftedChat.append(previousMessages, [
+	// 						mapChatToGifted(chatInfo),
+	// 					])
+	// 				);
+	// 			} else {
+	// 				fetchMessages();
+	// 			}
+	// 		});
+
+	// 		socket.on("message:new:customer", (data) => {
+	// 			let chatInfo = data?.data?.chat;
+	// 			if (chatInfo?.chatId) {
+	// 				setMessages((previousMessages) =>
+	// 					GiftedChat.append(previousMessages, [
+	// 						mapChatToGifted(data?.data?.chat),
+	// 					])
+	// 				);
+	// 			} else {
+	// 				fetchMessages();
+	// 			}
+	// 		});
+	// 		socket.on("message:new:guest", (data) => {
+	// 			let chatInfo = data?.data?.chat;
+	// 			if (chatInfo?.chatId) {
+	// 				setMessages((previousMessages) =>
+	// 					GiftedChat.append(previousMessages, [
+	// 						mapChatToGifted(data?.data?.chat),
+	// 					])
+	// 				);
+	// 			} else {
+	// 				fetchMessages();
+	// 			}
+	// 		});
+	// 	};
+
+	// 	connectSocket();
+	// 	fetchMessages();
+
+	// 	return () => {
+	// 		if (socketRef.current) {
+	// 			socketRef.current.disconnect();
+	// 			socketRef.current = null;
+	// 		}
+	// 	};
+	// }, [chatInfo]);
 
 	useEffect(() => {
-		let socket: Socket;
+		if (!socket) return;
 
-		const connectSocket = async () => {
-			const token = (await AsyncStorage.getItem("@accesstoken")) || "";
+		if (chatInfo?.newMsg === "0" && user?.role === "consultant") {
+			joinRoom();
+		}
 
-			socket = io(baseUrl, {
-				query: { token, role: user.role },
-				transports: ["websocket"],
-			});
+		socket.onAny((event, ...args) => {
+			console.log("Got event:", event, args);
+		});
 
-			socketRef.current = socket;
-
-			socket.on("connect", () => {
-				console.log("Connected to socket:", socket.id);
-
-				if (chatInfo?.video) {
-					consultHandler();
-				}
-
-				if (chatInfo?.newMsg === "0" && user?.role === "consultant") {
-					joinRoom();
-				}
-			});
-
-			socket.on("disconnect", () => {
-				console.log("Disconnected from socket");
-			});
-
-			socket.on("connect_error", (err) => {
-				console.log(" Socket connection error:", err.message);
-			});
-
-			socket.onAny((event, ...args) => {
-				console.log("Got event:", event, args);
-			});
-
-			// receive messages
-			socket.on("message:new", (data) => {
-				//fetchMessages();
-				let chatInfo = data?.data;
-				if (chatInfo?.chatId) {
-					setMessages((previousMessages) =>
-						GiftedChat.append(previousMessages, [
-							mapChatToGifted(chatInfo),
-						])
-					);
-				} else {
-					fetchMessages();
-				}
-			});
-
-			socket.on("message:new:customer", (data) => {
-				let chatInfo = data?.data?.chat;
-				if (chatInfo?.chatId) {
-					setMessages((previousMessages) =>
-						GiftedChat.append(previousMessages, [
-							mapChatToGifted(data?.data?.chat),
-						])
-					);
-				} else {
-					fetchMessages();
-				}
-			});
-			socket.on("message:new:guest", (data) => {
-				let chatInfo = data?.data?.chat;
-				if (chatInfo?.chatId) {
-					setMessages((previousMessages) =>
-						GiftedChat.append(previousMessages, [
-							mapChatToGifted(data?.data?.chat),
-						])
-					);
-				} else {
-					fetchMessages();
-				}
-			});
-		};
-
-		connectSocket();
-		fetchMessages();
-
-		return () => {
-			if (socketRef.current) {
-				socketRef.current.disconnect();
-				socketRef.current = null;
+		socket.on("message:new", (data) => {
+			let chatInfo = data?.data;
+			if (chatInfo?.chatId) {
+				setMessages((previousMessages) =>
+					GiftedChat.append(previousMessages, [
+						mapChatToGifted(chatInfo),
+					])
+				);
+			} else {
+				fetchMessages();
 			}
-		};
-	}, [chatInfo]);
+		});
+
+		socket.on("message:new:customer", (data) => {
+			let chatInfo = data?.data?.chat;
+			if (chatInfo?.chatId) {
+				setMessages((previousMessages) =>
+					GiftedChat.append(previousMessages, [
+						mapChatToGifted(data?.data?.chat),
+					])
+				);
+			} else {
+				fetchMessages();
+			}
+		});
+		socket.on("message:new:guest", (data) => {
+			let chatInfo = data?.data?.chat;
+			if (chatInfo?.chatId) {
+				setMessages((previousMessages) =>
+					GiftedChat.append(previousMessages, [
+						mapChatToGifted(data?.data?.chat),
+					])
+				);
+			} else {
+				fetchMessages();
+			}
+		});
+
+		fetchMessages();
+	}, []);
 
 	const loadLastMessage = async () => {
 		if (chatInfo?.chatId) {
@@ -165,8 +212,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 	const onSend = useCallback((newMessages: IMessage[] = []) => {
 		let chatMsg = newMessages[0];
-		if (socketRef.current?.connected) {
-			socketRef.current.emit("message:new", {
+		if (socket?.connected) {
+			socket.emit("message:new", {
 				message: chatMsg.text,
 				messageType: "text",
 				receiverId: chatInfo.receiverId
@@ -199,8 +246,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		setMessages((previousMessages) =>
 			GiftedChat.append(previousMessages, [payload])
 		);
-		if (socketRef.current?.connected) {
-			socketRef.current.emit("message:new", {
+		if (socket?.connected) {
+			socket.emit("message:new", {
 				message: obj.text,
 				messageType: obj.type === "videos" ? "video" : "photo",
 				media: [
@@ -219,49 +266,9 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		}
 	};
 
-	const consultHandler = () => {
-		let payload = {
-			_id: Math.random().toString(36).substring(7),
-			text: chatInfo.text || "Consultation Request",
-			createdAt: new Date(),
-			user: {
-				_id: user.userId,
-				name: user.name,
-				avatar: user.faceIdPhotoUrl,
-			},
-			video: chatInfo.video,
-		};
-		setMessages((previousMessages) =>
-			GiftedChat.append(previousMessages, [payload])
-		);
-		if (socketRef.current?.connected) {
-			socketRef.current.emit(
-				"message:new",
-				{
-					message: chatInfo.text || "Consultation Request",
-					messageType: "video",
-					media: [
-						{
-							thumbnail: chatInfo.thumbnail,
-							url: chatInfo.video,
-						},
-					],
-				},
-				(response: any) => {
-					if (
-						response?.data &&
-						(user.role === "guest" || user.role === "user")
-					) {
-						dispatch(saveChatId(response.data?.chatRoomId));
-					}
-				}
-			);
-		}
-	};
-
 	const joinRoom = () => {
-		if (socketRef.current?.connected) {
-			socketRef.current.emit(
+		if (socket?.connected) {
+			socket.emit(
 				"chatroom:join",
 				Number(chatInfo.chatRoomId),
 				(response: any) => console.log(response, "reponse__")
@@ -358,6 +365,10 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		[]
 	);
 
+	const isEditable =
+		messages.length === 0 &&
+		(user.role === "user" || user.role === "guest");
+
 	return (
 		<SafeAreaView
 			style={{ flex: 1, backgroundColor: "#fff" }}
@@ -401,6 +412,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						renderInputToolbar={renderInputToolbar}
 						renderMessageVideo={renderMessageVideo}
 						isKeyboardInternallyHandled={true}
+						textInputProps={{ editable: !isEditable }}
 						renderBubble={(props: any) =>
 							props.currentMessage.messageType === "receipt" ? (
 								<ReceiptChat

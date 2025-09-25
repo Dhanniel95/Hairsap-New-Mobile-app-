@@ -104,7 +104,6 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 				galleryId: video.galleryId,
 				galleryItemId: video.galleryId,
 			});
-			console.log(res, "RES");
 			setLoadC(false);
 			router.push(
 				user.role === "guest"

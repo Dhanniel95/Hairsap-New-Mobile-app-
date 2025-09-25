@@ -35,7 +35,6 @@ const UserForm = ({
 				name: name.trim(),
 				phone: phone.trim(),
 				email,
-				guestUserId: Number(userId),
 			};
 			setLoad(true);
 			let res = await authService.consultantGuest(payload);
@@ -68,7 +67,6 @@ const UserForm = ({
 		} catch (err: any) {
 			setLoad(false);
 			let msg = displayError(err, false);
-			console.log(err?.response?.data);
 			Alert.alert("Error", msg?.toString());
 		}
 	};

@@ -21,7 +21,7 @@ export default function RedirectPage() {
 		} else {
 			router.replace("/(auth)/guest");
 		}
-	}, [user]);
+	}, [user, router]);
 
 	return (
 		<ImageBackground

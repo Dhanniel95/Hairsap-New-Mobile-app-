@@ -6,7 +6,6 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
-	console.log("ItemHHH");
 	return (
 		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }}>
 			<View

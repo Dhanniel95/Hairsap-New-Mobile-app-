@@ -14,7 +14,6 @@ const ConsultScreen = () => {
 	const loadRooms = async () => {
 		try {
 			let res = await chatService.listChatRooms();
-			console.log(res, "RES");
 			if (Array.isArray(res?.data) && res?.data?.length > 0) {
 				let id = res.data[0].chatRoomId;
 				dispatch(saveChatId(id));

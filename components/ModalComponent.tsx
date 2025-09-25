@@ -45,22 +45,23 @@ const ModalComponent = ({
 					alignItems: "center",
 				}}
 			>
-				<View style={{ alignItems: "flex-end", width: "85%" }}>
-					<TouchableOpacity
-						onPress={closeModal}
-						style={{
-							backgroundColor: "#334155",
-							height: 40,
-							width: 40,
-							borderRadius: 20,
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					>
-						<Entypo name="cross" size={25} />
-					</TouchableOpacity>
-				</View>
-
+				{centered && (
+					<View style={{ alignItems: "flex-end", width: "85%" }}>
+						<TouchableOpacity
+							onPress={closeModal}
+							style={{
+								backgroundColor: "#334155",
+								height: 40,
+								width: 40,
+								borderRadius: 20,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Entypo name="cross" size={25} />
+						</TouchableOpacity>
+					</View>
+				)}
 				<View
 					style={[
 						centered ? styles.modalCenter : styles.modalView,
