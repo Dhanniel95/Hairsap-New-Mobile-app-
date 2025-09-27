@@ -15,6 +15,7 @@ const InputField = ({
 	isLight,
 	editable,
 	multi,
+	noMargin,
 }: {
 	val: string;
 	setVal: (arg: string) => void;
@@ -26,9 +27,10 @@ const InputField = ({
 	isLight?: boolean;
 	editable?: boolean;
 	multi?: boolean;
+	noMargin?: boolean;
 }) => {
 	return (
-		<View style={{ marginBottom: 20 }}>
+		<View style={{ marginBottom: noMargin ? 0 : 20 }}>
 			{label && (
 				<Text
 					style={[

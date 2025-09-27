@@ -1,7 +1,9 @@
 import authService from "@/redux/auth/authService";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
-import { displayError } from "@/utils/error";
+import { displayError, displaySuccess } from "@/utils/error";
+import { Feather } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
 import React, { useState } from "react";
 import {
 	ActivityIndicator,
@@ -58,17 +60,22 @@ const UserForm = ({
 					guestUserId: Number(userId),
 				});
 				await authService.exchangeToken(details.userId, userId);
+				onSubmit();
 			} else {
 				let res = await authService.generateToken(details.userId);
 				console.log(res, "RES");
-				setMagicLink(res);
+				setMagicLink(res?.data);
 			}
-			onSubmit();
 		} catch (err: any) {
 			setLoad(false);
 			let msg = displayError(err, false);
 			Alert.alert("Error", msg?.toString());
 		}
+	};
+
+	const copyToClipboard = async () => {
+		await Clipboard.setStringAsync(magicLink);
+		displaySuccess("", "Copied!");
 	};
 
 	return (
@@ -81,24 +88,53 @@ const UserForm = ({
 		>
 			{details?.userId ? (
 				<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
-					<Text style={[textStyles.text, { color: "#FFF" }]}>
+					<Text
+						style={[
+							textStyles.text,
+							{ color: "#FFF", fontStyle: "italic" },
+						]}
+					>
 						The customer account, {details.name} has been saved.
 					</Text>
-					<TouchableOpacity
-						activeOpacity={0.8}
-						onPress={linkHandler}
-						style={[formStyles.mainBtn, { marginTop: 20 }]}
-					>
-						{load ? (
-							<ActivityIndicator color={"#FFF"} />
-						) : (
+					{magicLink ? (
+						<TouchableOpacity
+							onPress={copyToClipboard}
+							style={[formStyles.mainBtn, { marginTop: 20 }]}
+						>
+							<Feather name="copy" size={20} color={"#FFF"} />
 							<Text
-								style={[textStyles.textMid, { color: "#FFF" }]}
+								style={[
+									textStyles.textBold,
+									{
+										color: "#FFF",
+										marginLeft: 8,
+										fontSize: 14,
+									},
+								]}
 							>
-								{inChat ? "Link User" : "Get Login Link"}
+								Copy Magic Link
 							</Text>
-						)}
-					</TouchableOpacity>
+						</TouchableOpacity>
+					) : (
+						<TouchableOpacity
+							activeOpacity={0.8}
+							onPress={linkHandler}
+							style={[formStyles.mainBtn, { marginTop: 20 }]}
+						>
+							{load ? (
+								<ActivityIndicator color={"#FFF"} />
+							) : (
+								<Text
+									style={[
+										textStyles.textMid,
+										{ color: "#FFF" },
+									]}
+								>
+									{inChat ? "Link User" : "Get Login Link"}
+								</Text>
+							)}
+						</TouchableOpacity>
+					)}
 				</View>
 			) : (
 				<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>

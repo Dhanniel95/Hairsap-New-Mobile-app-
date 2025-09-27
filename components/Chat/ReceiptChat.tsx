@@ -1,6 +1,5 @@
 import textStyles from "@/styles/textStyles";
 import { formatCommas } from "@/utils/currency";
-import { format } from "date-fns";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import BorderDashed from "../Basics/BorderDashed";
@@ -12,6 +11,7 @@ const ReceiptChat = ({
 	metadata: any;
 	isUser: boolean;
 }) => {
+	console.log(metadata, "mm");
 	return metadata?.serviceBooked ? (
 		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }}>
 			<View style={[styles.card]}>
@@ -69,6 +69,21 @@ const ReceiptChat = ({
 									{formatCommas((metadata?.price || 0) / 100)}
 								</Text>
 							</Text>
+							<Text
+								style={[
+									textStyles.textBold,
+									{
+										color: "#FFF",
+										fontSize: 14,
+										marginBottom: 5,
+									},
+								]}
+							>
+								DURATION:{" "}
+								<Text style={{ fontFamily: "regular" }}>
+									{metadata.estimatedDuration}
+								</Text>
+							</Text>
 						</View>
 					</View>
 				</View>
@@ -86,10 +101,7 @@ const ReceiptChat = ({
 					>
 						DATE:{" "}
 						<Text style={{ fontFamily: "regular" }}>
-							{format(
-								metadata?.createdAt || new Date(),
-								"MMMM do, yyyy"
-							)}
+							{metadata.appointmentDate}
 						</Text>
 					</Text>
 					<Text
@@ -103,10 +115,7 @@ const ReceiptChat = ({
 					>
 						TIME:{" "}
 						<Text style={{ fontFamily: "regular" }}>
-							{format(
-								metadata?.createdAt || new Date(),
-								"h:mm a"
-							)}
+							{metadata.appointmentTime}
 						</Text>
 					</Text>
 				</View>

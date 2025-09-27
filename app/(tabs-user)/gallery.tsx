@@ -9,7 +9,7 @@ const GalleryScreen = () => {
 	const { user } = useAppSelector((state) => state.auth);
 
 	useEffect(() => {
-		if (!user.faceIdPhotoUrl) {
+		if (user.userId && !user.faceIdPhotoUrl) {
 			setTimeout(() => {
 				router.replace("/(auth)/faceverify");
 			}, 1500);

@@ -1,16 +1,21 @@
 import basicService from "@/redux/basic/basicService";
 import bookService from "@/redux/book/bookService";
+import chatService from "@/redux/chat/chatService";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
+import colors from "@/utils/colors";
 import { formatCommas } from "@/utils/currency";
 import { formatTime } from "@/utils/datetime";
 import { displayError } from "@/utils/error";
 import { Feather } from "@expo/vector-icons";
 import { addHours, addMinutes, format } from "date-fns";
+import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	Alert,
+	Image,
+	Platform,
 	Text,
 	TouchableOpacity,
 	View,
@@ -36,11 +41,14 @@ const BookingForm = ({
 	const [durationCount, setDurationCount] = useState(0);
 	const [address, setAddress] = useState("");
 	const [description, setDescription] = useState("");
+	const [mediaUrl, setMediaUrl] = useState("");
 	const [braiders, setBraiders] = useState<any>([]);
 	const [selectedBraiders, setSelectedBraiders] = useState<any>([]);
 	const [dateTime, setDateTime] = useState("");
 	const [load, setLoad] = useState(false);
 	const [referralCode, setReferralCode] = useState("");
+	const [uploadLoad, setUploadLoad] = useState(false);
+	const [viewFile, setViewFile] = useState(false);
 
 	useEffect(() => {
 		if (detail?.bookingId) {
@@ -175,7 +183,10 @@ const BookingForm = ({
 					address,
 					channel: "cash",
 					assistantProIds,
-					description,
+					description: {
+						text: description,
+						media: mediaUrl,
+					},
 					referralCode,
 				};
 				setLoad(true);
@@ -194,6 +205,48 @@ const BookingForm = ({
 		}
 	};
 
+	const selectFile = async (type: "images" | "videos") => {
+		try {
+			await ImagePicker.requestMediaLibraryPermissionsAsync();
+			const { assets, canceled } =
+				await ImagePicker.launchImageLibraryAsync({
+					mediaTypes: type,
+					quality: 0.5,
+				});
+			if (!canceled) {
+				let imgUrl =
+					Platform.OS == "ios"
+						? assets[0].uri.replace("file://", "")
+						: assets[0].uri;
+				uploadMedia(type, imgUrl);
+			}
+		} catch (error) {
+			console.log("there was an error loading image", error);
+		}
+	};
+
+	const uploadMedia = async (type: string, url: string) => {
+		try {
+			const formData = new FormData();
+			formData.append(type == "images" ? "chatphoto" : "chatvideo", {
+				uri: url,
+				type: type == "images" ? "image/jpeg" : "video/mp4",
+				name: type == "images" ? "chatphoto.jpg" : "chatvideo.mp4",
+			} as any);
+			setUploadLoad(true);
+			let res;
+			if (type === "images") {
+				res = await chatService.uploadImage(formData);
+			} else {
+				res = await chatService.uploadVideo(formData);
+			}
+			setUploadLoad(false);
+			setMediaUrl(res?.data?.url);
+		} catch (err) {
+			displayError(err, true);
+		}
+	};
+
 	return (
 		<KeyboardAwareScrollView
 			enableAutomaticScroll={true}
@@ -202,88 +255,187 @@ const BookingForm = ({
 			keyboardShouldPersistTaps="handled"
 			contentContainerStyle={{}}
 		>
-			<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
-				<MultipleSelect
-					data={list}
-					value={selectedService}
-					setValue={setSelectedService}
-					placeholder="Select Service"
-					isLight={true}
-					label="Service"
-				/>
-				<InputField
-					val={price}
-					setVal={setPrice}
-					label="Price"
-					isLight={true}
-					editable={false}
-				/>
-				<InputField
-					val={duration}
-					setVal={setDuration}
-					label="Duration"
-					isLight={true}
-					editable={false}
-				/>
-				<InputField
-					val={address}
-					setVal={setAddress}
-					label="Address"
-					isLight={true}
-				/>
-				<DatePicker
-					label="Date and Time"
-					date={dateTime}
-					setDate={setDateTime}
-					isLight={true}
-					placeholder={showDateTime(dateTime)}
-				/>
-				<MultipleSelect
-					data={braiders}
-					value={selectedBraiders}
-					setValue={setSelectedBraiders}
-					placeholder="Add Braiders"
-					isLight={true}
-					label="Add Braiders"
-				/>
-				<InputField
-					val={description}
-					setVal={setDescription}
-					label="Description"
-					isLight={true}
-					multi={true}
-				/>
-				<InputField
-					val={referralCode}
-					setVal={setReferralCode}
-					label="Referral Code"
-					isLight={true}
-				/>
-				<TouchableOpacity
-					activeOpacity={0.8}
-					style={[formStyles.mainBtn, {}]}
-					disabled={load}
-					onPress={submitHandler}
+			{viewFile ? (
+				<View
+					style={{
+						paddingHorizontal: 15,
+						paddingVertical: 20,
+						alignItems: "center",
+					}}
 				>
-					{load ? (
-						<ActivityIndicator color={"#FFF"} />
-					) : (
-						<>
-							{!detail && (
-								<Feather name="plus" color={"#FFF"} size={20} />
+					<Image
+						source={{ uri: mediaUrl }}
+						style={{ width: "80%", height: 300 }}
+					/>
+					<TouchableOpacity
+						style={{
+							marginTop: 20,
+							borderBottomWidth: 1,
+							borderBottomColor: "#FFF",
+						}}
+						onPress={() => setViewFile(false)}
+					>
+						<Text style={[textStyles.textMid, { color: "#FFF" }]}>
+							Cancel
+						</Text>
+					</TouchableOpacity>
+				</View>
+			) : (
+				<View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
+					<MultipleSelect
+						data={list}
+						value={selectedService}
+						setValue={setSelectedService}
+						placeholder="Select Service"
+						isLight={true}
+						label="Service"
+					/>
+					<InputField
+						val={price}
+						setVal={setPrice}
+						label="Price"
+						isLight={true}
+						editable={false}
+					/>
+					<InputField
+						val={duration}
+						setVal={setDuration}
+						label="Duration"
+						isLight={true}
+						editable={false}
+					/>
+					<InputField
+						val={address}
+						setVal={setAddress}
+						label="Address"
+						isLight={true}
+					/>
+					<DatePicker
+						label="Date and Time"
+						date={dateTime}
+						setDate={setDateTime}
+						isLight={true}
+						placeholder={showDateTime(dateTime)}
+					/>
+					<MultipleSelect
+						data={braiders}
+						value={selectedBraiders}
+						setValue={setSelectedBraiders}
+						placeholder="Add Braiders"
+						isLight={true}
+						label="Add Braiders"
+					/>
+					<InputField
+						val={description}
+						setVal={setDescription}
+						label="Description"
+						isLight={true}
+						multi={true}
+						noMargin={true}
+					/>
+					<View
+						style={{
+							backgroundColor: colors.appGray,
+							borderRadius: 10,
+							flexDirection: "row",
+							justifyContent: "space-between",
+							paddingHorizontal: 20,
+							marginTop: 5,
+							marginBottom: 15,
+							paddingVertical: 10,
+						}}
+					>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+							}}
+						>
+							{uploadLoad && (
+								<ActivityIndicator
+									color={colors.primary}
+									style={{ marginRight: 5 }}
+								/>
 							)}
-							<Text
-								style={[
-									textStyles.textMid,
-									{ marginLeft: 10, color: "#FFF" },
-								]}
+							{mediaUrl && (
+								<TouchableOpacity
+									activeOpacity={0.8}
+									onPress={() => setViewFile(true)}
+								>
+									<Text
+										style={[
+											textStyles.textBold,
+											{ fontSize: 13 },
+										]}
+									>
+										View File
+									</Text>
+								</TouchableOpacity>
+							)}
+						</View>
+						<View style={{ flexDirection: "row" }}>
+							<TouchableOpacity
+								onPress={() => {
+									selectFile("images");
+								}}
 							>
-								{detail?.bookingId ? "Update" : "Add"} Booking
-							</Text>
-						</>
-					)}
-				</TouchableOpacity>
-			</View>
+								<Feather
+									name="image"
+									size={22}
+									color={"#000"}
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={{ marginLeft: 10 }}
+								onPress={() => {
+									selectFile("videos");
+								}}
+							>
+								<Feather
+									name="video"
+									size={22}
+									color={"#000"}
+								/>
+							</TouchableOpacity>
+						</View>
+					</View>
+					<InputField
+						val={referralCode}
+						setVal={setReferralCode}
+						label="Referral Code"
+						isLight={true}
+					/>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						style={[formStyles.mainBtn, {}]}
+						disabled={load}
+						onPress={submitHandler}
+					>
+						{load ? (
+							<ActivityIndicator color={"#FFF"} />
+						) : (
+							<>
+								{!detail && (
+									<Feather
+										name="plus"
+										color={"#FFF"}
+										size={20}
+									/>
+								)}
+								<Text
+									style={[
+										textStyles.textMid,
+										{ marginLeft: 10, color: "#FFF" },
+									]}
+								>
+									{detail?.bookingId ? "Update" : "Add"}{" "}
+									Booking
+								</Text>
+							</>
+						)}
+					</TouchableOpacity>
+				</View>
+			)}
 		</KeyboardAwareScrollView>
 	);
 };

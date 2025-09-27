@@ -53,7 +53,7 @@ const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 					</Text>
 					<Text style={[textStyles.text, { fontSize: 13 }]}>
 						{user.role === "user" || user.role === "guest"
-							? "Active Now (7am - 7pm)"
+							? "Available (7am - 7pm)"
 							: "Active"}
 					</Text>
 				</View>

@@ -17,8 +17,6 @@ const BookingSummaries = () => {
 	const [activeTab, setActiveTab] = useState(1);
 	const [load, setLoad] = useState(false);
 
-	console.log(params, "pp");
-
 	useEffect(() => {
 		listBookings();
 	}, []);

@@ -1,9 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { VideoView, useVideoPlayer } from "expo-video";
 import React, { useState } from "react";
-import { Modal, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+	ActivityIndicator,
+	Modal,
+	TouchableOpacity,
+	View,
+	ViewStyle,
+} from "react-native";
 
-const ChatVideo = ({ uri }: { uri: string }) => {
+const ChatVideo = ({ uri, load }: { uri: string; load: boolean }) => {
 	const player = useVideoPlayer(uri, (p) => {
 		p.loop = false;
 	});
@@ -41,6 +47,13 @@ const ChatVideo = ({ uri }: { uri: string }) => {
 					</View>
 				)}
 			</TouchableOpacity>
+			{load && (
+				<ActivityIndicator
+					size="small"
+					color="white"
+					style={{ position: "absolute", top: "45%", left: "45%" }}
+				/>
+			)}
 			<Modal visible={fullscreen} animationType="fade">
 				<View style={{ flex: 1, backgroundColor: "black" }}>
 					<VideoView

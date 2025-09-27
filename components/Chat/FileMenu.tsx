@@ -1,13 +1,10 @@
-import chatService from "@/redux/chat/chatService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
-import { displayError } from "@/utils/error";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useVideoPlayer, VideoView } from "expo-video";
 import React, { useState } from "react";
 import {
-	ActivityIndicator,
 	Image,
 	Platform,
 	StyleSheet,
@@ -23,9 +20,7 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 	const [media, setMedia] = useState("");
 	const [mediaType, setMediaType] = useState("");
 	const [openMedia, setOpenMedia] = useState(false);
-	const [load, setLoad] = useState(false);
 	const [text, setText] = useState("");
-	const [savedFile, setSavedFile] = useState<any>({});
 
 	const player = useVideoPlayer(media, (p) => {
 		p.loop = false;
@@ -47,58 +42,19 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 						: assets[0].uri;
 				setMedia(imgUrl);
 				setOpenMedia(true);
-				saveFile(imgUrl, type);
 			}
 		} catch (error) {
 			console.log("there was an error loading image", error);
 		}
 	};
 
-	const saveFile = async (uri: string, type: string) => {
-		try {
-			const formData = new FormData();
-			formData.append(type == "images" ? "chatphoto" : "chatvideo", {
-				uri: uri,
-				type: type == "images" ? "image/jpeg" : "video/mp4",
-				name: type == "images" ? "chatphoto.jpg" : "chatvideo.mp4",
-			} as any);
-			setLoad(true);
-			let res;
-			if (type === "images") {
-				res = await chatService.uploadImage(formData);
-			} else {
-				res = await chatService.uploadVideo(formData);
-			}
-			setLoad(false);
-			if (res?.data?.url) {
-				setSavedFile(res.data);
-			}
-		} catch (err) {
-			setLoad(false);
-			displayError(err, true);
-		}
-	};
-
 	const sendHandler = () => {
-		if (!load) {
-			if (savedFile?.url) {
-				let payload = {
-					url: savedFile.url,
-					thumbnail: savedFile.thumbnail,
-					text,
-					type: mediaType,
-				};
-				onSend(payload);
-			} else {
-				displayError(
-					"File Upload was not successful. Please try again",
-					true
-				);
-				setOpenMedia(false);
-			}
-		} else {
-			displayError("Please wait for file to load", true);
-		}
+		let payload = {
+			url: media,
+			text,
+			type: mediaType,
+		};
+		onSend(payload);
 	};
 
 	return (
@@ -178,17 +134,6 @@ const FileMenu = ({ onSend }: { onSend: (arg: any) => void }) => {
 										allowsPictureInPicture
 									/>
 								)
-							)}
-							{load && (
-								<ActivityIndicator
-									style={{
-										position: "absolute",
-										top: "50%",
-										left: "47%",
-									}}
-									color={colors.primary}
-									size={"large"}
-								/>
 							)}
 						</View>
 						<View

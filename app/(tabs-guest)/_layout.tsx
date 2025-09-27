@@ -7,7 +7,7 @@ import { setSocketStatus } from "@/redux/socket/socketSlice";
 import colors from "@/utils/colors";
 import baseUrl from "@/utils/config";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
-import { connectSocket } from "@/utils/socket";
+import { connectSocket, disconnectSocket } from "@/utils/socket";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Tabs, useRouter } from "expo-router";
@@ -31,6 +31,10 @@ export default function TabLayout() {
 
 	useEffect(() => {
 		connectToSocket();
+
+		return () => {
+			disconnectSocket();
+		};
 	}, []);
 
 	const connectToSocket = async () => {

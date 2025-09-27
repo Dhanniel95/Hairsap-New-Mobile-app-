@@ -17,9 +17,11 @@ const EachBooking = ({ booking }: { booking: any }) => {
 				<Text style={[textStyles.textMid, { fontSize: 14 }]}>
 					Booking Summary
 				</Text>
-				<TouchableOpacity onPress={() => setOpenModal(true)}>
-					<Feather name="edit" size={20} color={colors.dark} />
-				</TouchableOpacity>
+				{booking.pinStatus == null && (
+					<TouchableOpacity onPress={() => setOpenModal(true)}>
+						<Feather name="edit" size={20} color={colors.dark} />
+					</TouchableOpacity>
+				)}
 			</View>
 			<View style={{ marginTop: 15, paddingHorizontal: 20 }}>
 				{Array.isArray(booking.bookedSubServices) &&

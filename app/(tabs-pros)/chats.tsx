@@ -1,12 +1,21 @@
 import EachChat from "@/components/List/EachChat";
 import chatService from "@/redux/chat/chatService";
+import { setSocketStatus } from "@/redux/socket/socketSlice";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import baseUrl from "@/utils/config";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import { connectSocket, disconnectSocket } from "@/utils/socket";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 
 const ChatScreen = () => {
+	const dispatch = useAppDispatch();
+
+	const { user } = useAppSelector((state) => state.auth);
+
 	const [list, setList] = useState<any>([]);
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -18,6 +27,14 @@ const ChatScreen = () => {
 		}
 	}, [isFocused]);
 
+	useEffect(() => {
+		connectToSocket();
+
+		return () => {
+			disconnectSocket();
+		};
+	}, []);
+
 	const listChats = async () => {
 		try {
 			let res = await chatService.listChatRooms();
@@ -25,6 +42,27 @@ const ChatScreen = () => {
 				setList(res.data);
 			}
 		} catch (err) {}
+	};
+
+	const connectToSocket = async () => {
+		const token = (await AsyncStorage.getItem("@accesstoken")) || "";
+
+		const socket = connectSocket(baseUrl, token, user.role);
+
+		socket.on("connect", () => {
+			console.log("Connected");
+			dispatch(setSocketStatus("connected"));
+		});
+
+		socket.on("disconnect", () => {
+			console.log("Disconnected");
+			dispatch(setSocketStatus("disconnected"));
+		});
+
+		socket.on("connect_error", (err) => {
+			console.log("Error With Connection", err);
+			dispatch(setSocketStatus("disconnected"));
+		});
 	};
 
 	const onRefresh = useCallback(async () => {

@@ -219,7 +219,7 @@ const ActivityBookings = () => {
 					/>
 					<RequestList
 						title="Description"
-						value={bookingData?.description}
+						value={bookingData?.description?.text}
 					/>
 					{pinState == "paid" && (
 						<View style={{ marginTop: 10 }}>

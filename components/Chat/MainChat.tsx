@@ -1,6 +1,7 @@
 import chatService from "@/redux/chat/chatService";
 import colors from "@/utils/colors";
 import { mapChatToGifted } from "@/utils/data";
+import { displayError } from "@/utils/error";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { getSocket } from "@/utils/socket";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -22,6 +23,7 @@ import {
 	Send,
 } from "react-native-gifted-chat";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ChatImage from "./ChatImage";
 import ChatVideo from "./ChatVideo";
 import ConsultantMenu from "./ConsultantMenu";
 import FileMenu from "./FileMenu";
@@ -35,6 +37,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const [messages, setMessages] = useState<IMessage[]>([]);
 	const [showMenu, setShowMenu] = useState(false);
 	const [showDoc, setShowDoc] = useState(false);
+	const [uploadLoad, setUploadLoad] = useState(false);
 
 	const socket = getSocket();
 
@@ -229,10 +232,11 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		);
 	}, []);
 
-	const fromMedia = (obj: any) => {
+	const fromMedia = async (obj: any) => {
 		setShowDoc(false);
+		let tempId = Math.random().toString(36).substring(7);
 		let payload = {
-			_id: Math.random().toString(36).substring(7),
+			_id: tempId,
 			text: obj.text,
 			createdAt: new Date(),
 			user: {
@@ -242,27 +246,68 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 			},
 			video: obj.type === "videos" ? obj.url : undefined,
 			image: obj.type === "images" ? obj.url : undefined,
+			pending: true,
 		};
 		setMessages((previousMessages) =>
 			GiftedChat.append(previousMessages, [payload])
 		);
-		if (socket?.connected) {
-			socket.emit("message:new", {
-				message: obj.text,
-				messageType: obj.type === "videos" ? "video" : "photo",
-				media: [
-					{
-						thumbnail: obj.thumbnail,
-						url: obj.url,
-					},
-				],
-				receiverId: chatInfo.receiverId
-					? Number(chatInfo.receiverId)
-					: undefined,
-				chatRoomId: chatInfo.chatRoomId
-					? Number(chatInfo.chatRoomId)
-					: undefined,
-			});
+
+		try {
+			const formData = new FormData();
+			formData.append(obj.type == "images" ? "chatphoto" : "chatvideo", {
+				uri: obj.url,
+				type: obj.type == "images" ? "image/jpeg" : "video/mp4",
+				name: obj.type == "images" ? "chatphoto.jpg" : "chatvideo.mp4",
+			} as any);
+			setUploadLoad(true);
+			let res;
+			if (obj.type === "images") {
+				res = await chatService.uploadImage(formData);
+			} else {
+				res = await chatService.uploadVideo(formData);
+			}
+			if (res?.data?.url) {
+				setUploadLoad(false);
+				setMessages((prev) =>
+					prev.map((msg) =>
+						msg._id === tempId
+							? {
+									...msg,
+									video:
+										obj.type === "videos"
+											? res.data.url
+											: undefined,
+									image:
+										obj.type === "images"
+											? res.data.url
+											: undefined,
+									pending: false,
+							  }
+							: msg
+					)
+				);
+				if (socket?.connected) {
+					socket.emit("message:new", {
+						message: obj.text,
+						messageType: obj.type === "videos" ? "video" : "photo",
+						media: [
+							{
+								thumbnail: obj.thumbnail,
+								url: res.data.url,
+							},
+						],
+						receiverId: chatInfo.receiverId
+							? Number(chatInfo.receiverId)
+							: undefined,
+						chatRoomId: chatInfo.chatRoomId
+							? Number(chatInfo.chatRoomId)
+							: undefined,
+					});
+				}
+			}
+		} catch (err) {
+			displayError("Upload Failed", true);
+			setMessages((prev) => prev.filter((msg) => msg._id !== tempId));
 		}
 	};
 
@@ -360,7 +405,26 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		({ currentMessage }: { currentMessage?: IMessage }) => {
 			if (!currentMessage?.video) return null;
 
-			return <ChatVideo uri={String(currentMessage.video)} />;
+			return (
+				<ChatVideo
+					uri={String(currentMessage.video)}
+					load={currentMessage.pending || false}
+				/>
+			);
+		},
+		[]
+	);
+
+	const renderMessageImage = useCallback(
+		({ currentMessage }: { currentMessage?: IMessage }) => {
+			if (!currentMessage?.image) return null;
+
+			return (
+				<ChatImage
+					uri={String(currentMessage.image)}
+					load={currentMessage.pending || false}
+				/>
+			);
 		},
 		[]
 	);
@@ -410,6 +474,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						renderSend={renderSend}
 						renderComposer={renderComposer}
 						renderInputToolbar={renderInputToolbar}
+						renderMessageImage={renderMessageImage}
 						renderMessageVideo={renderMessageVideo}
 						isKeyboardInternallyHandled={true}
 						textInputProps={{ editable: !isEditable }}
