@@ -2,7 +2,7 @@ import chatService from "@/redux/chat/chatService";
 import colors from "@/utils/colors";
 import { mapChatToGifted } from "@/utils/data";
 import { displayError } from "@/utils/error";
-import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import { useAppSelector } from "@/utils/hooks";
 import { getSocket } from "@/utils/socket";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import React, { useCallback, useEffect, useState } from "react";
@@ -32,8 +32,6 @@ import ItemChat from "./ItemChat";
 import ReceiptChat from "./ReceiptChat";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
-	const dispatch = useAppDispatch();
-
 	const [messages, setMessages] = useState<IMessage[]>([]);
 	const [showMenu, setShowMenu] = useState(false);
 	const [showDoc, setShowDoc] = useState(false);
@@ -45,95 +43,9 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const { userChatRoomId } = useAppSelector((state) => state.chat);
 
 	useEffect(() => {
+		fetchMessages();
 		loadLastMessage();
-	}, []);
-	// 	let socket: Socket;
-
-	// 	const connectSocket = async () => {
-	// 		const token = (await AsyncStorage.getItem("@accesstoken")) || "";
-
-	// 		socket = io(baseUrl, {
-	// 			query: { token, role: user.role },
-	// 			transports: ["websocket"],
-	// 		});
-
-	// 		socketRef.current = socket;
-
-	// 		socket.on("connect", () => {
-	// 			console.log("Connected to socket:", socket.id);
-
-	// 			if (chatInfo?.video) {
-	// 				consultHandler();
-	// 			}
-
-	// 			if (chatInfo?.newMsg === "0" && user?.role === "consultant") {
-	// 				joinRoom();
-	// 			}
-	// 		});
-
-	// 		socket.on("disconnect", () => {
-	// 			console.log("Disconnected from socket");
-	// 		});
-
-	// 		socket.on("connect_error", (err) => {
-	// 			console.log(" Socket connection error:", err.message);
-	// 		});
-
-	// 		socket.onAny((event, ...args) => {
-	// 			console.log("Got event:", event, args);
-	// 		});
-
-	// 		// receive messages
-	// 		socket.on("message:new", (data) => {
-	// 			//fetchMessages();
-	// 			let chatInfo = data?.data;
-	// 			if (chatInfo?.chatId) {
-	// 				setMessages((previousMessages) =>
-	// 					GiftedChat.append(previousMessages, [
-	// 						mapChatToGifted(chatInfo),
-	// 					])
-	// 				);
-	// 			} else {
-	// 				fetchMessages();
-	// 			}
-	// 		});
-
-	// 		socket.on("message:new:customer", (data) => {
-	// 			let chatInfo = data?.data?.chat;
-	// 			if (chatInfo?.chatId) {
-	// 				setMessages((previousMessages) =>
-	// 					GiftedChat.append(previousMessages, [
-	// 						mapChatToGifted(data?.data?.chat),
-	// 					])
-	// 				);
-	// 			} else {
-	// 				fetchMessages();
-	// 			}
-	// 		});
-	// 		socket.on("message:new:guest", (data) => {
-	// 			let chatInfo = data?.data?.chat;
-	// 			if (chatInfo?.chatId) {
-	// 				setMessages((previousMessages) =>
-	// 					GiftedChat.append(previousMessages, [
-	// 						mapChatToGifted(data?.data?.chat),
-	// 					])
-	// 				);
-	// 			} else {
-	// 				fetchMessages();
-	// 			}
-	// 		});
-	// 	};
-
-	// 	connectSocket();
-	// 	fetchMessages();
-
-	// 	return () => {
-	// 		if (socketRef.current) {
-	// 			socketRef.current.disconnect();
-	// 			socketRef.current = null;
-	// 		}
-	// 	};
-	// }, [chatInfo]);
+	}, [userChatRoomId]);
 
 	useEffect(() => {
 		if (!socket) return;
@@ -183,8 +95,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				fetchMessages();
 			}
 		});
-
-		fetchMessages();
 	}, []);
 
 	const loadLastMessage = async () => {
@@ -196,7 +106,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	};
 
 	const fetchMessages = async () => {
-		if (chatInfo.chatRoomId || userChatRoomId) {
+		if (chatInfo?.chatRoomId || userChatRoomId) {
 			try {
 				let res = await chatService.listChatMessages({
 					cursor: 0,

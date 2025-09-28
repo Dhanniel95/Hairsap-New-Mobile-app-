@@ -99,7 +99,7 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 	const seekHandler = async () => {
 		try {
 			setLoadC(true);
-			let res = await bookService.seekConsultation({
+			await bookService.seekConsultation({
 				userId: user.userId,
 				galleryId: video.galleryId,
 				galleryItemId: video.galleryId,
@@ -130,14 +130,6 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 			<View style={styles.textArea}>
 				<TouchableOpacity
 					onPress={() => {
-						// router.push({
-						// 	pathname: "/(app)/chat",
-						// 	params: {
-						// 		thumbnail: video.thumbnail,
-						// 		video: video.mediaUrl,
-						// 		text: video.description,
-						// 	},
-						// });
 						seekHandler();
 					}}
 					activeOpacity={0.8}

@@ -49,8 +49,8 @@ const Gallery = () => {
 		setSearchList(
 			videos.filter(
 				(video: any) =>
-					video.description.toLowerCase().includes(lowerQuery) ||
-					video.title.toLowerCase().includes(lowerQuery)
+					video?.description.toLowerCase().includes(lowerQuery) ||
+					video?.subService?.name.toLowerCase().includes(lowerQuery)
 			)
 		);
 	};
@@ -81,7 +81,7 @@ const Gallery = () => {
 				</View>
 				{videos.length > 0 ? (
 					<FlatList
-						data={searchList.length > 0 ? searchList : videos}
+						data={search.length > 0 ? searchList : videos}
 						numColumns={3}
 						columnWrapperStyle={{ gap: spacing }}
 						contentContainerStyle={{

@@ -3,6 +3,7 @@ import ResetForm from "@/components/Auth/ResetForm";
 import Container from "@/components/Container";
 import GoBack from "@/components/GoBack";
 import textStyles from "@/styles/textStyles";
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
@@ -12,7 +13,6 @@ import {
 	Text,
 	View,
 } from "react-native";
-import Logo from "../../assets/images/logo.svg";
 
 const Forgot = () => {
 	const [email, setEmail] = useState("");
@@ -37,7 +37,10 @@ const Forgot = () => {
 							<View
 								style={{ alignItems: "center", marginTop: 20 }}
 							>
-								<Logo width={150} height={50} />
+								<Image
+									source={require("../../assets/images/logo.svg")}
+									style={{ height: 30, width: 130 }}
+								/>
 								<Text
 									style={[
 										textStyles.textBold,

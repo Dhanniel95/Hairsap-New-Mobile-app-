@@ -10,20 +10,17 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }}>
 			<View
 				style={{
-					width: "80%",
+					width: "85%",
 					backgroundColor: colors.primary,
-					alignItems: "flex-end",
 					paddingHorizontal: 10,
-					paddingVertical: 6,
 					borderRadius: 10,
 				}}
 			>
 				<View
 					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						flexWrap: "wrap",
-						justifyContent: "flex-end",
+						borderBottomColor: "rgba(255,255,255,0.4)",
+						borderBottomWidth: 1,
+						paddingVertical: 10,
 					}}
 				>
 					<Text
@@ -40,9 +37,6 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 							{
 								color: "#FFF",
 								fontSize: 14,
-								maxWidth: "90%",
-								textAlign: "right",
-								marginLeft: 5,
 							},
 						]}
 					>
@@ -51,9 +45,39 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 				</View>
 				<View
 					style={{
+						borderBottomColor: "rgba(255,255,255,0.4)",
+						borderBottomWidth: 1,
+						paddingVertical: 10,
+					}}
+				>
+					<Text
+						style={[
+							textStyles.textBold,
+							{ color: "#FFF", fontSize: 14 },
+						]}
+					>
+						Service Type:
+					</Text>
+					<Text
+						style={[
+							textStyles.textMid,
+							{
+								color: "#FFF",
+								fontSize: 14,
+							},
+						]}
+					>
+						{metadata.serviceType || "---"}
+					</Text>
+				</View>
+				<View
+					style={{
 						flexDirection: "row",
 						alignItems: "center",
-						marginVertical: 5,
+						paddingTop: 10,
+						borderBottomColor: "rgba(255,255,255,0.4)",
+						borderBottomWidth: 1,
+						paddingBottom: 10,
 					}}
 				>
 					<Text
@@ -73,7 +97,13 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						{formatTime(metadata.duration)}
 					</Text>
 				</View>
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						paddingVertical: 10,
+					}}
+				>
 					<Text
 						style={[
 							textStyles.textBold,
