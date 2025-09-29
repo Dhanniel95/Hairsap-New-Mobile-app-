@@ -1,6 +1,7 @@
 import ButtonSettings from "@/components/Basics/ButtonSettings";
 import authService from "@/redux/auth/authService";
 import { logOut } from "@/redux/auth/authSlice";
+import { saveChatId } from "@/redux/chat/chatSlice";
 import textStyles from "@/styles/textStyles";
 import { displayError } from "@/utils/error";
 import { useAppDispatch } from "@/utils/hooks";
@@ -15,6 +16,7 @@ const SettingsScreen = () => {
 	const router = useRouter();
 
 	const logoutHandler = async () => {
+		dispatch(saveChatId(""));
 		dispatch(logOut());
 		await AsyncStorage.removeItem("@accesstoken");
 		router.replace("/(auth)/login");

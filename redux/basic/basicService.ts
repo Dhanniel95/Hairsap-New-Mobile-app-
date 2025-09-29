@@ -5,6 +5,11 @@ const getDiscount = async () => {
 	return data?.data;
 };
 
+const getUnusedDiscount = async () => {
+	const { data } = await apiRequest().get(`/unused-discount`);
+	return data?.data;
+};
+
 const getProStats = async (id: string) => {
 	const { data } = await apiRequest().get(`/pros/${id}`);
 	return data?.data;
@@ -42,6 +47,7 @@ const updateLocation = async (obj: any) => {
 
 const basicService = {
 	getDiscount,
+	getUnusedDiscount,
 	getProStats,
 	getProTarget,
 	getReviews,

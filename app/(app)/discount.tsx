@@ -3,19 +3,29 @@ import GoBack from "@/components/GoBack";
 import basicService from "@/redux/basic/basicService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import { formatCommas } from "@/utils/currency";
 import { useAppSelector } from "@/utils/hooks";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import React, { useEffect, useState } from "react";
-import { Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+	ActivityIndicator,
+	Share,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 
 const DiscountScreen = () => {
 	const [amount, setAmount] = useState(0);
+	const [total, setTotal] = useState<any>(null);
 
 	const { user } = useAppSelector((state) => state.auth);
 
 	useEffect(() => {
 		getDiscount();
+		getTotalDiscount();
 	}, []);
 
 	const getDiscount = async () => {
@@ -23,6 +33,15 @@ const DiscountScreen = () => {
 			let res = await basicService.getDiscount();
 			if (res?.discountAmount) {
 				setAmount(res.discountAmount);
+			}
+		} catch (err) {}
+	};
+
+	const getTotalDiscount = async () => {
+		try {
+			let res = await basicService.getUnusedDiscount();
+			if (res) {
+				setTotal(res);
 			}
 		} catch (err) {}
 	};
@@ -44,7 +63,7 @@ const DiscountScreen = () => {
 				<View style={styles.textBox}>
 					<Text style={[textStyles.text, { fontSize: 14 }]}>
 						You can share your referral code with friends and family
-						for ₦{amount.toLocaleString()} discount.
+						for ₦{(amount / 100).toLocaleString()} discount.
 					</Text>
 					<Text style={[textStyles.text, { fontSize: 14 }]}>
 						NB: The more referral, the more discount.
@@ -93,7 +112,6 @@ const DiscountScreen = () => {
 							</TouchableOpacity>
 						</View>
 					</View>
-
 					<TouchableOpacity
 						style={styles.shareContainer}
 						onPress={() =>
@@ -111,6 +129,35 @@ const DiscountScreen = () => {
 						/>
 						<Text style={styles.share}>Share</Text>
 					</TouchableOpacity>
+				</View>
+				<View
+					style={{
+						borderWidth: 1,
+						borderColor: "rgba(0,0,0,0.3)",
+						paddingVertical: 20,
+						borderRadius: 20,
+						alignItems: "center",
+						marginTop: 20,
+					}}
+				>
+					<Text style={[textStyles.text, { fontSize: 12 }]}>
+						Your Total Discount
+					</Text>
+					{total ? (
+						<Text
+							style={[
+								textStyles.textBold,
+								{ fontSize: 18, marginTop: 10 },
+							]}
+						>
+							₦ {formatCommas(total.grandTotal / 100)}
+						</Text>
+					) : (
+						<ActivityIndicator
+							color={colors.primary}
+							style={{ marginTop: 10 }}
+						/>
+					)}
 				</View>
 			</View>
 		</Container>

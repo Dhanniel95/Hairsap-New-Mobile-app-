@@ -11,6 +11,8 @@ import ModalComponent from "../ModalComponent";
 const EachBooking = ({ booking }: { booking: any }) => {
 	const [openModal, setOpenModal] = useState(false);
 
+	console.log(booking, "booking");
+
 	return (
 		<View style={styles.card}>
 			<View style={styles.top}>

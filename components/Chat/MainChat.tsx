@@ -43,8 +43,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const { userChatRoomId } = useAppSelector((state) => state.chat);
 
 	useEffect(() => {
-		fetchMessages();
-		loadLastMessage();
+		fetchMessages(true);
 	}, [userChatRoomId]);
 
 	useEffect(() => {
@@ -97,27 +96,40 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		});
 	}, []);
 
-	const loadLastMessage = async () => {
+	const readLastMessages = async (msgs: any) => {
 		if (chatInfo?.chatId) {
-			try {
-				await chatService.markAsRead(chatInfo.chatId);
-			} catch (err) {}
+			let findMyMsgs = msgs?.filter(
+				(m: any) => m.user._id != user.userId
+			);
+			let notSeen = findMyMsgs?.slice(0, chatInfo?.count || 1);
+			if (socket?.connected) {
+				notSeen.map((msg: any) => {
+					socket.emit(
+						"message:read",
+						Number(msg._id),
+						(response: any) => console.log(response, "response")
+					);
+				});
+			}
 		}
 	};
 
-	const fetchMessages = async () => {
+	const fetchMessages = async (readLast?: boolean) => {
 		if (chatInfo?.chatRoomId || userChatRoomId) {
 			try {
 				let res = await chatService.listChatMessages({
 					cursor: 0,
-					take: 20,
+					take: 100,
 					desc: true,
 					chatRoomId:
 						Number(chatInfo.chatRoomId) || Number(userChatRoomId),
 				});
-				if (Array.isArray(res?.data)) {
-					let formatted = res.data.map(mapChatToGifted);
+				if (Array.isArray(res?.data?.messages)) {
+					let formatted = res.data.messages.map(mapChatToGifted);
 					setMessages(formatted);
+					if (readLast) {
+						readLastMessages(formatted);
+					}
 				}
 			} catch (err) {}
 		}

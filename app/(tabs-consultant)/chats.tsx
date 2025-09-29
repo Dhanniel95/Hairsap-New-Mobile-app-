@@ -69,9 +69,9 @@ const ChatRooms = () => {
 	const listMyGuests = async () => {
 		try {
 			let res = await chatService.listMyGuestChats();
-			if (Array.isArray(res?.data)) {
+			if (Array.isArray(res?.data?.chats)) {
 				setMyGuestList(
-					res.data?.sort(
+					res.data?.chats.sort(
 						(a: any, b: any) =>
 							new Date(b.chat?.updatedAt).getTime() -
 							new Date(a.chat?.updatedAt).getTime()
@@ -85,9 +85,9 @@ const ChatRooms = () => {
 		try {
 			setLoad(true);
 			let res = await chatService.listGuestChats();
-			if (Array.isArray(res?.data)) {
+			if (Array.isArray(res?.data?.chats)) {
 				setGuestList(
-					res.data?.sort(
+					res.data?.chats.sort(
 						(a: any, b: any) =>
 							new Date(b.chat?.updatedAt).getTime() -
 							new Date(a.chat?.updatedAt).getTime()
@@ -103,9 +103,9 @@ const ChatRooms = () => {
 	const listCustomers = async () => {
 		try {
 			let res = await chatService.listCustomersChats();
-			if (Array.isArray(res?.data)) {
+			if (Array.isArray(res?.data?.chats)) {
 				setCustomersList(
-					res.data?.sort(
+					res.data?.chats?.sort(
 						(a: any, b: any) =>
 							new Date(b.chat?.updatedAt).getTime() -
 							new Date(a.chat?.updatedAt).getTime()
@@ -118,8 +118,8 @@ const ChatRooms = () => {
 	const listMyCustomers = async () => {
 		try {
 			let res = await chatService.listMyCustomersChats();
-			if (Array.isArray(res?.data)) {
-				setMyCustomersList(res.data);
+			if (Array.isArray(res?.data?.chats)) {
+				setMyCustomersList(res.data?.chats);
 			}
 		} catch (err) {}
 	};
@@ -127,8 +127,8 @@ const ChatRooms = () => {
 	const listBraiders = async () => {
 		try {
 			let res = await chatService.listBraidersChats();
-			if (Array.isArray(res?.data)) {
-				setBraidersList(res.data);
+			if (Array.isArray(res?.data?.chats)) {
+				setBraidersList(res.data.chats);
 			}
 		} catch (err) {}
 	};

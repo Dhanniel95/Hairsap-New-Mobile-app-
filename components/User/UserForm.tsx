@@ -63,7 +63,6 @@ const UserForm = ({
 				onSubmit();
 			} else {
 				let res = await authService.generateToken(details.userId);
-				console.log(res, "RES");
 				setMagicLink(res?.data);
 			}
 		} catch (err: any) {

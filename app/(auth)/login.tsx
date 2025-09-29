@@ -6,7 +6,6 @@ import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { registerForPushNotificationsAsync } from "@/utils/notification";
-import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -19,6 +18,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import Logo from "../../assets/images/logo.svg";
 
 const Login = () => {
 	const dispatch = useAppDispatch();
@@ -71,10 +71,11 @@ const Login = () => {
 							<View
 								style={{ alignItems: "center", marginTop: 20 }}
 							>
-								<Image
+								{/* <Image
 									source={require("../../assets/images/logo.svg")}
 									style={{ height: 30, width: 130 }}
-								/>
+								/> */}
+								<Logo width={150} />
 								<Text
 									style={[
 										textStyles.textBold,

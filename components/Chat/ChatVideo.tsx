@@ -17,20 +17,15 @@ const ChatVideo = ({ uri, load }: { uri: string; load: boolean }) => {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [fullscreen, setFullscreen] = useState(false);
 
-	const togglePlay = async () => {
-		if (isPlaying) {
-			player.pause();
-			setIsPlaying(false);
-		} else {
-			player.play();
-			setIsPlaying(true);
-			setFullscreen(true);
-		}
-	};
-
 	return (
 		<View style={{ width: 260, borderRadius: 12, overflow: "hidden" }}>
-			<TouchableOpacity activeOpacity={0.9} onPress={togglePlay}>
+			<TouchableOpacity
+				activeOpacity={0.9}
+				onPress={() => {
+					setFullscreen(true);
+					player.play();
+				}}
+			>
 				<VideoView
 					style={{
 						width: "100%",
@@ -59,12 +54,15 @@ const ChatVideo = ({ uri, load }: { uri: string; load: boolean }) => {
 					<VideoView
 						style={{ flex: 1 }}
 						player={player}
-						nativeControls={true} // here native controls are allowed
+						nativeControls={false} // here native controls are allowed
 						allowsFullscreen
 						allowsPictureInPicture
 					/>
 					<TouchableOpacity
-						onPress={() => setFullscreen(false)}
+						onPress={() => {
+							player.pause();
+							setFullscreen(false);
+						}}
 						style={styles.closeBtn}
 					>
 						<Ionicons name="close" size={28} color="white" />

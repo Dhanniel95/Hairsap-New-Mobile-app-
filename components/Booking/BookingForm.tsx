@@ -59,7 +59,11 @@ const BookingForm = ({
 			);
 			setAddress(detail.address);
 			setDateTime(detail.arrivalAt);
-			setSelectedBraiders([detail.proId]);
+			setSelectedBraiders(
+				detail?.assistants?.map((b: any) => {
+					return b.assistant?.userId;
+				})
+			);
 		}
 	}, [detail]);
 
@@ -136,8 +140,8 @@ const BookingForm = ({
 
 			const braiderCount =
 				selectedBraiders.length > 0 ? selectedBraiders.length : 1;
-			setDurationCount(totalDuration * braiderCount);
-			setDuration(formatTime(totalDuration * braiderCount));
+			setDurationCount(totalDuration / selectedBraiders.length);
+			setDuration(formatTime(totalDuration / selectedBraiders.length));
 			setPrice(`₦${formatCommas((totalPrice * braiderCount) / 100)}`);
 		} else {
 			setDuration("");
@@ -187,7 +191,7 @@ const BookingForm = ({
 						text: description,
 						media: mediaUrl,
 					},
-					referralCode,
+					code: referralCode,
 				};
 				setLoad(true);
 				if (detail?.bookingId) {
@@ -199,6 +203,7 @@ const BookingForm = ({
 				onClose();
 			} catch (err) {
 				let msg = displayError(err, false);
+				//console.log(err?.response?.data);
 				setLoad(false);
 				Alert.alert("Error", msg.toString());
 			}

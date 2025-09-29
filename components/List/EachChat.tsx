@@ -13,7 +13,9 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 
 	let chatInfo = chat?.chat;
 
-	let newMsg = chat.participants?.find((c: any) => c.userId == user.userId)
+	let newMsg = !chat.participants
+		? "1"
+		: chat.participants?.find((c: any) => c.userId == user.userId)
 		? "1"
 		: "0";
 
@@ -51,7 +53,7 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 						chatId: chatInfo?.chatId || chat.chatId,
 						createdAt: chatInfo?.createdAt,
 						messageType: chatInfo?.messageType || "",
-						message: chatInfo?.message || "",
+						count: chat?.unreadMessages || 0,
 					},
 				})
 			}

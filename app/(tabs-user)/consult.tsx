@@ -14,8 +14,11 @@ const ConsultScreen = () => {
 	const loadRooms = async () => {
 		try {
 			let res = await chatService.listChatRooms();
-			if (Array.isArray(res?.data) && res?.data?.length > 0) {
-				let id = res.data[0].chatRoomId;
+			if (
+				Array.isArray(res?.data?.chats) &&
+				res?.data?.chats?.length > 0
+			) {
+				let id = res.data.chats[0].chatRoomId;
 				dispatch(saveChatId(id));
 			}
 		} catch (err) {

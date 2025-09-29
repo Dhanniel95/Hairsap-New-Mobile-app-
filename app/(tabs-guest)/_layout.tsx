@@ -48,6 +48,7 @@ export default function TabLayout() {
 		});
 
 		socket.on("auth:new-token", async (data) => {
+			console.log(data?.data?.user, "USER");
 			if (data?.data?.token) {
 				await AsyncStorage.setItem("@accesstoken", data.data.token);
 				dispatch(saveUserData(data.data.user));

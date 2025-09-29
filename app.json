@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Hairsap",
 		"slug": "hairsap",
-		"version": "1.7.2",
+		"version": "1.7.3",
 		"orientation": "portrait",
 		"icon": "./assets/images/icon.png",
 		"scheme": "hairsap",
@@ -91,6 +91,6 @@
 			}
 		},
 		"description": "App for connecting users to hairstylists",
-		"owner": "hairsap"
+		"owner": "afolwalex"
 	}
 }

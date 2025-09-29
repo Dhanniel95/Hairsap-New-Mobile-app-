@@ -11,7 +11,6 @@ const ReceiptChat = ({
 	metadata: any;
 	isUser: boolean;
 }) => {
-	console.log(metadata, "mm");
 	return metadata?.serviceBooked ? (
 		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }}>
 			<View style={[styles.card]}>

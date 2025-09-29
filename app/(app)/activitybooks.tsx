@@ -76,6 +76,13 @@ const ActivityBookings = () => {
 		}
 	};
 
+	console.log(
+		bookingData?.assistants?.map((b: any) => {
+			return b.assistant?.userId;
+		}),
+		"gg"
+	);
+
 	return (
 		<Container dark={true} bg="#FFF">
 			<GoBack

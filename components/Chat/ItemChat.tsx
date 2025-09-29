@@ -43,33 +43,35 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						{metadata.name}
 					</Text>
 				</View>
-				<View
-					style={{
-						borderBottomColor: "rgba(255,255,255,0.4)",
-						borderBottomWidth: 1,
-						paddingVertical: 10,
-					}}
-				>
-					<Text
-						style={[
-							textStyles.textBold,
-							{ color: "#FFF", fontSize: 14 },
-						]}
+				{metadata.serviceType && (
+					<View
+						style={{
+							borderBottomColor: "rgba(255,255,255,0.4)",
+							borderBottomWidth: 1,
+							paddingVertical: 10,
+						}}
 					>
-						Service Type:
-					</Text>
-					<Text
-						style={[
-							textStyles.textMid,
-							{
-								color: "#FFF",
-								fontSize: 14,
-							},
-						]}
-					>
-						{metadata.serviceType || "---"}
-					</Text>
-				</View>
+						<Text
+							style={[
+								textStyles.textBold,
+								{ color: "#FFF", fontSize: 14 },
+							]}
+						>
+							Service Type:
+						</Text>
+						<Text
+							style={[
+								textStyles.textMid,
+								{
+									color: "#FFF",
+									fontSize: 14,
+								},
+							]}
+						>
+							{metadata.serviceType || "---"}
+						</Text>
+					</View>
+				)}
 				<View
 					style={{
 						flexDirection: "row",

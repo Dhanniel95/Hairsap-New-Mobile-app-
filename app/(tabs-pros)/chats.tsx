@@ -9,7 +9,7 @@ import { connectSocket, disconnectSocket } from "@/utils/socket";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, RefreshControl, Text, View } from "react-native";
 
 const ChatScreen = () => {
 	const dispatch = useAppDispatch();
@@ -38,8 +38,8 @@ const ChatScreen = () => {
 	const listChats = async () => {
 		try {
 			let res = await chatService.listChatRooms();
-			if (Array.isArray(res?.data)) {
-				setList(res.data);
+			if (Array.isArray(res?.data?.chats)) {
+				setList(res.data.chats);
 			}
 		} catch (err) {}
 	};
@@ -124,5 +124,3 @@ const ChatScreen = () => {
 };
 
 export default ChatScreen;
-
-const styles = StyleSheet.create({});
