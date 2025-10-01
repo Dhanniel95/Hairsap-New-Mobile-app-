@@ -6,6 +6,7 @@ interface UserDetailsType {
 	phone: string;
 	discountCode: string;
 	role: string;
+	changePassword: boolean;
 }
 
 const userDetailsType: UserDetailsType | Record<string, never> = {};

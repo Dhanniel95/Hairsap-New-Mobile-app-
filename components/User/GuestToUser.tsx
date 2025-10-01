@@ -1,7 +1,7 @@
 import { getUserInfo } from "@/redux/auth/authSlice";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
-import { useAppDispatch } from "@/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -11,13 +11,22 @@ const GuestToUser = ({ closeModal }: { closeModal: () => void }) => {
 
 	const dispatch = useAppDispatch();
 
+	const { user } = useAppSelector((state) => state.auth);
+
 	useEffect(() => {
 		dispatch(getUserInfo());
 	}, []);
 
 	const reloadHandler = async () => {
 		closeModal();
-		router.replace("/(tabs-user)/gallery");
+		if (user.changePassword) {
+			router.replace({
+				pathname: "/(app)/changepassword",
+				params: { new: "true" },
+			});
+		} else {
+			router.replace("/(tabs-user)/gallery");
+		}
 	};
 
 	return (
@@ -25,15 +34,17 @@ const GuestToUser = ({ closeModal }: { closeModal: () => void }) => {
 			<Text
 				style={[textStyles.textMid, { marginBottom: 20, fontSize: 14 }]}
 			>
-				A Customer Account has been created for you. You can continue
-				using our services with it.
+				{user?.changePassword
+					? `A Customer Account has been created for you. You can continue
+				using our services with it.`
+					: `Welcome Back, ${user?.name}`}
 			</Text>
 			<TouchableOpacity
 				style={[formStyles.mainBtn]}
 				onPress={reloadHandler}
 			>
 				<Text style={[textStyles.textBold, { color: "#FFF" }]}>
-					OKAY
+					CLOSE
 				</Text>
 			</TouchableOpacity>
 		</View>

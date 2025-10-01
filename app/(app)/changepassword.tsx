@@ -7,14 +7,28 @@ import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { displayError, displaySuccess } from "@/utils/error";
-import React, { useState } from "react";
+import { useAppSelector } from "@/utils/hooks";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
 const ChangePassword = () => {
+	const { user } = useAppSelector((state) => state.auth);
+
+	const params = useLocalSearchParams();
+
+	const router = useRouter();
+
 	const [password, setPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [load, setLoad] = useState(false);
+
+	useEffect(() => {
+		if (params?.new == "true") {
+			setPassword("password");
+		}
+	}, [params]);
 
 	const submitHandler = async () => {
 		if (password) {
@@ -26,9 +40,14 @@ const ChangePassword = () => {
 					};
 
 					setLoad(true);
-					await authService.changePassword(payload);
+					await authService.changePassword(
+						params?.new == "true" ? { newPassword } : payload
+					);
 					setLoad(false);
 					displaySuccess("Password successfully updated");
+					if (params?.new == "true" && user.role === "user") {
+						router.replace("/(tabs-user)/gallery");
+					}
 				} catch (err) {
 					setLoad(false);
 					displayError(err, true);
@@ -54,20 +73,25 @@ const ChangePassword = () => {
 				}}
 			>
 				<KeyboardWrapper>
-					<InputField
-						label="Old Password"
-						value={password}
-						setValue={setPassword}
-					/>
+					{params?.new != "true" && (
+						<InputField
+							label="Old Password"
+							value={password}
+							setValue={setPassword}
+							password={true}
+						/>
+					)}
 					<InputField
 						label="New Password"
 						value={newPassword}
 						setValue={setNewPassword}
+						password={true}
 					/>
 					<InputField
 						label="Confirm New Password"
 						value={confirmPassword}
 						setValue={setConfirmPassword}
+						password={true}
 					/>
 					<TouchableOpacity
 						style={[

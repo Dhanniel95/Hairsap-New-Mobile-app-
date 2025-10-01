@@ -11,6 +11,7 @@ import { connectSocket, disconnectSocket } from "@/utils/socket";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Tabs, useRouter } from "expo-router";
+import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { Alert, Platform, TouchableOpacity } from "react-native";
 
@@ -48,10 +49,15 @@ export default function TabLayout() {
 		});
 
 		socket.on("auth:new-token", async (data) => {
-			console.log(data?.data?.user, "USER");
 			if (data?.data?.token) {
+				let decode: any = jwtDecode(data.data.token);
 				await AsyncStorage.setItem("@accesstoken", data.data.token);
-				dispatch(saveUserData(data.data.user));
+				dispatch(
+					saveUserData({
+						...data.data.user,
+						changePassword: decode?.changePassword,
+					})
+				);
 				setOpenUser(true);
 			}
 		});
