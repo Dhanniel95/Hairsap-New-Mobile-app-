@@ -88,6 +88,19 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 		};
 	}, [player, player.status]);
 
+	useEffect(() => {
+		return () => {
+			try {
+				if (player && player.status == "readyToPlay") {
+					player.pause();
+					player.currentTime = 0;
+				}
+			} catch (e) {
+				console.warn("Failed to pause player on cleanup:", e);
+			}
+		};
+	}, [player]);
+
 	const onSliderValueChange = (value: number) => {
 		setPosition(value);
 	};
@@ -105,6 +118,7 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 				galleryItemId: video.galleryId,
 			});
 			setLoadC(false);
+			player.pause();
 			router.push(
 				user.role === "guest"
 					? "/(tabs-guest)/consult"

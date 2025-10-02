@@ -28,14 +28,14 @@ const formatChatDate = (dateString: string) => {
 	return format(date, "MMM d, yyyy"); // e.g. "Aug 10, 2025"
 };
 
-const formatTime = (value: any) => {
-	if (value < 60) return `${value} mins`;
+const formatTime = (value: number) => {
+	if (value < 60) return `${value} min${value !== 1 ? "s" : ""}`;
 
-	let hours = value / 60;
-	let mins = value % 60;
+	const hours = Math.floor(value / 60);
+	const mins = value % 60;
 
-	return `${hours.toFixed(0)} hr${hours > 1 && "s"} ${
-		mins !== 0 ? mins + " mins" : ""
+	return `${hours} hr${hours !== 1 ? "s" : ""}${
+		mins ? ` ${mins} min${mins !== 1 ? "s" : ""}` : ""
 	}`;
 };
 

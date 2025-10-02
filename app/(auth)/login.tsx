@@ -1,9 +1,10 @@
 import Container from "@/components/Container";
 import FloatInput from "@/components/FloatInput";
-import { loginUser } from "@/redux/auth/authSlice";
+import { loginGuest, loginUser } from "@/redux/auth/authSlice";
 import formStyles from "@/styles/formStyles";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import { displayError } from "@/utils/error";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { registerForPushNotificationsAsync } from "@/utils/notification";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,6 +30,7 @@ const Login = () => {
 
 	const [pass, setPass] = useState("");
 	const [phone, setPhone] = useState("");
+	const [load, setLoad] = useState(false);
 
 	const submitHandler = async () => {
 		if (phone && pass) {
@@ -51,6 +53,29 @@ const Login = () => {
 					router.replace("/(tabs-user)/gallery");
 				}
 			}
+		}
+	};
+
+	const registerGuest = async () => {
+		try {
+			setLoad(true);
+			const { deviceId, token } =
+				await registerForPushNotificationsAsync();
+			let payload = {
+				deviceId,
+				token: token || undefined,
+				role: "guest",
+			};
+			let res = await dispatch(loginGuest(payload)).unwrap();
+			if (res?.userId) {
+				router.replace("/(tabs-guest)/gallery");
+			}
+		} catch (err) {
+			router.replace("/(auth)/login");
+			displayError(
+				"An error has occured. Please login or create an account",
+				true
+			);
 		}
 	};
 
@@ -180,6 +205,36 @@ const Login = () => {
 											</Text>
 										</TouchableOpacity>
 									</Link>
+								</View>
+								<View
+									style={{
+										alignItems: "center",
+										marginTop: 20,
+									}}
+								>
+									{load ? (
+										<ActivityIndicator color={"#FFF"} />
+									) : (
+										<TouchableOpacity
+											onPress={registerGuest}
+											style={{
+												borderBottomWidth: 1,
+												borderBottomColor: "#FFF",
+											}}
+										>
+											<Text
+												style={[
+													textStyles.textBold,
+													{
+														color: "#FFF",
+														fontSize: 16,
+													},
+												]}
+											>
+												Skip
+											</Text>
+										</TouchableOpacity>
+									)}
 								</View>
 							</View>
 						</View>
