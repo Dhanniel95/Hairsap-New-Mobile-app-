@@ -1,5 +1,7 @@
 import textStyles from "@/styles/textStyles";
 import { formatCommas } from "@/utils/currency";
+import { formatTime } from "@/utils/datetime";
+import { format, isValid, parseISO } from "date-fns";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import BorderDashed from "../Basics/BorderDashed";
@@ -11,11 +13,16 @@ const ReceiptChat = ({
 	metadata: any;
 	isUser: boolean;
 }) => {
-	console.log(metadata, "mtttt");
+	const pinDate = metadata?.pinDate ? parseISO(metadata.pinDate) : new Date();
 
 	return metadata?.serviceBooked ? (
-		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }}>
-			<View style={[styles.card]}>
+		<View
+			style={{
+				flexDirection: isUser ? "row-reverse" : "row",
+			}}
+			pointerEvents="box-none"
+		>
+			<View style={[styles.card]} pointerEvents="box-none">
 				<View style={styles.top}>
 					<Text
 						style={[
@@ -82,7 +89,7 @@ const ReceiptChat = ({
 							>
 								DURATION:{" "}
 								<Text style={{ fontFamily: "regular" }}>
-									{metadata.estimatedDuration}
+									{formatTime(metadata.estimatedDuration)}
 								</Text>
 							</Text>
 						</View>
@@ -102,7 +109,9 @@ const ReceiptChat = ({
 					>
 						DATE:{" "}
 						<Text style={{ fontFamily: "regular" }}>
-							{metadata.appointmentDate}
+							{isValid(pinDate)
+								? format(pinDate, "do MMMM, yyyy")
+								: "Invalid date"}
 						</Text>
 					</Text>
 					<Text
@@ -116,7 +125,9 @@ const ReceiptChat = ({
 					>
 						TIME:{" "}
 						<Text style={{ fontFamily: "regular" }}>
-							{metadata.appointmentTime}
+							{isValid(pinDate)
+								? format(pinDate, "h:mm a")
+								: "Invalid date"}
 						</Text>
 					</Text>
 				</View>
@@ -249,9 +260,9 @@ const styles = StyleSheet.create({
 		backgroundColor: "#6B7280",
 		marginVertical: 10,
 		borderTopLeftRadius: 20,
-		width: "90%",
 		borderBottomRightRadius: 20,
 		borderBottomLeftRadius: 20,
+		width: "90%",
 	},
 	top: {
 		backgroundColor: "#FFF",

@@ -1,6 +1,7 @@
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { formatCommas } from "@/utils/currency";
+import { formatTime } from "@/utils/datetime";
 import { useAppSelector } from "@/utils/hooks";
 import React from "react";
 import { Text, View } from "react-native";
@@ -85,7 +86,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						]}
 					>
 						<Text style={{ fontFamily: "bold" }}>Duration:</Text>{" "}
-						{metadata.premiumServiceDuration}
+						{formatTime(metadata.premiumServiceDuration)}
 					</Text>
 					<Text
 						style={[
@@ -111,7 +112,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						]}
 					>
 						<Text style={{ fontFamily: "bold" }}>Duration:</Text>{" "}
-						{metadata.vipServiceDuration}
+						{formatTime(metadata.vipServiceDuration)}
 					</Text>
 				</View>
 				{metadata.description && (
