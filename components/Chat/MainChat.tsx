@@ -235,11 +235,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 
 	const joinRoom = () => {
 		if (socket?.connected) {
-			socket.emit(
-				"chatroom:join",
-				Number(chatInfo.chatRoomId),
-				(response: any) => console.log(response, "reponse__")
-			);
+			socket.emit("chatroom:join", Number(chatInfo.chatRoomId));
 		}
 	};
 
@@ -381,6 +377,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						alwaysShowSend
 						scrollToBottom
 						inverted={messages.length > 0 ? true : false}
+						renderAvatar={null}
+						showAvatarForEveryMessage={false}
 						listViewProps={{
 							contentContainerStyle: {
 								paddingHorizontal: 20,

@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
 	userChatRoomId: "",
+	consultantChat: {} as any,
 };
 
 export const saveChatId = createAsyncThunk(
@@ -16,6 +17,17 @@ export const saveChatId = createAsyncThunk(
 	}
 );
 
+export const consultantChatting = createAsyncThunk(
+	"chat/consultantChat",
+	async (data: any) => {
+		try {
+			return data;
+		} catch (error: any) {
+			return "";
+		}
+	}
+);
+
 const chatSlice = createSlice({
 	name: "chat",
 	initialState,
@@ -23,6 +35,9 @@ const chatSlice = createSlice({
 	extraReducers(builder) {
 		builder.addCase(saveChatId.fulfilled, (state, action) => {
 			state.userChatRoomId = action.payload;
+		});
+		builder.addCase(consultantChatting.fulfilled, (state, action) => {
+			state.consultantChat = action.payload;
 		});
 	},
 });

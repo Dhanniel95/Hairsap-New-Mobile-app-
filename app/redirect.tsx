@@ -1,9 +1,12 @@
-import { useAppSelector } from "@/utils/hooks";
+import { getTransport } from "@/redux/basic/basicSlice";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, ImageBackground, View } from "react-native";
 
 export default function RedirectPage() {
+	const dispatch = useAppDispatch();
+
 	const router = useRouter();
 	const { user } = useAppSelector((state) => state.auth);
 
@@ -18,6 +21,7 @@ export default function RedirectPage() {
 			} else {
 				router.replace("/(tabs-user)/gallery");
 			}
+			dispatch(getTransport());
 		} else {
 			router.replace("/(auth)/guest");
 		}

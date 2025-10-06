@@ -11,27 +11,37 @@ const listChatMessages = async (obj: any) => {
 };
 
 const listCustomersChats = async () => {
-	const { data } = await apiRequest().get(`/chats/chatroom/customers`);
+	const { data } = await apiRequest().get(
+		`/chats/chatroom/customers?cursor=0&take=200&desc=true`
+	);
 	return data;
 };
 
 const listGuestChats = async () => {
-	const { data } = await apiRequest().get(`/chats/chatroom/guests`);
+	const { data } = await apiRequest().get(
+		`/chats/chatroom/guests?cursor=0&take=200&desc=true`
+	);
 	return data;
 };
 
 const listMyCustomersChats = async () => {
-	const { data } = await apiRequest().get(`/chats/chatroom/me/customers`);
+	const { data } = await apiRequest().get(
+		`/chats/chatroom/me/customers?cursor=0&take=200&desc=true`
+	);
 	return data;
 };
 
 const listMyGuestChats = async () => {
-	const { data } = await apiRequest().get(`/chats/chatroom/me/guests`);
+	const { data } = await apiRequest().get(
+		`/chats/chatroom/me/guests?cursor=0&take=200&desc=true`
+	);
 	return data;
 };
 
 const listBraidersChats = async () => {
-	const { data } = await apiRequest().get(`/chats/chatroom/me/pros`);
+	const { data } = await apiRequest().get(
+		`/chats/chatroom/me/pros?cursor=0&take=200&desc=true`
+	);
 	return data;
 };
 

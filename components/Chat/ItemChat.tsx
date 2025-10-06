@@ -1,16 +1,25 @@
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { formatCommas } from "@/utils/currency";
-import { formatTime } from "@/utils/datetime";
+import { useAppSelector } from "@/utils/hooks";
 import React from "react";
 import { Text, View } from "react-native";
 
 const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
+	const { user } = useAppSelector((state) => state.auth);
+
 	return (
-		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }}>
+		<View
+			style={{
+				marginBottom: 10,
+				width: "100%",
+				alignItems:
+					user.role === "consultant" ? "flex-start" : "flex-end",
+			}}
+		>
 			<View
 				style={{
-					width: "85%",
+					width: "75%",
 					backgroundColor: colors.primary,
 					paddingHorizontal: 10,
 					borderRadius: 10,
@@ -32,7 +41,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 							},
 						]}
 					>
-						{metadata.name}
+						{metadata.serviceName}
 					</Text>
 				</View>
 				<View
@@ -63,7 +72,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						<Text style={{ fontFamily: "bold" }}>
 							Regular Premium:
 						</Text>{" "}
-						₦{formatCommas(metadata.price / 100)}
+						₦{formatCommas(metadata.premiumServicePrice / 100)}
 					</Text>
 					<Text
 						style={[
@@ -76,7 +85,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						]}
 					>
 						<Text style={{ fontFamily: "bold" }}>Duration:</Text>{" "}
-						{formatTime(metadata.duration)}
+						{metadata.premiumServiceDuration}
 					</Text>
 					<Text
 						style={[
@@ -89,7 +98,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						]}
 					>
 						<Text style={{ fontFamily: "bold" }}>VIP Service:</Text>{" "}
-						₦{formatCommas((metadata.price * 2) / 100)}
+						₦{formatCommas(metadata.vipServicePrice / 100)}
 					</Text>
 					<Text
 						style={[
@@ -102,7 +111,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						]}
 					>
 						<Text style={{ fontFamily: "bold" }}>Duration:</Text>{" "}
-						{formatTime(metadata.duration / 2)}
+						{metadata.vipServiceDuration}
 					</Text>
 				</View>
 				{metadata.description && (

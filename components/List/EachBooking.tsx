@@ -2,6 +2,7 @@ import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { formatCurrency } from "@/utils/currency";
 import { formatTime } from "@/utils/datetime";
+import { useAppSelector } from "@/utils/hooks";
 import { Feather } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -9,9 +10,15 @@ import BookingForm from "../Booking/BookingForm";
 import ModalComponent from "../ModalComponent";
 
 const EachBooking = ({ booking }: { booking: any }) => {
+	const { transportFee } = useAppSelector((state) => state.basic);
+
 	const [openModal, setOpenModal] = useState(false);
 
-	console.log(booking, "booking");
+	const totalBraiders = (booking.assistants?.length || 0) + 1;
+
+	const viewPrice = (val: any) => {
+		return (val + transportFee) * totalBraiders;
+	};
 
 	return (
 		<View style={styles.card}>
@@ -19,7 +26,7 @@ const EachBooking = ({ booking }: { booking: any }) => {
 				<Text style={[textStyles.textMid, { fontSize: 14 }]}>
 					Booking Summary
 				</Text>
-				{booking.pinStatus == null && (
+				{booking.pinStatus != null && (
 					<TouchableOpacity onPress={() => setOpenModal(true)}>
 						<Feather name="edit" size={20} color={colors.dark} />
 					</TouchableOpacity>
@@ -85,7 +92,7 @@ const EachBooking = ({ booking }: { booking: any }) => {
 								>
 									₦
 									{formatCurrency(
-										book.subService?.price / 100
+										viewPrice(book.subService?.price / 100)
 									)}
 								</Text>
 							</View>
@@ -114,7 +121,10 @@ const EachBooking = ({ booking }: { booking: any }) => {
 										{ color: "#FFF", fontSize: 14 },
 									]}
 								>
-									{formatTime(book.subService?.duration)}
+									{formatTime(
+										book.subService?.duration /
+											totalBraiders
+									)}
 								</Text>
 							</View>
 						</View>

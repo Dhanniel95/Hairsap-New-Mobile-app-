@@ -7,6 +7,7 @@ import colors from "@/utils/colors";
 import { formatCommas } from "@/utils/currency";
 import { formatTime } from "@/utils/datetime";
 import { displayError } from "@/utils/error";
+import { useAppSelector } from "@/utils/hooks";
 import { Feather } from "@expo/vector-icons";
 import { addHours, addMinutes, format } from "date-fns";
 import * as ImagePicker from "expo-image-picker";
@@ -34,6 +35,8 @@ const BookingForm = ({
 	onClose: () => void;
 	detail?: any;
 }) => {
+	const { transportFee } = useAppSelector((state) => state.basic);
+
 	const [price, setPrice] = useState("");
 	const [selectedService, setSelectedService] = useState<any>([]);
 	const [list, setList] = useState<any>([]);
@@ -60,9 +63,16 @@ const BookingForm = ({
 			setAddress(detail.address);
 			setDateTime(detail.arrivalAt);
 			setSelectedBraiders(
-				detail?.assistants?.map((b: any) => {
-					return b.assistant?.userId;
-				})
+				Array.from(
+					new Set(
+						[
+							detail.proId,
+							...detail?.assistants.map(
+								(a: any) => a.assistant?.userId
+							),
+						].filter((id): id is number => id != null)
+					)
+				)
 			);
 		}
 	}, [detail]);
@@ -140,9 +150,14 @@ const BookingForm = ({
 
 			const braiderCount =
 				selectedBraiders.length > 0 ? selectedBraiders.length : 1;
-			setDurationCount(totalDuration / selectedBraiders.length);
-			setDuration(formatTime(totalDuration / selectedBraiders.length));
-			setPrice(`₦${formatCommas((totalPrice * braiderCount) / 100)}`);
+			setDurationCount(totalDuration / (selectedBraiders.length || 1));
+			setDuration(
+				formatTime(totalDuration / (selectedBraiders.length || 1))
+			);
+			console.log(braiderCount, "PRICE", totalPrice);
+			let finalP = (totalPrice * braiderCount) / 100;
+			let finalT = (transportFee || 0) * braiderCount;
+			setPrice(`₦${formatCommas(finalP + finalT)}`);
 		} else {
 			setDuration("");
 			setPrice("");
@@ -152,14 +167,14 @@ const BookingForm = ({
 	const showDateTime = (val: any) => {
 		if (val) {
 			let valDate = new Date(val);
-			let realDate = format(valDate, "dd/MM/yyyy HH:mm");
+			let realDate = format(valDate, "dd/MM/yyyy hh:mm a");
 			let addTime;
 			if (durationCount < 60) {
-				addTime = format(addMinutes(valDate, durationCount), "HH:mm");
+				addTime = format(addMinutes(valDate, durationCount), "hh:mm a");
 			} else {
 				addTime = format(
 					addHours(valDate, durationCount / 60),
-					"HH:mm"
+					"hh:mm a"
 				);
 			}
 			return `${realDate} - ${addTime}`;

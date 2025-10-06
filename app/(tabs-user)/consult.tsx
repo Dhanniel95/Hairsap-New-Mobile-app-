@@ -1,6 +1,6 @@
 import Consult from "@/components/User/Consult";
 import chatService from "@/redux/chat/chatService";
-import { saveChatId } from "@/redux/chat/chatSlice";
+import { consultantChatting, saveChatId } from "@/redux/chat/chatSlice";
 import { useAppDispatch } from "@/utils/hooks";
 import React, { useEffect } from "react";
 
@@ -15,11 +15,13 @@ const ConsultScreen = () => {
 		try {
 			let res = await chatService.listChatRooms();
 			if (
-				Array.isArray(res?.data?.chats) &&
-				res?.data?.chats?.length > 0
+				Array.isArray(res?.data?.chatRooms) &&
+				res?.data?.chatRooms?.length > 0
 			) {
-				let id = res.data.chats[0].chatRoomId;
+				let id = res.data.chatRooms[0].chatRoomId;
+				let receiver = res.data.chatRooms[0]?.chat?.receiver;
 				dispatch(saveChatId(id));
+				dispatch(consultantChatting(receiver));
 			}
 		} catch (err) {
 			console.log(err);

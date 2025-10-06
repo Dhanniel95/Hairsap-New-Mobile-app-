@@ -59,7 +59,7 @@ const ConsultantMenu = ({
 				}}
 			>
 				<View style={styles.innerBox}>
-					<AntDesign name="adduser" size={25} color={"#FFF"} />
+					<AntDesign name="user-add" size={25} color={"#FFF"} />
 				</View>
 				<Text
 					style={[

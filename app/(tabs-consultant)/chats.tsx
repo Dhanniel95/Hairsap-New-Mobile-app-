@@ -30,11 +30,11 @@ const ChatRooms = () => {
 
 	const [activeTab, setActiveTab] = useState(1);
 	const [load, setLoad] = useState(false);
-	const [guestList, setGuestList] = useState<any>([]);
-	const [myGuestList, setMyGuestList] = useState<any>([]);
-	const [myCustomersList, setMyCustomersList] = useState<any>([]);
-	const [customersList, setCustomersList] = useState<any>([]);
-	const [braidersList, setBraidersList] = useState<any>([]);
+	const [guestList, setGuestList] = useState<any>({});
+	const [myGuestList, setMyGuestList] = useState<any>({});
+	const [myCustomersList, setMyCustomersList] = useState<any>({});
+	const [customersList, setCustomersList] = useState<any>({});
+	const [braidersList, setBraidersList] = useState<any>({});
 	const [refreshing, setRefreshing] = useState<any>(false);
 	const [openModal, setOpenModal] = useState(false);
 	const [search, setSearch] = useState("");
@@ -69,14 +69,8 @@ const ChatRooms = () => {
 	const listMyGuests = async () => {
 		try {
 			let res = await chatService.listMyGuestChats();
-			if (Array.isArray(res?.data?.chats)) {
-				setMyGuestList(
-					res.data?.chats.sort(
-						(a: any, b: any) =>
-							new Date(b.chat?.updatedAt).getTime() -
-							new Date(a.chat?.updatedAt).getTime()
-					)
-				);
+			if (Array.isArray(res?.data?.data)) {
+				setMyGuestList(res.data);
 			}
 		} catch (err) {}
 	};
@@ -85,14 +79,8 @@ const ChatRooms = () => {
 		try {
 			setLoad(true);
 			let res = await chatService.listGuestChats();
-			if (Array.isArray(res?.data?.chats)) {
-				setGuestList(
-					res.data?.chats.sort(
-						(a: any, b: any) =>
-							new Date(b.chat?.updatedAt).getTime() -
-							new Date(a.chat?.updatedAt).getTime()
-					)
-				);
+			if (Array.isArray(res?.data?.chatRooms)) {
+				setGuestList(res.data);
 			}
 			setLoad(false);
 		} catch (err) {
@@ -103,14 +91,8 @@ const ChatRooms = () => {
 	const listCustomers = async () => {
 		try {
 			let res = await chatService.listCustomersChats();
-			if (Array.isArray(res?.data?.chats)) {
-				setCustomersList(
-					res.data?.chats?.sort(
-						(a: any, b: any) =>
-							new Date(b.chat?.updatedAt).getTime() -
-							new Date(a.chat?.updatedAt).getTime()
-					)
-				);
+			if (Array.isArray(res?.data?.chatRooms)) {
+				setCustomersList(res.data);
 			}
 		} catch (err) {}
 	};
@@ -118,8 +100,8 @@ const ChatRooms = () => {
 	const listMyCustomers = async () => {
 		try {
 			let res = await chatService.listMyCustomersChats();
-			if (Array.isArray(res?.data?.chats)) {
-				setMyCustomersList(res.data?.chats);
+			if (Array.isArray(res?.data?.chatRooms)) {
+				setMyCustomersList(res.data);
 			}
 		} catch (err) {}
 	};
@@ -127,8 +109,8 @@ const ChatRooms = () => {
 	const listBraiders = async () => {
 		try {
 			let res = await chatService.listBraidersChats();
-			if (Array.isArray(res?.data?.chats)) {
-				setBraidersList(res.data.chats);
+			if (Array.isArray(res?.data?.chatRooms)) {
+				setBraidersList(res.data);
 			}
 		} catch (err) {}
 	};
@@ -145,12 +127,40 @@ const ChatRooms = () => {
 		const lowerQuery = val.toLowerCase();
 
 		setSearchList(
-			customersList.filter(
+			customersList.chatRooms?.filter(
 				(user: any) =>
 					user?.name?.toLowerCase().includes(lowerQuery) ||
 					user?.phone?.includes(lowerQuery)
 			)
 		);
+	};
+
+	const arrayType = (type: string) => {
+		if (activeTab === 1) {
+			return guestList[type];
+		} else if (activeTab === 2) {
+			if (search) {
+				return searchList;
+			} else {
+				return customersList[type];
+			}
+		} else if (activeTab === 3) {
+			return myGuestList?.data;
+		} else if (activeTab === 4) {
+			return myCustomersList[type];
+		} else {
+			return braidersList[type];
+		}
+	};
+
+	const keyId = (item: any) => {
+		if (item.chatRoomId) {
+			return item.chatRoomId.toString();
+		} else if (item.userId) {
+			return item.userId.toString();
+		} else {
+			return item.chat?.chatId?.toString();
+		}
 	};
 
 	return (
@@ -199,11 +209,13 @@ const ChatRooms = () => {
 					<ChatTabs
 						activeTab={activeTab}
 						setActiveTab={setActiveTab}
-						guestList={guestList.length}
-						braidersList={braidersList.length}
-						customersList={customersList.length}
-						myCustomersList={myCustomersList.length}
-						myGuestList={myGuestList.length}
+						guestList={guestList.cursor?.totalUnreadMessage}
+						braidersList={braidersList.cursor?.totalUnreadMessage}
+						customersList={customersList.cursor?.totalUnreadMessage}
+						myCustomersList={
+							myCustomersList.cursor?.totalUnreadMessage
+						}
+						myGuestList={myGuestList.cursor?.totalUnreadMessage}
 					/>
 				</View>
 				{activeTab === 2 && (
@@ -225,23 +237,8 @@ const ChatRooms = () => {
 				)}
 				<View style={{ flex: 1 }}>
 					<FlatList
-						data={
-							activeTab === 1
-								? guestList
-								: activeTab === 2
-								? search
-									? searchList
-									: customersList
-								: activeTab === 3
-								? myGuestList
-								: activeTab === 4
-								? myCustomersList
-								: braidersList
-						}
-						keyExtractor={(item: any) =>
-							item.chat?.chatId?.toString() ||
-							item.userId?.toString()
-						}
+						data={arrayType("chatRooms")}
+						keyExtractor={(item: any, i: number) => i.toString()}
 						renderItem={({ item }) => (
 							<EachChat
 								chat={item}

@@ -1,9 +1,11 @@
 // socketSlice.js
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import bookService from "../book/bookService";
 import basicService from "./basicService";
 
 const initialState = {
 	notiList: [],
+	transportFee: 0,
 };
 
 export const listNotifications = createAsyncThunk(
@@ -16,6 +18,17 @@ export const listNotifications = createAsyncThunk(
 	}
 );
 
+export const getTransport = createAsyncThunk("basic/transport", async () => {
+	try {
+		let res = await bookService.transportInfo();
+		if (res?.price) {
+			return res.price / 100;
+		} else {
+			return 0;
+		}
+	} catch (error: any) {}
+});
+
 const basicSlice = createSlice({
 	name: "basic",
 	initialState,
@@ -27,6 +40,9 @@ const basicSlice = createSlice({
 	extraReducers(builder) {
 		builder.addCase(listNotifications.fulfilled, (state, action) => {
 			state.notiList = action.payload;
+		});
+		builder.addCase(getTransport.fulfilled, (state, action) => {
+			state.transportFee = action.payload || 0;
 		});
 	},
 });

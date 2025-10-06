@@ -38,8 +38,8 @@ const ChatScreen = () => {
 	const listChats = async () => {
 		try {
 			let res = await chatService.listChatRooms();
-			if (Array.isArray(res?.data?.chats)) {
-				setList(res.data.chats);
+			if (Array.isArray(res?.data?.chatRooms)) {
+				setList(res.data.chatRooms);
 			}
 		} catch (err) {}
 	};
