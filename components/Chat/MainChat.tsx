@@ -276,7 +276,10 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	);
 
 	const renderComposer = (props: any) => {
-		return (
+		return user.role === "consultant" &&
+			chatInfo?.isParticipant === "false" ? (
+			<View style={{ width: "100%" }}></View>
+		) : (
 			<View
 				style={{
 					flexDirection: "row",

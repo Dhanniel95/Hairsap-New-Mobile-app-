@@ -39,7 +39,6 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 
 	return (
 		<TouchableOpacity
-			disabled={!isBtnAllowed}
 			onPress={() =>
 				router.push({
 					pathname: "/(app)/chat",
@@ -54,6 +53,7 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 						createdAt: chatInfo?.createdAt,
 						messageType: chatInfo?.messageType || "",
 						count: chat?.unreadMessages || 0,
+						isParticipant: `${isBtnAllowed}`,
 					},
 				})
 			}
