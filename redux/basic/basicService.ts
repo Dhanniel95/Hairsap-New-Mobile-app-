@@ -26,7 +26,9 @@ const getReviews = async (id: any) => {
 };
 
 const getBraidersAvailability = async (date: any, id: string) => {
-	const { data } = await apiRequest().get(`/consultant/available/pros`);
+	const { data } = await apiRequest().get(
+		`/consultant/available/pros?pinDate=${date}&bookingId=${id}`
+	);
 	return data?.data;
 };
 

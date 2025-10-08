@@ -161,7 +161,7 @@ const Login = () => {
 								</View>
 								<TouchableOpacity
 									style={[formStyles.mainBtn]}
-									disabled={loading}
+									disabled={loading || load}
 									onPress={submitHandler}
 								>
 									{loading ? (
@@ -217,6 +217,7 @@ const Login = () => {
 									) : (
 										<TouchableOpacity
 											onPress={registerGuest}
+											disabled={loading}
 											style={{
 												borderBottomWidth: 1,
 												borderBottomColor: "#FFF",

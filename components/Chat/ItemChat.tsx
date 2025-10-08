@@ -15,7 +15,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 				marginBottom: 10,
 				width: "100%",
 				alignItems:
-					user.role === "consultant" ? "flex-start" : "flex-end",
+					user.role === "consultant" ? "flex-end" : "flex-start",
 			}}
 		>
 			<View
@@ -47,21 +47,12 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 				</View>
 				<View
 					style={{
-						borderBottomColor: "rgba(255,255,255,0.4)",
-						borderBottomWidth: 1,
-						paddingVertical: 10,
+						paddingTop: 10,
+						paddingBottom: 20,
 					}}
 				>
 					<Text
 						style={[
-							textStyles.textBold,
-							{ color: "#FFF", fontSize: 15 },
-						]}
-					>
-						Service Type:
-					</Text>
-					<Text
-						style={[
 							textStyles.textMid,
 							{
 								color: "#FFF",
@@ -70,10 +61,9 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 							},
 						]}
 					>
-						<Text style={{ fontFamily: "bold" }}>
-							Regular Premium:
-						</Text>{" "}
-						₦{formatCommas(metadata.premiumServicePrice / 100)}
+						Regular Premium Service: ₦
+						{formatCommas(metadata.premiumServicePrice / 100)} (
+						{formatTime(metadata.premiumServiceDuration)})
 					</Text>
 					<Text
 						style={[
@@ -81,45 +71,18 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 							{
 								color: "#FFF",
 								fontSize: 14,
-								marginTop: 8,
+								marginTop: 12,
 							},
 						]}
 					>
-						<Text style={{ fontFamily: "bold" }}>Duration:</Text>{" "}
-						{formatTime(metadata.premiumServiceDuration)}
-					</Text>
-					<Text
-						style={[
-							textStyles.textMid,
-							{
-								color: "#FFF",
-								fontSize: 14,
-								marginTop: 8,
-							},
-						]}
-					>
-						<Text style={{ fontFamily: "bold" }}>VIP Service:</Text>{" "}
-						₦{formatCommas(metadata.vipServicePrice / 100)}
-					</Text>
-					<Text
-						style={[
-							textStyles.textMid,
-							{
-								color: "#FFF",
-								fontSize: 14,
-								marginTop: 8,
-							},
-						]}
-					>
-						<Text style={{ fontFamily: "bold" }}>Duration:</Text>{" "}
-						{formatTime(metadata.vipServiceDuration)}
+						VIP Service: ₦
+						{formatCommas(metadata.vipServicePrice / 100)} (
+						{formatTime(metadata.vipServiceDuration)})
 					</Text>
 				</View>
-				{metadata.description && (
+				{user.role === "consultant" && metadata.description && (
 					<View
 						style={{
-							flexDirection: "row",
-							alignItems: "center",
 							paddingVertical: 10,
 						}}
 					>
@@ -134,7 +97,7 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						<Text
 							style={[
 								textStyles.textMid,
-								{ color: "#FFF", fontSize: 14, marginLeft: 4 },
+								{ color: "#FFF", fontSize: 14, marginTop: 4 },
 							]}
 						>
 							{metadata.description}

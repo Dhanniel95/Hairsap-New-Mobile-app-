@@ -11,7 +11,6 @@ import {
 	Platform,
 	StyleSheet,
 	TouchableOpacity,
-	TouchableWithoutFeedback,
 	View,
 } from "react-native";
 import {
@@ -53,10 +52,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 			joinRoom();
 		}
 
-		socket.onAny((event, ...args) => {
-			console.log("Got event:", event, args);
-		});
-
 		socket.on("message:new", (data) => {
 			let chatInfo = data?.data;
 			if (chatInfo?.chatId) {
@@ -65,8 +60,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						mapChatToGifted(chatInfo),
 					])
 				);
-			} else {
-				fetchMessages();
 			}
 		});
 
@@ -78,8 +71,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						mapChatToGifted(data?.data?.chat),
 					])
 				);
-			} else {
-				fetchMessages();
 			}
 		});
 		socket.on("message:new:guest", (data) => {
@@ -90,13 +81,18 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						mapChatToGifted(data?.data?.chat),
 					])
 				);
-			} else {
-				fetchMessages();
 			}
 		});
 	}, []);
 
 	const readLastMessages = async (msgs: any) => {
+		// if (socket?.connected) {
+		// 	socket.emit(
+		// 		"message:allRead",
+		// 		Number(chatInfo.chatRoomId) || Number(userChatRoomId),
+		// 		(response: any) => console.log(response, "responseREad")
+		// 	);
+		// }
 		if (chatInfo?.chatId) {
 			let findMyMsgs = msgs?.filter(
 				(m: any) => m.user._id != user.userId
@@ -285,27 +281,25 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				style={{
 					flexDirection: "row",
 					alignItems: "center",
-					width: "80%",
+					flex: 1,
 				}}
 			>
 				{user.role === "consultant" && (
 					<TouchableOpacity
-						style={{ width: "10%" }}
+						style={{ paddingHorizontal: 8 }}
 						onPress={() => setShowMenu(!showMenu)}
 					>
 						<Feather name="paperclip" size={24} color="#555" />
 					</TouchableOpacity>
 				)}
-				<View
-					style={[
-						styles.composerWrapper,
-						{ width: user.role === "consultant" ? "95%" : "100%" },
-					]}
-				>
+				<View style={[styles.composerWrapper, { flex: 1 }]}>
 					<Composer
 						{...props}
-						textInputStyle={styles.customComposer}
-						placeholder="Type a message..."
+						textInputStyle={[
+							styles.customComposer,
+							{ color: "#000" }, // ensure visible text
+						]}
+						placeholder="Type a messagess..."
 					/>
 					<TouchableOpacity onPress={() => setShowDoc(!showDoc)}>
 						<Ionicons
@@ -347,23 +341,16 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 		[]
 	);
 
-	const isEditable =
-		messages.length === 0 &&
-		(user.role === "user" || user.role === "guest");
-
 	return (
 		<SafeAreaView
 			style={{ flex: 1, backgroundColor: "#fff" }}
 			edges={["bottom"]}
 		>
-			<TouchableWithoutFeedback
-				style={{ flex: 1 }}
-				onPress={() => {
-					setShowDoc(false);
-					setShowMenu(false);
-				}}
-				accessible={false}
-			>
+			{user.role !== "consultant" && messages.length === 0 ? (
+				<View style={{ flex: 1 }}>
+					<GalleryCheck />
+				</View>
+			) : (
 				<View style={{ flex: 1 }}>
 					<GiftedChat
 						messages={messages}
@@ -376,20 +363,14 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						showUserAvatar
 						alwaysShowSend
 						scrollToBottom
-						inverted={messages.length > 0 ? true : false}
 						renderAvatar={null}
 						showAvatarForEveryMessage={false}
 						listViewProps={{
+							style: { flexGrow: 0 },
 							contentContainerStyle: {
-								paddingHorizontal: 20,
+								paddingHorizontal: 10,
+								paddingBottom: 20,
 							},
-							ListEmptyComponent: () =>
-								user.role === "user" ||
-								user.role === "guest" ? (
-									<GalleryCheck />
-								) : (
-									<></>
-								),
 						}}
 						renderSend={renderSend}
 						renderComposer={renderComposer}
@@ -397,7 +378,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						renderMessageImage={renderMessageImage}
 						renderMessageVideo={renderMessageVideo}
 						isKeyboardInternallyHandled={true}
-						textInputProps={{ editable: !isEditable }}
 						renderBubble={(props: any) =>
 							props.currentMessage.messageType === "receipt" ? (
 								<ReceiptChat
@@ -445,7 +425,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						)}
 					/>
 				</View>
-			</TouchableWithoutFeedback>
+			)}
 		</SafeAreaView>
 	);
 };

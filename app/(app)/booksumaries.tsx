@@ -29,10 +29,10 @@ const BookingSummaries = () => {
 			);
 			if (Array.isArray(res?.data)) {
 				let appoints = res.data.filter((item: any) => {
-					return item.pinStatus != null;
+					return item.pinStatus == "completed";
 				});
 				let pendings = res.data.filter((item: any) => {
-					return item.pinStatus == null;
+					return item.pinStatus != "completed";
 				});
 				setPendings(pendings);
 				setAccepted(appoints);

@@ -15,6 +15,8 @@ const ReceiptChat = ({
 }) => {
 	const pinDate = metadata?.pinDate ? parseISO(metadata.pinDate) : new Date();
 
+	console.log(metadata, "mm");
+
 	return metadata?.serviceBooked ? (
 		<View
 			style={{

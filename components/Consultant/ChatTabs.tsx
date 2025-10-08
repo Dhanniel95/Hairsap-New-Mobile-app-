@@ -123,7 +123,7 @@ const ChatTabs = ({
 								},
 							]}
 						>
-							{`(${tab.length})`}
+							{`(${tab.length || 0})`}
 						</Text>
 					</TouchableOpacity>
 				))}

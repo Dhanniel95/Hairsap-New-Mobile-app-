@@ -10,9 +10,9 @@ const listChatMessages = async (obj: any) => {
 	return data;
 };
 
-const listCustomersChats = async () => {
+const listCustomersChats = async (search: string) => {
 	const { data } = await apiRequest().get(
-		`/chats/chatroom/customers?cursor=0&take=200&desc=true`
+		`/chats/chatroom/customers?cursor=0&take=3000&desc=true&search=${search}`
 	);
 	return data;
 };

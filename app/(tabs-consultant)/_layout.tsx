@@ -44,6 +44,10 @@ export default function TabLayout() {
 			console.log("Error With Connection", err);
 			dispatch(setSocketStatus("disconnected"));
 		});
+
+		socket.onAny((event, ...args) => {
+			console.log("Got event:", event, args);
+		});
 	};
 
 	return (

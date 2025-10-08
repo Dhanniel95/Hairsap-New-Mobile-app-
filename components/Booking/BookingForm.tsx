@@ -112,10 +112,12 @@ const BookingForm = ({
 
 	const listBraiders = async () => {
 		try {
+			console.log(dateTime, "dateTime");
 			let res = await basicService.getBraidersAvailability(
 				dateTime,
 				selectedService?.length > 0 ? selectedService[0] : ""
 			);
+			console.log(res, "RES");
 			if (Array.isArray(res)) {
 				setBraiders(
 					res.map((s: any) => {
@@ -154,7 +156,6 @@ const BookingForm = ({
 			setDuration(
 				formatTime(totalDuration / (selectedBraiders.length || 1))
 			);
-			console.log(braiderCount, "PRICE", totalPrice);
 			let finalP = (totalPrice * braiderCount) / 100;
 			let finalT = (transportFee || 0) * braiderCount;
 			setPrice(`₦${formatCommas(finalP + finalT)}`);

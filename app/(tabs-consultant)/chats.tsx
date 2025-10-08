@@ -10,10 +10,12 @@ import colors from "@/utils/colors";
 import { displaySuccess } from "@/utils/error";
 import { useAppDispatch } from "@/utils/hooks";
 import { useDebounce } from "@/utils/search";
+import { getSocket } from "@/utils/socket";
 import { Feather } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	FlatList,
 	RefreshControl,
 	StyleSheet,
@@ -42,6 +44,21 @@ const ChatRooms = () => {
 
 	const debouncedSearch = useDebounce(search);
 
+	const socket = getSocket();
+
+	useEffect(() => {
+		if (!socket) return;
+
+		socket.on("message:new:customer", (data) => {
+			listCustomers();
+			listMyCustomers();
+		});
+		socket.on("message:new:guest", (data) => {
+			listGuests();
+			listMyGuests();
+		});
+	}, []);
+
 	useEffect(() => {
 		if (isFocused) {
 			listChats();
@@ -53,14 +70,13 @@ const ChatRooms = () => {
 	}, []);
 
 	useEffect(() => {
-		if (debouncedSearch) {
-			filterSearch(debouncedSearch);
+		if (isFocused) {
+			listCustomers();
 		}
-	}, [debouncedSearch]);
+	}, [debouncedSearch, isFocused]);
 
 	const listChats = async () => {
 		listGuests();
-		listCustomers();
 		listMyGuests();
 		listMyCustomers();
 		listBraiders();
@@ -77,10 +93,20 @@ const ChatRooms = () => {
 
 	const listGuests = async () => {
 		try {
-			setLoad(true);
 			let res = await chatService.listGuestChats();
 			if (Array.isArray(res?.data?.chatRooms)) {
 				setGuestList(res.data);
+			}
+		} catch (err) {}
+	};
+
+	const listCustomers = async () => {
+		try {
+			setLoad(true);
+			let res = await chatService.listCustomersChats(debouncedSearch);
+			console.log(res?.data?.chatRooms[0]);
+			if (Array.isArray(res?.data?.chatRooms)) {
+				setCustomersList(res.data);
 			}
 			setLoad(false);
 		} catch (err) {
@@ -88,14 +114,7 @@ const ChatRooms = () => {
 		}
 	};
 
-	const listCustomers = async () => {
-		try {
-			let res = await chatService.listCustomersChats();
-			if (Array.isArray(res?.data?.chatRooms)) {
-				setCustomersList(res.data);
-			}
-		} catch (err) {}
-	};
+	console.log("first");
 
 	const listMyCustomers = async () => {
 		try {
@@ -139,27 +158,21 @@ const ChatRooms = () => {
 		if (activeTab === 1) {
 			return guestList[type];
 		} else if (activeTab === 2) {
-			if (search) {
-				return searchList;
-			} else {
-				return customersList[type];
-			}
+			return customersList[type]?.slice().sort((a: any, b: any) => {
+				const dateA = a.chat?.updatedAt
+					? new Date(a.chat.updatedAt).getTime()
+					: 0;
+				const dateB = b.chat?.updatedAt
+					? new Date(b.chat.updatedAt).getTime()
+					: 0;
+				return dateB - dateA;
+			});
 		} else if (activeTab === 3) {
 			return myGuestList?.data;
 		} else if (activeTab === 4) {
 			return myCustomersList[type];
 		} else {
 			return braidersList[type];
-		}
-	};
-
-	const keyId = (item: any) => {
-		if (item.chatRoomId) {
-			return item.chatRoomId.toString();
-		} else if (item.userId) {
-			return item.userId.toString();
-		} else {
-			return item.chat?.chatId?.toString();
 		}
 	};
 
@@ -209,13 +222,26 @@ const ChatRooms = () => {
 					<ChatTabs
 						activeTab={activeTab}
 						setActiveTab={setActiveTab}
-						guestList={guestList.cursor?.totalUnreadMessage}
-						braidersList={braidersList.cursor?.totalUnreadMessage}
-						customersList={customersList.cursor?.totalUnreadMessage}
-						myCustomersList={
-							myCustomersList.cursor?.totalUnreadMessage
-						}
-						myGuestList={myGuestList.cursor?.totalUnreadMessage}
+						guestList={guestList?.chatRooms?.reduce(
+							(a: any, b: any) => a + (b.unreadMessages || 0),
+							0
+						)}
+						braidersList={braidersList?.chatRooms?.reduce(
+							(a: any, b: any) => a + (b.unreadMessages || 0),
+							0
+						)}
+						customersList={customersList?.chatRooms?.reduce(
+							(a: any, b: any) => a + (b.unreadMessages || 0),
+							0
+						)}
+						myCustomersList={myCustomersList?.chatRooms?.reduce(
+							(a: any, b: any) => a + (b.unreadMessages || 0),
+							0
+						)}
+						myGuestList={myGuestList?.data?.reduce(
+							(a: any, b: any) => a + (b.unreadMessages || 0),
+							0
+						)}
 					/>
 				</View>
 				{activeTab === 2 && (
@@ -233,6 +259,12 @@ const ChatRooms = () => {
 							size={20}
 							style={styles.pos}
 						/>
+						{load && search && (
+							<ActivityIndicator
+								style={{ marginBottom: 15 }}
+								color={colors.primary}
+							/>
+						)}
 					</View>
 				)}
 				<View style={{ flex: 1 }}>
@@ -261,6 +293,10 @@ const ChatRooms = () => {
 								colors={[colors.dark]}
 							/>
 						}
+						initialNumToRender={20} // how many to render at first
+						maxToRenderPerBatch={20} // how many to render in a batch
+						windowSize={10} // how many screens worth of content to render
+						removeClippedSubviews={true}
 					/>
 				</View>
 			</View>
