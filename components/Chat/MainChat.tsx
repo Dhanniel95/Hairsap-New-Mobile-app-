@@ -86,13 +86,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	}, []);
 
 	const readLastMessages = async (msgs: any) => {
-		// if (socket?.connected) {
-		// 	socket.emit(
-		// 		"message:allRead",
-		// 		Number(chatInfo.chatRoomId) || Number(userChatRoomId),
-		// 		(response: any) => console.log(response, "responseREad")
-		// 	);
-		// }
 		if (chatInfo?.chatId) {
 			let findMyMsgs = msgs?.filter(
 				(m: any) => m.user._id != user.userId

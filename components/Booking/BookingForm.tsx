@@ -74,6 +74,9 @@ const BookingForm = ({
 					)
 				)
 			);
+			setDescription(detail?.description?.text);
+			setMediaUrl(detail?.description?.mediaUrl);
+			setReferralCode(detail?.code);
 		}
 	}, [detail]);
 

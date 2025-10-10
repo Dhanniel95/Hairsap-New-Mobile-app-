@@ -104,7 +104,6 @@ const ChatRooms = () => {
 		try {
 			setLoad(true);
 			let res = await chatService.listCustomersChats(debouncedSearch);
-			console.log(res?.data?.chatRooms[0]);
 			if (Array.isArray(res?.data?.chatRooms)) {
 				setCustomersList(res.data);
 			}
@@ -113,8 +112,6 @@ const ChatRooms = () => {
 			setLoad(false);
 		}
 	};
-
-	console.log("first");
 
 	const listMyCustomers = async () => {
 		try {

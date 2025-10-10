@@ -28,10 +28,20 @@ const BookingSummaries = () => {
 				params?.userId || ""
 			);
 			if (Array.isArray(res?.data)) {
-				let appoints = res.data.filter((item: any) => {
+				let finalData = res.data?.sort((a: any, b: any) => {
+					const dateA = a.updatedAt
+						? new Date(a.updatedAt).getTime()
+						: 0;
+					const dateB = b.updatedAt
+						? new Date(b.updatedAt).getTime()
+						: 0;
+					return dateB - dateA;
+				});
+
+				let appoints = finalData.filter((item: any) => {
 					return item.pinStatus == "completed";
 				});
-				let pendings = res.data.filter((item: any) => {
+				let pendings = finalData.filter((item: any) => {
 					return item.pinStatus != "completed";
 				});
 				setPendings(pendings);
