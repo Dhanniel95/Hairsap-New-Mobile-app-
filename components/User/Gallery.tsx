@@ -59,26 +59,6 @@ const Gallery = () => {
 		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
 			<Header />
 			<View style={{ flex: 1, paddingHorizontal: 20 }}>
-				<View style={{ paddingVertical: 10 }}>
-					<Text style={[textStyles.textBold, { fontSize: 17 }]}>
-						Gallery
-					</Text>
-					<View style={{ marginVertical: 15, position: "relative" }}>
-						<TextInput
-							value={search}
-							onChangeText={setSearch}
-							placeholder="Search"
-							style={styles.input}
-							placeholderTextColor={"rgba(0,0,0,0.3)"}
-						/>
-						<Feather
-							name="search"
-							color={"rgba(0,0,0,0.3)"}
-							size={20}
-							style={styles.pos}
-						/>
-					</View>
-				</View>
 				{videos.length > 0 ? (
 					<FlatList
 						data={search.length > 0 ? searchList : videos}
@@ -86,7 +66,7 @@ const Gallery = () => {
 						columnWrapperStyle={{ gap: spacing }}
 						contentContainerStyle={{
 							gap: spacing,
-							paddingBottom: spacing,
+							paddingBottom: 150,
 						}}
 						keyExtractor={(item) => item.galleryId.toString()}
 						renderItem={({ item }) => (
@@ -96,6 +76,38 @@ const Gallery = () => {
 								videos={videos}
 							/>
 						)}
+						ListHeaderComponent={
+							<View style={{ paddingVertical: 10 }}>
+								<Text
+									style={[
+										textStyles.textBold,
+										{ fontSize: 17 },
+									]}
+								>
+									Gallery
+								</Text>
+								<View
+									style={{
+										marginVertical: 15,
+										position: "relative",
+									}}
+								>
+									<TextInput
+										value={search}
+										onChangeText={setSearch}
+										placeholder="Search"
+										style={styles.input}
+										placeholderTextColor={"rgba(0,0,0,0.3)"}
+									/>
+									<Feather
+										name="search"
+										color={"rgba(0,0,0,0.3)"}
+										size={20}
+										style={styles.pos}
+									/>
+								</View>
+							</View>
+						}
 					/>
 				) : (
 					<GalleryLoad />

@@ -7,6 +7,7 @@ import colors from "@/utils/colors";
 import { displayError } from "@/utils/error";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { registerForPushNotificationsAsync } from "@/utils/notification";
+import ZegoUIKitPrebuiltCallService from "@zegocloud/zego-uikit-prebuilt-call-rn";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -19,6 +20,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import * as ZIM from "zego-zim-react-native";
 import Logo from "../../assets/images/logo.svg";
 
 const Login = () => {
@@ -52,6 +54,7 @@ const Login = () => {
 				} else {
 					router.replace("/(tabs-user)/gallery");
 				}
+				zegoInit(res?.userId, res?.name);
 			}
 		}
 	};
@@ -77,6 +80,26 @@ const Login = () => {
 				true
 			);
 		}
+	};
+
+	const zegoInit = async (userID: number, userName: string) => {
+		return ZegoUIKitPrebuiltCallService.init(
+			"1499669791",
+			"fef5cd5708bd1f97d3d8c885079eb7c167e25cf0efd5706175f80a9e86416ecb",
+			`${userID}`,
+			userName,
+			[ZIM],
+			{
+				ringtoneConfig: {
+					incomingCallFileName: "zego_incoming.mp3",
+					outgoingCallFileName: "zego_outgoing.mp3",
+				},
+				androidNotificationConfig: {
+					channelID: "ZegoUIKit",
+					channelName: "ZegoUIKit",
+				},
+			}
+		);
 	};
 
 	return (

@@ -269,38 +269,72 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	);
 
 	const renderComposer = (props: any) => {
-		return user.role === "consultant" &&
-			chatInfo?.isParticipant === "false" ? (
-			<View style={{ width: "100%" }}></View>
-		) : (
+		const isConsultant = user.role === "consultant";
+		const notParticipant = chatInfo?.isParticipant === "false";
+
+		if (isConsultant && notParticipant) {
+			return <View style={{ width: "100%" }} />;
+		}
+
+		return (
 			<View
 				style={{
 					flexDirection: "row",
 					alignItems: "center",
 					flex: 1,
+					paddingVertical: 5,
 				}}
+				pointerEvents="box-none"
 			>
-				{user.role === "consultant" && (
+				{isConsultant && (
 					<TouchableOpacity
 						style={{ paddingHorizontal: 8 }}
 						onPress={() => setShowMenu(!showMenu)}
+						activeOpacity={0.7}
 					>
-						<Feather name="paperclip" size={24} color="#555" />
+						<Feather name="paperclip" size={22} color="#555" />
 					</TouchableOpacity>
 				)}
-				<View style={[styles.composerWrapper, { flex: 1 }]}>
+
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						backgroundColor: "#F3F6F6",
+						borderRadius: 20,
+						paddingHorizontal: 10,
+						marginRight: 10,
+						flex: 1,
+					}}
+					pointerEvents="box-none"
+				>
 					<Composer
 						{...props}
-						textInputStyle={[
-							styles.customComposer,
-							{ color: "#000" }, // ensure visible text
-						]}
-						placeholder="Type a messagess..."
+						textInputStyle={{
+							color: "black",
+							flex: 1,
+							minHeight: 40,
+							maxHeight: 100,
+							paddingTop: 8,
+							paddingBottom: 8,
+						}}
+						textInputProps={{
+							editable: true,
+							multiline: true,
+							returnKeyType: "default",
+							enablesReturnKeyAutomatically: true,
+						}}
+						placeholder="Type a message..."
 					/>
-					<TouchableOpacity onPress={() => setShowDoc(!showDoc)}>
+
+					<TouchableOpacity
+						onPress={() => setShowDoc(!showDoc)}
+						style={{ paddingLeft: 6 }}
+						activeOpacity={0.7}
+					>
 						<Ionicons
 							name="documents-outline"
-							size={24}
+							size={22}
 							color="#555"
 						/>
 					</TouchableOpacity>
@@ -358,16 +392,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						}}
 						showUserAvatar
 						alwaysShowSend
-						scrollToBottom
 						renderAvatar={null}
 						showAvatarForEveryMessage={false}
-						listViewProps={{
-							style: { flexGrow: 0 },
-							contentContainerStyle: {
-								paddingHorizontal: 10,
-								paddingBottom: 20,
-							},
-						}}
 						renderSend={renderSend}
 						renderComposer={renderComposer}
 						renderInputToolbar={renderInputToolbar}

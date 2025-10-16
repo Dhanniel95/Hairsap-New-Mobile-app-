@@ -4,6 +4,7 @@ import { saveChatId } from "@/redux/chat/chatSlice";
 import textStyles from "@/styles/textStyles";
 import { useAppDispatch } from "@/utils/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ZegoUIKitPrebuiltCallService from "@zegocloud/zego-uikit-prebuilt-call-rn";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, ScrollView, Text, View } from "react-native";
@@ -14,10 +15,13 @@ const SettingsScreen = () => {
 	const router = useRouter();
 
 	const logoutHandler = async () => {
-		dispatch(saveChatId(""));
-		dispatch(logOut());
-		await AsyncStorage.removeItem("@accesstoken");
-		router.replace("/(auth)/login");
+		try {
+			dispatch(saveChatId(""));
+			dispatch(logOut());
+			await AsyncStorage.removeItem("@accesstoken");
+			router.replace("/(auth)/login");
+			ZegoUIKitPrebuiltCallService.uninit();
+		} catch (err) {}
 	};
 
 	return (

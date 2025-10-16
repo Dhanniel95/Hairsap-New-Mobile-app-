@@ -3,8 +3,8 @@ const config = {
 	production: "https://hairsap-be-production-6dd4.up.railway.app",
 };
 
-//const baseUrl = __DEV__ ? config.development : config.production;
+const baseUrl = __DEV__ ? config.development : config.production;
 
-const baseUrl = config.production;
+//const baseUrl = config.production;
 
 export default baseUrl;

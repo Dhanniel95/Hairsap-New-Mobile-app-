@@ -78,7 +78,7 @@ const ActivityBookings = () => {
 
 	console.log(
 		bookingData?.assistants?.map((b: any) => {
-			return b.assistant?.userId;
+			return b.assistant;
 		}),
 		"gg"
 	);

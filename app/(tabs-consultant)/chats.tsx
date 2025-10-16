@@ -173,6 +173,26 @@ const ChatRooms = () => {
 		}
 	};
 
+	// const zegoInit = async (userID: number, userName: string) => {
+	// 	return ZegoUIKitPrebuiltCallService.init(
+	// 		"1499669791",
+	// 		"fef5cd5708bd1f97d3d8c885079eb7c167e25cf0efd5706175f80a9e86416ecb",
+	// 		userID,
+	// 		userName,
+	// 		[],
+	// 		{
+	// 			ringtoneConfig: {
+	// 				incomingCallFileName: "zego_incoming.mp3",
+	// 				outgoingCallFileName: "zego_outgoing.mp3",
+	// 			},
+	// 			androidNotificationConfig: {
+	// 				channelID: "ZegoUIKit",
+	// 				channelName: "ZegoUIKit",
+	// 			},
+	// 		}
+	// 	);
+	// };
+
 	return (
 		<View
 			style={{
