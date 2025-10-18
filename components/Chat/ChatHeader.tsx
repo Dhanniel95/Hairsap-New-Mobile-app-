@@ -2,10 +2,10 @@ import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { useAppSelector } from "@/utils/hooks";
 import { Entypo, Feather } from "@expo/vector-icons";
-import { ZegoSendCallInvitationButton } from "@zegocloud/zego-uikit-prebuilt-call-rn";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import ChatCall from "./ChatCall";
 
 const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 	const router = useRouter();
@@ -19,10 +19,6 @@ const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 			setOpenMenu(!openMenu);
 		}
 	};
-
-	console.log(headerInfo, "headerInfo");
-
-	const callHandler = () => {};
 
 	return (
 		<View
@@ -64,27 +60,14 @@ const ChatHeader = ({ headerInfo }: { headerInfo: any }) => {
 				</View>
 			</View>
 			<View style={{ flexDirection: "row", alignItems: "center" }}>
-				{user.role === "consultant" && (
-					// <TouchableOpacity
-					// 	onPress={callHandler}
-					// 	style={{
-					// 		marginRight: 10,
-					// 		paddingLeft: 15,
-					// 	}}
-					// >
-					// 	<Ionicons name="call-outline" size={20} color="black" />
-
-					// </TouchableOpacity>
-					<ZegoSendCallInvitationButton
-						invitees={[
-							{
-								userID: headerInfo.receiverId,
-								userName: headerInfo.user,
-							},
-						]}
-						isVideoCall={false}
-					/>
-				)}
+				{user.role === "consultant" &&
+					headerInfo.receiverId &&
+					headerInfo.user && (
+						<ChatCall
+							userId={headerInfo.receiverId}
+							username={headerInfo.user}
+						/>
+					)}
 				<TouchableOpacity onPress={openHandler}>
 					<Entypo
 						name="dots-three-vertical"

@@ -7,7 +7,7 @@ import colors from "@/utils/colors";
 import { displayError } from "@/utils/error";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { registerForPushNotificationsAsync } from "@/utils/notification";
-import ZegoUIKitPrebuiltCallService from "@zegocloud/zego-uikit-prebuilt-call-rn";
+import { onUserLogin } from "@/utils/zego";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -20,7 +20,6 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import * as ZIM from "zego-zim-react-native";
 import Logo from "../../assets/images/logo.svg";
 
 const Login = () => {
@@ -39,23 +38,28 @@ const Login = () => {
 			let res = await dispatch(
 				loginUser({ phone: phone.trim(), password: pass.trim() })
 			).unwrap();
-
+			if (res?.userId) {
+				try {
+					await onUserLogin(`HSP-${res?.userId}`, res?.name);
+				} catch (err) {
+					console.log(err, "Error here");
+				}
+			}
 			registerForPushNotificationsAsync();
 
-			if (res?.userId && !res.faceIdPhotoUrl && res.role === "user") {
-				router.push({ pathname: "/(auth)/faceverify", params: res });
-			} else if (res?.userId) {
-				if (res?.role === "consultant") {
-					router.replace("/(tabs-consultant)/chats");
-				} else if (res?.role === "pro") {
-					router.replace("/(tabs-pros)/home");
-				} else if (res?.role === "guest") {
-					router.replace("/(tabs-guest)/gallery");
-				} else {
-					router.replace("/(tabs-user)/gallery");
-				}
-				zegoInit(res?.userId, res?.name);
-			}
+			// if (res?.userId && !res.faceIdPhotoUrl && res.role === "user") {
+			// 	router.push({ pathname: "/(auth)/faceverify", params: res });
+			// } else if (res?.userId) {
+			// 	if (res?.role === "consultant") {
+			// 		router.replace("/(tabs-consultant)/chats");
+			// 	} else if (res?.role === "pro") {
+			// 		router.replace("/(tabs-pros)/home");
+			// 	} else if (res?.role === "guest") {
+			// 		router.replace("/(tabs-guest)/gallery");
+			// 	} else {
+			// 		router.replace("/(tabs-user)/gallery");
+			// 	}
+			// }
 		}
 	};
 
@@ -82,26 +86,6 @@ const Login = () => {
 		}
 	};
 
-	const zegoInit = async (userID: number, userName: string) => {
-		return ZegoUIKitPrebuiltCallService.init(
-			"1499669791",
-			"fef5cd5708bd1f97d3d8c885079eb7c167e25cf0efd5706175f80a9e86416ecb",
-			`${userID}`,
-			userName,
-			[ZIM],
-			{
-				ringtoneConfig: {
-					incomingCallFileName: "zego_incoming.mp3",
-					outgoingCallFileName: "zego_outgoing.mp3",
-				},
-				androidNotificationConfig: {
-					channelID: "ZegoUIKit",
-					channelName: "ZegoUIKit",
-				},
-			}
-		);
-	};
-
 	return (
 		<Container dark={false} bg="#022220">
 			<LinearGradient
@@ -119,10 +103,6 @@ const Login = () => {
 							<View
 								style={{ alignItems: "center", marginTop: 20 }}
 							>
-								{/* <Image
-									source={require("../../assets/images/logo.svg")}
-									style={{ height: 30, width: 130 }}
-								/> */}
 								<Logo width={150} />
 								<Text
 									style={[

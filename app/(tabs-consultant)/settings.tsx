@@ -2,9 +2,9 @@ import ButtonSettings from "@/components/Basics/ButtonSettings";
 import { logOut } from "@/redux/auth/authSlice";
 import { saveChatId } from "@/redux/chat/chatSlice";
 import textStyles from "@/styles/textStyles";
-import { useAppDispatch } from "@/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import { onUserLogout } from "@/utils/zego";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ZegoUIKitPrebuiltCallService from "@zegocloud/zego-uikit-prebuilt-call-rn";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, ScrollView, Text, View } from "react-native";
@@ -14,13 +14,15 @@ const SettingsScreen = () => {
 
 	const router = useRouter();
 
+	const { user } = useAppSelector((state) => state.auth);
+
 	const logoutHandler = async () => {
 		try {
 			dispatch(saveChatId(""));
 			dispatch(logOut());
 			await AsyncStorage.removeItem("@accesstoken");
 			router.replace("/(auth)/login");
-			ZegoUIKitPrebuiltCallService.uninit();
+			onUserLogout();
 		} catch (err) {}
 	};
 

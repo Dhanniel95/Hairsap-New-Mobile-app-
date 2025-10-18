@@ -11,6 +11,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		32F36E2E609714978CFAE525 /* libPods-Hairsap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC568EDD618E0686C90C07CE /* libPods-Hairsap.a */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		89E20ACB2EA390DE004CFE31 /* zego_notification_incoming.caf in Resources */ = {isa = PBXBuildFile; fileRef = 89E20AC92EA390DE004CFE31 /* zego_notification_incoming.caf */; };
+		89E20ACC2EA390DE004CFE31 /* zego_outgoing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 89E20ACA2EA390DE004CFE31 /* zego_outgoing.mp3 */; };
+		89E20ACD2EA390DE004CFE31 /* zego_incoming.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 89E20AC82EA390DE004CFE31 /* zego_incoming.mp3 */; };
 		986E8E7261FA09018BA36EF6 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA37CC1122742AADE01B4B1 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
@@ -22,9 +25,12 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Hairsap/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Hairsap/Info.plist; sourceTree = "<group>"; };
 		7C6D006C7D8DBE4666E15865 /* Pods-Hairsap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hairsap.release.xcconfig"; path = "Target Support Files/Pods-Hairsap/Pods-Hairsap.release.xcconfig"; sourceTree = "<group>"; };
+		89E20AC82EA390DE004CFE31 /* zego_incoming.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = zego_incoming.mp3; sourceTree = "<group>"; };
+		89E20AC92EA390DE004CFE31 /* zego_notification_incoming.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = zego_notification_incoming.caf; sourceTree = "<group>"; };
+		89E20ACA2EA390DE004CFE31 /* zego_outgoing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = zego_outgoing.mp3; sourceTree = "<group>"; };
 		9BA37CC1122742AADE01B4B1 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Hairsap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		9CFB950029EAD111ED6707CA /* Pods-Hairsap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hairsap.debug.xcconfig"; path = "Target Support Files/Pods-Hairsap/Pods-Hairsap.debug.xcconfig"; sourceTree = "<group>"; };
-		A139E0689E2852E0A2646505 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Hairsap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		A139E0689E2852E0A2646505 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Hairsap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Hairsap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		BC568EDD618E0686C90C07CE /* libPods-Hairsap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hairsap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,7 +90,6 @@
 				9CFB950029EAD111ED6707CA /* Pods-Hairsap.debug.xcconfig */,
 				7C6D006C7D8DBE4666E15865 /* Pods-Hairsap.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -98,6 +103,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				89E20AC82EA390DE004CFE31 /* zego_incoming.mp3 */,
+				89E20AC92EA390DE004CFE31 /* zego_notification_incoming.caf */,
+				89E20ACA2EA390DE004CFE31 /* zego_outgoing.mp3 */,
 				13B07FAE1A68108700A75B9A /* Hairsap */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -197,6 +205,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89E20ACB2EA390DE004CFE31 /* zego_notification_incoming.caf in Resources */,
+				89E20ACC2EA390DE004CFE31 /* zego_outgoing.mp3 in Resources */,
+				89E20ACD2EA390DE004CFE31 /* zego_incoming.mp3 in Resources */,
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
