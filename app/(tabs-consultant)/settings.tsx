@@ -3,7 +3,6 @@ import { logOut } from "@/redux/auth/authSlice";
 import { saveChatId } from "@/redux/chat/chatSlice";
 import textStyles from "@/styles/textStyles";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
-import { onUserLogout } from "@/utils/zego";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -22,7 +21,6 @@ const SettingsScreen = () => {
 			dispatch(logOut());
 			await AsyncStorage.removeItem("@accesstoken");
 			router.replace("/(auth)/login");
-			onUserLogout();
 		} catch (err) {}
 	};
 

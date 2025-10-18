@@ -8,7 +8,6 @@ import colors from "@/utils/colors";
 import baseUrl from "@/utils/config";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { connectSocket, disconnectSocket } from "@/utils/socket";
-import { onUserLogout } from "@/utils/zego";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Tabs, useRouter } from "expo-router";
@@ -29,7 +28,6 @@ export default function TabLayout() {
 		dispatch(saveChatId(""));
 		router.replace("/(auth)/login");
 		dispatch(logOut());
-		onUserLogout();
 	};
 
 	useEffect(() => {

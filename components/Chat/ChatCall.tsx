@@ -1,5 +1,4 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
 
 const ChatCall = ({
 	userId,
@@ -8,7 +7,7 @@ const ChatCall = ({
 	userId: number;
 	username: string;
 }) => {
-	return <TouchableOpacity>C</TouchableOpacity>;
+	return <></>;
 };
 
 export default ChatCall;
