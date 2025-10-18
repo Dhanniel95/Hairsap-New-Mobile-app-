@@ -1,6 +1,5 @@
-import { displayError } from "@/utils/error";
-import { ZegoSendCallInvitationButton } from "@zegocloud/zego-uikit-prebuilt-call-rn";
 import React from "react";
+import { TouchableOpacity } from "react-native";
 
 const ChatCall = ({
 	userId,
@@ -9,24 +8,7 @@ const ChatCall = ({
 	userId: number;
 	username: string;
 }) => {
-	return (
-		<ZegoSendCallInvitationButton
-			invitees={[
-				{
-					userID: `HSP-${userId}`,
-					userName: username,
-				},
-			]}
-			isVideoCall={false}
-			showWaitingPageWhenGroupCall={true}
-			onPressed={(errorCode, errorMessage, errorInvitees) => {
-				displayError(
-					errorMessage || "Unable to connect at this time",
-					true
-				);
-			}}
-		/>
-	);
+	return <TouchableOpacity>C</TouchableOpacity>;
 };
 
 export default ChatCall;

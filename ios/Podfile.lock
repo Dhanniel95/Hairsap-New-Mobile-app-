@@ -1769,12 +1769,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-zego-express-engine (3.22.0):
-    - React
-    - ZegoExpressEngine (= 3.22.0)
-  - react-native-zego-zim (2.22.0):
-    - React
-    - ZIM (= 2.22.0)
   - React-NativeModulesApple (0.81.4):
     - hermes-engine
     - React-callinvoker
@@ -2489,15 +2483,6 @@ PODS:
     - SDWebImage/Core (~> 5.17)
   - Sentry/HybridSDK (8.56.1)
   - Yoga (0.0.0)
-  - zego-uikit-prebuilt-call-rn (6.6.1):
-    - React-Core
-    - zego-uikit-rn
-  - zego-uikit-rn (2.18.8):
-    - React-Core
-    - ZegoUIKitReport (= 0.5.1)
-  - ZegoExpressEngine (3.22.0)
-  - ZegoUIKitReport (0.5.1)
-  - ZIM (2.22.0)
   - ZXingObjC/Core (3.6.9)
   - ZXingObjC/OneD (3.6.9):
     - ZXingObjC/Core
@@ -2582,8 +2567,6 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
-  - react-native-zego-express-engine (from `../node_modules/zego-express-engine-reactnative`)
-  - react-native-zego-zim (from `../node_modules/zego-zim-react-native`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -2626,8 +2609,6 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNWorklets (from `../node_modules/react-native-worklets`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
-  - "zego-uikit-prebuilt-call-rn (from `../node_modules/@zegocloud/zego-uikit-prebuilt-call-rn`)"
-  - "zego-uikit-rn (from `../node_modules/@zegocloud/zego-uikit-rn`)"
 
 SPEC REPOS:
   trunk:
@@ -2639,9 +2620,6 @@ SPEC REPOS:
     - SDWebImageSVGCoder
     - SDWebImageWebPCoder
     - Sentry
-    - ZegoExpressEngine
-    - ZegoUIKitReport
-    - ZIM
     - ZXingObjC
 
 EXTERNAL SOURCES:
@@ -2798,10 +2776,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/slider"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
-  react-native-zego-express-engine:
-    :path: "../node_modules/zego-express-engine-reactnative"
-  react-native-zego-zim:
-    :path: "../node_modules/zego-zim-react-native"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-oscompat:
@@ -2886,10 +2860,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-worklets"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
-  zego-uikit-prebuilt-call-rn:
-    :path: "../node_modules/@zegocloud/zego-uikit-prebuilt-call-rn"
-  zego-uikit-rn:
-    :path: "../node_modules/@zegocloud/zego-uikit-rn"
 
 SPEC CHECKSUMS:
   EXApplication: a9d1c46d473d36f61302a9a81db2379441f3f094
@@ -2971,8 +2941,6 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: add9b4ba236fe95ec600604d0fc72f395433dd59
   react-native-slider: b76fa3dd989d25e8c2751c2a546674dfc0c2b6f8
   react-native-webview: a4f0775a31b73cf13cfc3d2d2b119aa94ec76e49
-  react-native-zego-express-engine: c63ab5d1df87806097649cc486f9a7020c36a659
-  react-native-zego-zim: 01b83ecd41ea5997adecb13ea9edb3f17c6aea9e
   React-NativeModulesApple: e653919faff1f76eadf02373bda26c085bf348e3
   React-oscompat: 73db7dbc80edef36a9d6ed3c6c4e1724ead4236d
   React-perflogger: f2116e7a0c1562ed7cbcaa2c90e8fdb0bc28df78
@@ -3020,11 +2988,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   Sentry: b3ec44d01708fce73f99b544beb57e890eca4406
   Yoga: c8f1aad5bc3522a8fdab409b5843965abff35aa6
-  zego-uikit-prebuilt-call-rn: 4cf9247c7047c231a34d4ab05d255fb759165f51
-  zego-uikit-rn: accc653cbb1b99eca212ec450106e53349949820
-  ZegoExpressEngine: c1b01551fc817e6fd32b3a877a9d15de6d93f68e
-  ZegoUIKitReport: 36f4bc9a02a4fdd5d1eda1bf665b42c54cbbfd89
-  ZIM: ed75dedea6e568d522b086aa7fa7c2620415ac00
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
 PODFILE CHECKSUM: 076e3bc087980411867fa504b1092cd30d713ce1

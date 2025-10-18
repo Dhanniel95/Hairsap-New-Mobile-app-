@@ -7,35 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0310CD0106FB20ECA2950341 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A139E0689E2852E0A2646505 /* PrivacyInfo.xcprivacy */; };
+		01FFCA93897B4078770A4A54 /* libPods-Hairsap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D067A4F019E3611EBDF31C7 /* libPods-Hairsap.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		32F36E2E609714978CFAE525 /* libPods-Hairsap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC568EDD618E0686C90C07CE /* libPods-Hairsap.a */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		89E20ACB2EA390DE004CFE31 /* zego_notification_incoming.caf in Resources */ = {isa = PBXBuildFile; fileRef = 89E20AC92EA390DE004CFE31 /* zego_notification_incoming.caf */; };
-		89E20ACC2EA390DE004CFE31 /* zego_outgoing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 89E20ACA2EA390DE004CFE31 /* zego_outgoing.mp3 */; };
-		89E20ACD2EA390DE004CFE31 /* zego_incoming.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 89E20AC82EA390DE004CFE31 /* zego_incoming.mp3 */; };
-		986E8E7261FA09018BA36EF6 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA37CC1122742AADE01B4B1 /* ExpoModulesProvider.swift */; };
+		63F9CDD332A9F37B4D338B2F /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51295DB5B5691388D5F3EDF7 /* ExpoModulesProvider.swift */; };
+		73E75841CAEF451587F44B4F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CCE16E1E736244C3918BE4EA /* GoogleService-Info.plist */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		CE217B80BAF17F7E93E3B4E5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7255AF53BC329A8B31475552 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		FCE984F7735C41C29166D5E0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EFDFA7DC6EB64C94BE45A911 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* Hairsap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hairsap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Hairsap/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Hairsap/Info.plist; sourceTree = "<group>"; };
-		7C6D006C7D8DBE4666E15865 /* Pods-Hairsap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hairsap.release.xcconfig"; path = "Target Support Files/Pods-Hairsap/Pods-Hairsap.release.xcconfig"; sourceTree = "<group>"; };
-		89E20AC82EA390DE004CFE31 /* zego_incoming.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = zego_incoming.mp3; sourceTree = "<group>"; };
-		89E20AC92EA390DE004CFE31 /* zego_notification_incoming.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = zego_notification_incoming.caf; sourceTree = "<group>"; };
-		89E20ACA2EA390DE004CFE31 /* zego_outgoing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = zego_outgoing.mp3; sourceTree = "<group>"; };
-		9BA37CC1122742AADE01B4B1 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Hairsap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		9CFB950029EAD111ED6707CA /* Pods-Hairsap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hairsap.debug.xcconfig"; path = "Target Support Files/Pods-Hairsap/Pods-Hairsap.debug.xcconfig"; sourceTree = "<group>"; };
-		A139E0689E2852E0A2646505 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Hairsap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		4BC2CA34D79738B11521E8D1 /* Pods-Hairsap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hairsap.debug.xcconfig"; path = "Target Support Files/Pods-Hairsap/Pods-Hairsap.debug.xcconfig"; sourceTree = "<group>"; };
+		51295DB5B5691388D5F3EDF7 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Hairsap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		7255AF53BC329A8B31475552 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Hairsap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		7D067A4F019E3611EBDF31C7 /* libPods-Hairsap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hairsap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Hairsap/SplashScreen.storyboard; sourceTree = "<group>"; };
+		B5A1C294C525182793F23284 /* Pods-Hairsap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hairsap.release.xcconfig"; path = "Target Support Files/Pods-Hairsap/Pods-Hairsap.release.xcconfig"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		BC568EDD618E0686C90C07CE /* libPods-Hairsap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hairsap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCE16E1E736244C3918BE4EA /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Hairsap/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		EFDFA7DC6EB64C94BE45A911 /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Hairsap/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Hairsap/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* Hairsap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Hairsap-Bridging-Header.h"; path = "Hairsap/Hairsap-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -45,21 +39,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32F36E2E609714978CFAE525 /* libPods-Hairsap.a in Frameworks */,
+				01FFCA93897B4078770A4A54 /* libPods-Hairsap.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		10FE4B4E7033056D6AB58BDC /* Hairsap */ = {
-			isa = PBXGroup;
-			children = (
-				9BA37CC1122742AADE01B4B1 /* ExpoModulesProvider.swift */,
-			);
-			name = Hairsap;
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* Hairsap */ = {
 			isa = PBXGroup;
 			children = (
@@ -69,8 +55,8 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				EFDFA7DC6EB64C94BE45A911 /* GoogleService-Info.plist */,
-				A139E0689E2852E0A2646505 /* PrivacyInfo.xcprivacy */,
+				CCE16E1E736244C3918BE4EA /* GoogleService-Info.plist */,
+				7255AF53BC329A8B31475552 /* PrivacyInfo.xcprivacy */,
 			);
 			name = Hairsap;
 			sourceTree = "<group>";
@@ -79,17 +65,26 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				BC568EDD618E0686C90C07CE /* libPods-Hairsap.a */,
+				7D067A4F019E3611EBDF31C7 /* libPods-Hairsap.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		7E2ED19D04BADA269F402C45 /* Pods */ = {
+		4087FE31BBC8B85F83349715 /* Hairsap */ = {
 			isa = PBXGroup;
 			children = (
-				9CFB950029EAD111ED6707CA /* Pods-Hairsap.debug.xcconfig */,
-				7C6D006C7D8DBE4666E15865 /* Pods-Hairsap.release.xcconfig */,
+				51295DB5B5691388D5F3EDF7 /* ExpoModulesProvider.swift */,
 			);
+			name = Hairsap;
+			sourceTree = "<group>";
+		};
+		80312BE4651A13D0B730047B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4BC2CA34D79738B11521E8D1 /* Pods-Hairsap.debug.xcconfig */,
+				B5A1C294C525182793F23284 /* Pods-Hairsap.release.xcconfig */,
+			);
+			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -103,15 +98,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				89E20AC82EA390DE004CFE31 /* zego_incoming.mp3 */,
-				89E20AC92EA390DE004CFE31 /* zego_notification_incoming.caf */,
-				89E20ACA2EA390DE004CFE31 /* zego_outgoing.mp3 */,
 				13B07FAE1A68108700A75B9A /* Hairsap */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				7E2ED19D04BADA269F402C45 /* Pods */,
-				BE308C044BFC98ECBD185E5D /* ExpoModulesProviders */,
+				80312BE4651A13D0B730047B /* Pods */,
+				C8FC3625E327D1A3660FCF4E /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -135,10 +127,10 @@
 			path = Hairsap/Supporting;
 			sourceTree = "<group>";
 		};
-		BE308C044BFC98ECBD185E5D /* ExpoModulesProviders */ = {
+		C8FC3625E327D1A3660FCF4E /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				10FE4B4E7033056D6AB58BDC /* Hairsap */,
+				4087FE31BBC8B85F83349715 /* Hairsap */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
@@ -151,14 +143,14 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Hairsap" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				7D16912BA9E8C1A02862E097 /* [Expo] Configure project */,
+				070929F684A4B82249E578C2 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				3617B67056D24F7C8CEBE7F0 /* Upload Debug Symbols to Sentry */,
-				0F878901F4C9114058E30B03 /* [CP] Embed Pods Frameworks */,
+				D4B83AEE0D9C43EEBA699322 /* Upload Debug Symbols to Sentry */,
+				B108F39C2E963B16F1F9ABE8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -205,14 +197,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				89E20ACB2EA390DE004CFE31 /* zego_notification_incoming.caf in Resources */,
-				89E20ACC2EA390DE004CFE31 /* zego_outgoing.mp3 in Resources */,
-				89E20ACD2EA390DE004CFE31 /* zego_incoming.mp3 in Resources */,
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				FCE984F7735C41C29166D5E0 /* GoogleService-Info.plist in Resources */,
-				0310CD0106FB20ECA2950341 /* PrivacyInfo.xcprivacy in Resources */,
+				73E75841CAEF451587F44B4F /* GoogleService-Info.plist in Resources */,
+				CE217B80BAF17F7E93E3B4E5 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,73 +225,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios absolute | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n# Source .xcode.env.updates if it exists to allow\n# SKIP_BUNDLING to be unset if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.updates\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.updates\"\nfi\n# Source local changes to allow overrides\n# if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n/bin/sh `\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('@sentry/react-native/package.json')) + '/scripts/sentry-xcode.sh'\"` `\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n\n";
 		};
-		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Hairsap-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0F878901F4C9114058E30B03 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Hairsap/Pods-Hairsap-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ZIM/ZIM.framework/ZIM",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ZegoExpressEngine/ZegoExpressEngine.framework/ZegoExpressEngine",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ZegoUIKitReport/ZegoUIKitReport.framework/ZegoUIKitReport",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ZegoUIKitReport/ZegoConnection.framework/ZegoConnection",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIM.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZegoExpressEngine.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZegoUIKitReport.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZegoConnection.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Hairsap/Pods-Hairsap-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3617B67056D24F7C8CEBE7F0 /* Upload Debug Symbols to Sentry */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Upload Debug Symbols to Sentry";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/bin/sh `${NODE_BINARY:-node} --print \"require('path').dirname(require.resolve('@sentry/react-native/package.json')) + '/scripts/sentry-xcode-debug-files.sh'\"`";
-		};
-		7D16912BA9E8C1A02862E097 /* [Expo] Configure project */ = {
+		070929F684A4B82249E578C2 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -325,6 +248,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-Hairsap/expo-configure-project.sh\"\n";
+		};
+		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Hairsap-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -374,6 +319,42 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Hairsap/Pods-Hairsap-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B108F39C2E963B16F1F9ABE8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Hairsap/Pods-Hairsap-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Hairsap/Pods-Hairsap-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D4B83AEE0D9C43EEBA699322 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh `${NODE_BINARY:-node} --print \"require('path').dirname(require.resolve('@sentry/react-native/package.json')) + '/scripts/sentry-xcode-debug-files.sh'\"`";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -382,7 +363,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				986E8E7261FA09018BA36EF6 /* ExpoModulesProvider.swift in Sources */,
+				63F9CDD332A9F37B4D338B2F /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,7 +372,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9CFB950029EAD111ED6707CA /* Pods-Hairsap.debug.xcconfig */;
+			baseConfigurationReference = 4BC2CA34D79738B11521E8D1 /* Pods-Hairsap.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -427,7 +408,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C6D006C7D8DBE4666E15865 /* Pods-Hairsap.release.xcconfig */;
+			baseConfigurationReference = B5A1C294C525182793F23284 /* Pods-Hairsap.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

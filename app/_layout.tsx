@@ -1,6 +1,5 @@
 import store from "@/redux/store";
 import * as Sentry from "@sentry/react-native";
-import { ZegoCallInvitationDialog } from "@zegocloud/zego-uikit-prebuilt-call-rn";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
@@ -68,7 +67,6 @@ export default Sentry.wrap(function RootLayout() {
 		<Provider store={store}>
 			<PersistGate persistor={persistor}>
 				<Stack screenOptions={{ headerShown: false }} />
-				<ZegoCallInvitationDialog />
 				<FlashMessage
 					position="top"
 					floating={true}

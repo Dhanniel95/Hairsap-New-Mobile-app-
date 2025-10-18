@@ -12,7 +12,3 @@
 -keep class com.facebook.react.turbomodule.** { *; }
 
 # Add any project specific keep options here:
--keep class **.zego.**  { *; }
-
--keep class com.hiennv.flutter_callkit_incoming.SharedPreferencesUtils* {*;}
--keep class com.fasterxml.jackson.** {*;}

@@ -71,8 +71,6 @@
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Hairsap needs permission to access your photo library to upload hairstyle image, set custom avatar and upload videos.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Hairsap needs access to your microphone to make and receive calls</string>
     <key>NSUserActivityTypes</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
