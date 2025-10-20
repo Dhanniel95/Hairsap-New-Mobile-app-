@@ -1,10 +1,14 @@
 import textStyles from "@/styles/textStyles";
 import { formatCommas } from "@/utils/currency";
 import { formatTime } from "@/utils/datetime";
+import { useAppSelector } from "@/utils/hooks";
+import { Feather } from "@expo/vector-icons";
 import { format, isValid, parseISO } from "date-fns";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BorderDashed from "../Basics/BorderDashed";
+import LoadReceiptToBooking from "../Booking/LoadReceiptToBooking";
 
 const ReceiptChat = ({
 	metadata,
@@ -13,9 +17,26 @@ const ReceiptChat = ({
 	metadata: any;
 	isUser: boolean;
 }) => {
+	const router = useRouter();
+
+	const { user } = useAppSelector((state) => state.auth);
+
+	const [openModal, setOpenModal] = useState(false);
+
 	const pinDate = metadata?.pinDate ? parseISO(metadata.pinDate) : new Date();
 
-	console.log(metadata, "mmm");
+	const receiptNav = () => {
+		if (metadata.bookingId) {
+			if (user.role === "pro") {
+				router.push({
+					pathname: "/(app)/activitybooks",
+					params: { itemId: metadata.bookingId },
+				});
+			} else if (user.role === "consultant") {
+				setOpenModal(true);
+			}
+		}
+	};
 
 	return metadata?.serviceBooked ? (
 		<View
@@ -26,6 +47,23 @@ const ReceiptChat = ({
 		>
 			<View style={[styles.card]} pointerEvents="box-none">
 				<View style={styles.top}>
+					{user.role === "pro" || user.role === "consultant" ? (
+						<TouchableOpacity
+							onPress={receiptNav}
+							style={{ paddingRight: 10 }}
+						>
+							<Feather
+								name={
+									user.role === "pro"
+										? "chevrons-right"
+										: "edit"
+								}
+								size={20}
+							/>
+						</TouchableOpacity>
+					) : (
+						<View />
+					)}
 					<Text
 						style={[
 							textStyles.textBold,
@@ -249,6 +287,13 @@ const ReceiptChat = ({
 					</Text>
 				</View>
 			</View>
+			{metadata.bookingId && user.role === "consultant" && (
+				<LoadReceiptToBooking
+					open={openModal}
+					close={() => setOpenModal(false)}
+					id={metadata.bookingId}
+				/>
+			)}
 		</View>
 	) : (
 		<View style={{ flexDirection: isUser ? "row-reverse" : "row" }} />
@@ -270,10 +315,11 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFF",
 		borderWidth: 1,
 		borderColor: "#6B7280",
-		alignItems: "flex-end",
-		justifyContent: "flex-end",
+		alignItems: "center",
+		justifyContent: "space-between",
+		flexDirection: "row",
 		paddingVertical: 10,
-		paddingRight: 10,
+		paddingHorizontal: 10,
 		borderTopLeftRadius: 20,
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,

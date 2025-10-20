@@ -22,6 +22,8 @@ const ConsultScreen = () => {
 				let receiver = res.data.chatRooms[0]?.chat?.receiver;
 				dispatch(saveChatId(id));
 				dispatch(consultantChatting(receiver));
+			} else {
+				dispatch(saveChatId(""));
 			}
 		} catch (err) {
 			console.log(err);

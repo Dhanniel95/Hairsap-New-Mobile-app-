@@ -36,7 +36,7 @@ const UserForm = ({
 			let payload = {
 				name: name.trim(),
 				phone: phone.trim(),
-				email,
+				email: email ? email.toLowerCase() : "",
 			};
 			setLoad(true);
 			let res = await authService.consultantGuest(payload);
@@ -59,7 +59,11 @@ const UserForm = ({
 					userId: details.userId,
 					guestUserId: Number(userId),
 				});
-				await authService.exchangeToken(details.userId, userId);
+				let res = await authService.exchangeToken(
+					details.userId,
+					userId
+				);
+				console.log(res, "RES");
 				onSubmit();
 			} else {
 				let res = await authService.generateToken(details.userId);

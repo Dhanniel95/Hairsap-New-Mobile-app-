@@ -34,7 +34,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 	const [messages, setMessages] = useState<IMessage[]>([]);
 	const [showMenu, setShowMenu] = useState(false);
 	const [showDoc, setShowDoc] = useState(false);
-	const [uploadLoad, setUploadLoad] = useState(false);
+	const [openModal, setOpenModal] = useState(false);
 
 	const socket = getSocket();
 
@@ -119,6 +119,8 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					if (readLast) {
 						readLastMessages(formatted);
 					}
+				} else {
+					setMessages([]);
 				}
 			} catch (err) {}
 		}
@@ -170,7 +172,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				type: obj.type == "images" ? "image/jpeg" : "video/mp4",
 				name: obj.type == "images" ? "chatphoto.jpg" : "chatvideo.mp4",
 			} as any);
-			setUploadLoad(true);
 			let res;
 			if (obj.type === "images") {
 				res = await chatService.uploadImage(formData);
@@ -178,7 +179,6 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 				res = await chatService.uploadVideo(formData);
 			}
 			if (res?.data?.url) {
-				setUploadLoad(false);
 				setMessages((prev) =>
 					prev.map((msg) =>
 						msg._id === tempId
@@ -376,78 +376,79 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 			style={{ flex: 1, backgroundColor: "#fff" }}
 			edges={["bottom"]}
 		>
-			{user.role !== "consultant" && messages.length === 0 ? (
-				<View style={{ flex: 1 }}>
-					<GalleryCheck />
-				</View>
-			) : (
-				<View style={{ flex: 1 }}>
-					<GiftedChat
-						messages={messages}
-						onSend={onSend}
-						user={{
-							_id: user.userId,
-							name: user.name,
-							avatar: user.faceIdPhotoUrl,
-						}}
-						showUserAvatar
-						alwaysShowSend
-						renderAvatar={null}
-						showAvatarForEveryMessage={false}
-						renderSend={renderSend}
-						renderComposer={renderComposer}
-						renderInputToolbar={renderInputToolbar}
-						renderMessageImage={renderMessageImage}
-						renderMessageVideo={renderMessageVideo}
-						isKeyboardInternallyHandled={true}
-						renderBubble={(props: any) =>
-							props.currentMessage.messageType === "receipt" ? (
-								<ReceiptChat
-									metadata={props.currentMessage.metaData}
-									isUser={props.position === "right"}
-								/>
-							) : props.currentMessage.messageType === "item" ? (
-								<ItemChat
-									metadata={props.currentMessage.metaData}
-									isUser={props.position === "right"}
-								/>
-							) : (
-								<Bubble
-									{...props}
-									wrapperStyle={{
-										right: {
-											backgroundColor: colors.primary,
-											borderRadius: 12,
-											padding: 5,
-										},
-										left: {
-											backgroundColor: "#F2F7FB",
-											borderRadius: 12,
-											padding: 5,
-										},
-									}}
-									textStyle={{
-										right: {
-											color: "#fff",
-										},
-										left: {
-											color: "#000",
-										},
-									}}
-								/>
-							)
-						}
-						keyboardShouldPersistTaps="handled"
-						bottomOffset={Platform.OS === "ios" ? 0 : 0}
-						renderLoading={() => (
-							<ActivityIndicator
-								size="large"
-								color={colors.primary}
+			<View style={{ flex: 1 }}>
+				<GiftedChat
+					messages={messages}
+					onSend={onSend}
+					user={{
+						_id: user.userId,
+						name: user.name,
+						avatar: user.faceIdPhotoUrl,
+					}}
+					showUserAvatar
+					alwaysShowSend
+					renderAvatar={null}
+					showAvatarForEveryMessage={false}
+					renderSend={renderSend}
+					renderComposer={renderComposer}
+					renderInputToolbar={renderInputToolbar}
+					renderMessageImage={renderMessageImage}
+					renderMessageVideo={renderMessageVideo}
+					isKeyboardInternallyHandled={true}
+					renderChatEmpty={() =>
+						user.role === "consultant" || user.role === "pro" ? (
+							<></>
+						) : (
+							<GalleryCheck />
+						)
+					}
+					renderBubble={(props: any) =>
+						props.currentMessage.messageType === "receipt" ? (
+							<ReceiptChat
+								metadata={props.currentMessage.metaData}
+								isUser={props.position === "right"}
 							/>
-						)}
-					/>
-				</View>
-			)}
+						) : props.currentMessage.messageType === "item" ? (
+							<ItemChat
+								metadata={props.currentMessage.metaData}
+								isUser={props.position === "right"}
+							/>
+						) : (
+							<Bubble
+								{...props}
+								wrapperStyle={{
+									right: {
+										backgroundColor: colors.primary,
+										borderRadius: 12,
+										padding: 5,
+									},
+									left: {
+										backgroundColor: "#F2F7FB",
+										borderRadius: 12,
+										padding: 5,
+									},
+								}}
+								textStyle={{
+									right: {
+										color: "#fff",
+									},
+									left: {
+										color: "#000",
+									},
+								}}
+							/>
+						)
+					}
+					keyboardShouldPersistTaps="handled"
+					bottomOffset={Platform.OS === "ios" ? 0 : 0}
+					renderLoading={() => (
+						<ActivityIndicator
+							size="large"
+							color={colors.primary}
+						/>
+					)}
+				/>
+			</View>
 		</SafeAreaView>
 	);
 };

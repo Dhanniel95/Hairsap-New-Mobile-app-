@@ -4,6 +4,7 @@ const displayError = (error: any, display: boolean) => {
 	let status = error?.response?.status;
 	let message;
 	if (error?.response?.data?.message) {
+		console.log("Yeah");
 		message = error.response.data.message;
 	} else if (status === 500) {
 		message = "Internal Server Error";

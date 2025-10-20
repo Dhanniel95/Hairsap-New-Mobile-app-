@@ -106,10 +106,14 @@ const EachChat = ({ chat, userType }: { chat: any; userType?: string }) => {
 								color: "#000E08",
 								fontSize: 15,
 								textTransform: "capitalize",
+								flexWrap: "wrap",
 							},
 						]}
+						numberOfLines={5}
+						ellipsizeMode="tail"
 					>
-						{chat.name}
+						{chat.name?.substring(0, 18)}
+						{chat.name?.length > 18 && "..."}
 					</Text>
 					<Text
 						style={[

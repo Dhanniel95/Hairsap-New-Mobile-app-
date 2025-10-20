@@ -89,25 +89,6 @@ const SettingsScreen = () => {
 								)
 							}
 						/>
-						<View style={{ height: 50 }} />
-						<ButtonSettings
-							name="Deactivate Account"
-							iconName="cancel"
-							onPress={() =>
-								Alert.alert(
-									"Deactivate Account",
-									"Are you sure you want to deactivate your account?",
-									[
-										{ text: "NO" },
-										{
-											text: "Deactivate",
-											onPress: () => deactivateHandler(),
-											style: "destructive",
-										},
-									]
-								)
-							}
-						/>
 					</View>
 				</ScrollView>
 			</View>

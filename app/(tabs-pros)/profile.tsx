@@ -7,6 +7,7 @@ import TransportBox from "@/components/Pro/TransportBox";
 import basicService from "@/redux/basic/basicService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
+import { displayError } from "@/utils/error";
 import { useAppSelector } from "@/utils/hooks";
 import { format, parseISO } from "date-fns";
 import React, { useEffect, useState } from "react";
@@ -29,9 +30,11 @@ const ProfileScreen = () => {
 		try {
 			setLoad(true);
 			let res = await basicService.getProStats(user.userId.toString());
+			console.log(res, "RES");
 			setStats(res);
 			setLoad(false);
 		} catch (err) {
+			console.log(displayError(err, false), "err");
 			setLoad(false);
 		}
 	};

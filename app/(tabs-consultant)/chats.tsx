@@ -53,9 +53,16 @@ const ChatRooms = () => {
 			listCustomers();
 			listMyCustomers();
 		});
+		socket.on("message:new", (data) => {
+			listCustomers();
+			listMyCustomers();
+		});
 		socket.on("message:new:guest", (data) => {
 			listGuests();
 			listMyGuests();
+		});
+		socket.onAny((event, ...args) => {
+			console.log("Got event:", event, args);
 		});
 	}, []);
 

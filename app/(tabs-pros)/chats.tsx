@@ -1,4 +1,5 @@
 import EachChat from "@/components/List/EachChat";
+import SkeletonLoad from "@/components/SkeletonLoad";
 import chatService from "@/redux/chat/chatService";
 import { setSocketStatus } from "@/redux/socket/socketSlice";
 import textStyles from "@/styles/textStyles";
@@ -18,6 +19,7 @@ const ChatScreen = () => {
 
 	const [list, setList] = useState<any>([]);
 	const [refreshing, setRefreshing] = useState(false);
+	const [load, setLoad] = useState(false);
 
 	const isFocused = useIsFocused();
 
@@ -37,11 +39,15 @@ const ChatScreen = () => {
 
 	const listChats = async () => {
 		try {
+			setLoad(true);
 			let res = await chatService.listChatRooms();
+			setLoad(false);
 			if (Array.isArray(res?.data?.chatRooms)) {
 				setList(res.data.chatRooms);
 			}
-		} catch (err) {}
+		} catch (err) {
+			setLoad(false);
+		}
 	};
 
 	const connectToSocket = async () => {
@@ -106,16 +112,20 @@ const ChatScreen = () => {
 						/>
 					}
 					ListEmptyComponent={
-						<View style={{ marginTop: 100 }}>
-							<Text
-								style={[
-									textStyles.text,
-									{ textAlign: "center", fontSize: 13 },
-								]}
-							>
-								Your Chats will appear here..
-							</Text>
-						</View>
+						load ? (
+							<SkeletonLoad count={5} />
+						) : (
+							<View style={{ marginTop: 100 }}>
+								<Text
+									style={[
+										textStyles.text,
+										{ textAlign: "center", fontSize: 13 },
+									]}
+								>
+									Your Chats will appear here..
+								</Text>
+							</View>
+						)
 					}
 				/>
 			</View>

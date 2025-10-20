@@ -14,6 +14,8 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 			style={{
 				marginBottom: 10,
 				width: "100%",
+				paddingHorizontal: 10,
+				marginVertical: 10,
 				alignItems:
 					user.role === "consultant" ? "flex-end" : "flex-start",
 			}}
@@ -21,14 +23,18 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 			<View
 				style={{
 					width: "75%",
-					backgroundColor: colors.primary,
+					backgroundColor:
+						user.role === "consultant" ? colors.primary : "#F2F7FB",
 					paddingHorizontal: 10,
 					borderRadius: 10,
 				}}
 			>
 				<View
 					style={{
-						borderBottomColor: "rgba(255,255,255,0.4)",
+						borderBottomColor:
+							user.role === "consultant"
+								? "rgba(255,255,255,0.4)"
+								: "rgba(0,0,0,0.2)",
 						borderBottomWidth: 1,
 						paddingVertical: 10,
 					}}
@@ -37,7 +43,10 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						style={[
 							textStyles.textMid,
 							{
-								color: "#FFF",
+								color:
+									user.role === "consultant"
+										? "#FFF"
+										: "#000",
 								fontSize: 14,
 							},
 						]}
@@ -55,7 +64,10 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						style={[
 							textStyles.textMid,
 							{
-								color: "#FFF",
+								color:
+									user.role === "consultant"
+										? "#FFF"
+										: "#000",
 								fontSize: 14,
 								marginTop: 8,
 							},
@@ -69,7 +81,10 @@ const ItemChat = ({ metadata, isUser }: { metadata: any; isUser: boolean }) => {
 						style={[
 							textStyles.textMid,
 							{
-								color: "#FFF",
+								color:
+									user.role === "consultant"
+										? "#FFF"
+										: "#000",
 								fontSize: 14,
 								marginTop: 12,
 							},

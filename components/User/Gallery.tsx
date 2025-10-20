@@ -68,6 +68,7 @@ const Gallery = () => {
 							gap: spacing,
 							paddingBottom: 150,
 						}}
+						showsVerticalScrollIndicator={false}
 						keyExtractor={(item) => item.galleryId.toString()}
 						renderItem={({ item }) => (
 							<EachGallery
