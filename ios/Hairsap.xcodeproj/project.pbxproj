@@ -23,7 +23,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Hairsap/Info.plist; sourceTree = "<group>"; };
 		4BC2CA34D79738B11521E8D1 /* Pods-Hairsap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hairsap.debug.xcconfig"; path = "Target Support Files/Pods-Hairsap/Pods-Hairsap.debug.xcconfig"; sourceTree = "<group>"; };
 		51295DB5B5691388D5F3EDF7 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Hairsap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		7255AF53BC329A8B31475552 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Hairsap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		7255AF53BC329A8B31475552 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Hairsap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7D067A4F019E3611EBDF31C7 /* libPods-Hairsap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hairsap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Hairsap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		B5A1C294C525182793F23284 /* Pods-Hairsap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hairsap.release.xcconfig"; path = "Target Support Files/Pods-Hairsap/Pods-Hairsap.release.xcconfig"; sourceTree = "<group>"; };
@@ -84,7 +84,6 @@
 				4BC2CA34D79738B11521E8D1 /* Pods-Hairsap.debug.xcconfig */,
 				B5A1C294C525182793F23284 /* Pods-Hairsap.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -377,19 +376,21 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Hairsap/Hairsap.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 11;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = Hairsap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Hairsap;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.7.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -413,14 +414,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Hairsap/Hairsap.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 11;
 				INFOPLIST_FILE = Hairsap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Hairsap;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.7.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

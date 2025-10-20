@@ -159,7 +159,7 @@ const EachVideo = ({ video, isActive }: { video: any; isActive: boolean }) => {
 						<ActivityIndicator />
 					) : (
 						<Text style={{ fontFamily: "regular", color: "#FFF" }}>
-							Seek Consultations
+							Seek Consultation
 						</Text>
 					)}
 				</TouchableOpacity>

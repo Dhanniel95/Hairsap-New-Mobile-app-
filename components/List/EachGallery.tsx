@@ -124,7 +124,7 @@ const EachGallery = ({
 						}}
 					>
 						<Text style={{ fontFamily: "regular", color: "#FFF" }}>
-							Seek Consultations
+							Seek Consultation
 						</Text>
 					</TouchableOpacity>
 				</View>
