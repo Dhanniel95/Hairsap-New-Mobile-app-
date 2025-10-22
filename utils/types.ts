@@ -1,6 +1,6 @@
 interface UserDetailsType {
 	name: string;
-	userId: string | number;
+	userId: number;
 	faceIdPhotoUrl: string;
 	email: string;
 	phone: string;

@@ -7,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
 import FlashMessage from "react-native-flash-message";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import persistStore from "redux-persist/es/persistStore";
 import { PersistGate } from "redux-persist/integration/react";
@@ -66,7 +67,9 @@ export default Sentry.wrap(function RootLayout() {
 	return (
 		<Provider store={store}>
 			<PersistGate persistor={persistor}>
-				<Stack screenOptions={{ headerShown: false }} />
+				<GestureHandlerRootView style={{ flex: 1 }}>
+					<Stack screenOptions={{ headerShown: false }} />
+				</GestureHandlerRootView>
 				<FlashMessage
 					position="top"
 					floating={true}

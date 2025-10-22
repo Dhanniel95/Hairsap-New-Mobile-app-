@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Hairsap",
 		"slug": "hairsap",
-		"version": "1.7.7",
+		"version": "1.7.8",
 		"orientation": "portrait",
 		"icon": "./assets/images/icon.png",
 		"scheme": "hairsap",
@@ -83,7 +83,17 @@
 			],
 			"expo-font",
 			"expo-video",
-			"expo-web-browser"
+			"expo-web-browser",
+			[
+				"expo-build-properties",
+				{
+					"android": {
+						"minSdkVersion": 24
+					}
+				}
+			],
+			"@stream-io/video-react-native-sdk",
+			["@config-plugins/react-native-webrtc"]
 		],
 		"experiments": {
 			"typedRoutes": true

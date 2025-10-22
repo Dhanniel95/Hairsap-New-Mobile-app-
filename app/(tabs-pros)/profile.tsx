@@ -30,7 +30,6 @@ const ProfileScreen = () => {
 		try {
 			setLoad(true);
 			let res = await basicService.getProStats(user.userId.toString());
-			console.log(res, "RES");
 			setStats(res);
 			setLoad(false);
 		} catch (err) {

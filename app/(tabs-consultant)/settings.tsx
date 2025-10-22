@@ -2,7 +2,7 @@ import ButtonSettings from "@/components/Basics/ButtonSettings";
 import { logOut } from "@/redux/auth/authSlice";
 import { saveChatId } from "@/redux/chat/chatSlice";
 import textStyles from "@/styles/textStyles";
-import { useAppDispatch, useAppSelector } from "@/utils/hooks";
+import { useAppDispatch } from "@/utils/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -12,8 +12,6 @@ const SettingsScreen = () => {
 	const dispatch = useAppDispatch();
 
 	const router = useRouter();
-
-	const { user } = useAppSelector((state) => state.auth);
 
 	const logoutHandler = async () => {
 		try {
