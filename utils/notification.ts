@@ -1,5 +1,3 @@
-import authService from "@/redux/auth/authService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
@@ -14,6 +12,9 @@ const registerForPushNotificationsAsync = async () => {
 			await Notifications.getPermissionsAsync();
 		let finalStatus = existingStatus;
 
+		console.log(existingStatus, "Existing Status");
+		console.log(finalStatus, "Final Status");
+
 		// Ask permission if not granted
 		if (existingStatus !== "granted") {
 			const { status } = await Notifications.requestPermissionsAsync();
@@ -27,12 +28,20 @@ const registerForPushNotificationsAsync = async () => {
 			};
 		}
 
+		console.log("About to get token");
+
 		// ✅ Get Expo Push Token
-		token = (await Notifications.getExpoPushTokenAsync()).data;
 		try {
-			await authService.saveToken(token);
-			AsyncStorage.setItem("@savedPush", "yes");
-		} catch (err) {}
+			token = (await Notifications.getExpoPushTokenAsync()).data;
+			console.log(token, "TOKEN");
+		} catch (err) {
+			console.log(err, "Err");
+		}
+
+		// try {
+		// 	await authService.saveToken(token);
+		// 	AsyncStorage.setItem("@savedPush", "yes");
+		// } catch (err) {}
 	} else {
 		console.log("Must use physical device for Push Notifications");
 	}
