@@ -1,64 +1,59 @@
+import authService from "@/redux/auth/authService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 
-// Function to get Device ID and Push Token
-const registerForPushNotificationsAsync = async () => {
-	let token;
+export const registerForPushNotificationsAsync = async () => {
+	// Ensure physical device
+	if (!Device.isDevice) {
+		console.log("Push notifications require a physical device.");
+		return { deviceId: getDeviceId(), token: undefined };
+	}
 
-	// Make sure it's a physical device
-	if (Device.isDevice) {
+	try {
+		// 1️⃣ Request Notification Permission
 		const { status: existingStatus } =
 			await Notifications.getPermissionsAsync();
 		let finalStatus = existingStatus;
 
-		console.log(existingStatus, "Existing Status");
-		console.log(finalStatus, "Final Status");
-
-		// Ask permission if not granted
 		if (existingStatus !== "granted") {
 			const { status } = await Notifications.requestPermissionsAsync();
 			finalStatus = status;
 		}
 
 		if (finalStatus !== "granted") {
-			return {
-				deviceId: Device.osInternalBuildId || Device.osBuildId,
-				token: undefined,
-			};
+			console.warn("Notification permissions not granted.");
+			return { deviceId: getDeviceId(), token: undefined };
 		}
 
-		console.log("About to get token");
+		// 2️⃣ Get Expo Push Token
+		const { data: token } = await Notifications.getExpoPushTokenAsync();
+		console.log("Expo Push Token:", token);
 
-		// ✅ Get Expo Push Token
-		try {
-			token = (await Notifications.getExpoPushTokenAsync()).data;
-			console.log(token, "TOKEN");
-		} catch (err) {
-			console.log(err, "Err");
+		// 3️⃣ Set Android notification channel
+		if (Platform.OS === "android") {
+			await Notifications.setNotificationChannelAsync("default", {
+				name: "default",
+				importance: Notifications.AndroidImportance.MAX,
+				vibrationPattern: [0, 250, 250, 250],
+				lightColor: "#FF231F7C",
+			});
 		}
 
-		// try {
-		// 	await authService.saveToken(token);
-		// 	AsyncStorage.setItem("@savedPush", "yes");
-		// } catch (err) {}
-	} else {
-		console.log("Must use physical device for Push Notifications");
+		// 4️⃣ Save token to backend & local storage
+		await authService.saveToken(token);
+		await AsyncStorage.setItem("@savedPush", "yes");
+
+		// 5️⃣ Return device info
+		return { deviceId: getDeviceId(), token };
+	} catch (error) {
+		console.error("Failed to register for push notifications:", error);
+		return { deviceId: getDeviceId(), token: undefined };
 	}
-
-	// ✅ Get Device ID (installation ID)
-	const deviceId = Device.osInternalBuildId || Device.osBuildId;
-
-	if (Platform.OS === "android") {
-		await Notifications.setNotificationChannelAsync("default", {
-			name: "default",
-			importance: Notifications.AndroidImportance.MAX,
-			vibrationPattern: [0, 250, 250, 250],
-			lightColor: "#FF231F7C",
-		});
-	}
-
-	return { deviceId, token };
 };
 
-export { registerForPushNotificationsAsync };
+// 🔹 Helper to get a consistent device ID
+const getDeviceId = () => {
+	return Device.osInternalBuildId || Device.osBuildId || "unknown-device";
+};
