@@ -1,12 +1,14 @@
 import { listGallery } from "@/redux/book/bookSlice";
 import textStyles from "@/styles/textStyles";
+import colors from "@/utils/colors";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { useDebounce } from "@/utils/search";
 import { Feather } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
 	Dimensions,
 	FlatList,
+	RefreshControl,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -21,6 +23,7 @@ const Gallery = () => {
 
 	const [search, setSearch] = useState("");
 	const [searchList, setSearchList] = useState<any>([]);
+	const [refreshing, setRefreshing] = useState(false);
 
 	const debouncedSearch = useDebounce(search);
 
@@ -55,6 +58,14 @@ const Gallery = () => {
 		);
 	};
 
+	const onRefresh = useCallback(async () => {
+		setRefreshing(true);
+		dispatch(listGallery());
+		setTimeout(() => {
+			setRefreshing(false);
+		}, 2000);
+	}, []);
+
 	return (
 		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
 			<Header />
@@ -77,6 +88,14 @@ const Gallery = () => {
 								videos={videos}
 							/>
 						)}
+						refreshControl={
+							<RefreshControl
+								refreshing={refreshing}
+								onRefresh={onRefresh}
+								tintColor={colors.dark}
+								colors={[colors.dark]}
+							/>
+						}
 						ListHeaderComponent={
 							<View style={{ paddingVertical: 10 }}>
 								<Text

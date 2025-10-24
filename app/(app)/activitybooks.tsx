@@ -2,18 +2,21 @@ import Container from "@/components/Container";
 import GoBack from "@/components/GoBack";
 import SkeletonLoad from "@/components/SkeletonLoad";
 import bookService from "@/redux/book/bookService";
+import chatService from "@/redux/chat/chatService";
 import textStyles from "@/styles/textStyles";
 import colors from "@/utils/colors";
 import { formatCurrency } from "@/utils/currency";
+import { useAppSelector } from "@/utils/hooks";
 import {
 	Feather,
 	FontAwesome,
 	MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { format } from "date-fns";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	Image,
 	Linking,
 	ScrollView,
@@ -24,16 +27,17 @@ import {
 } from "react-native";
 
 const ActivityBookings = () => {
+	const { user } = useAppSelector((state) => state.auth);
+
+	const router = useRouter();
+
 	const params = useLocalSearchParams();
 
 	const [bookingData, setBookingData] = useState<any>({});
-	const [invoice, setInvoice] = useState<any>({});
 	const [transportation, setTransportation] = useState(0);
 	const [sub, setSub] = useState<any>([]);
 	const [price, setPrice] = useState(0);
-	const [pinState, setPinState] = useState("");
-	const [load, setLoad] = useState(false);
-	const [service, setService] = useState<any>({});
+	const [loadChat, setLoadChat] = useState(false);
 
 	useEffect(() => {
 		loadBookingInfo();
@@ -51,21 +55,10 @@ const ActivityBookings = () => {
 
 	const loadBookingInfo = async () => {
 		try {
-			setLoad(true);
 			let res = await bookService.loadBookingData(params?.itemId || "");
 			if (res?.user) {
-				setService(res?.bookedSubServices[0]?.subService);
 				setBookingData(res);
-				setSub(
-					res?.bookedSubServices?.filter((value: any) => {
-						return (
-							value.subService.name !=
-							invoice?.invoiceFees?.[0]?.name
-						);
-					}) || []
-				);
-				setInvoice(res.invoice);
-				setPinState(res.pinStatus);
+				setSub(res?.bookedSubServices);
 				setPrice(
 					res?.invoice?.invoiceFees?.reduce(
 						(accumulator: any, object: any) => {
@@ -75,9 +68,7 @@ const ActivityBookings = () => {
 					)
 				);
 			}
-		} catch (err) {
-			setLoad(false);
-		}
+		} catch (err) {}
 	};
 
 	const isPermitted = () => {
@@ -95,6 +86,63 @@ const ActivityBookings = () => {
 			}
 		} else {
 			return false;
+		}
+	};
+
+	const chatConsultant = async () => {
+		try {
+			setLoadChat(true);
+			let res = await chatService.listChatRooms();
+			setLoadChat(false);
+			if (
+				Array.isArray(res?.data?.chatRooms) &&
+				res.data.chatRooms?.length > 0
+			) {
+				let find = res.data.chatRooms.find((f: any) =>
+					f.participants.some(
+						(p: any) => p.userId == bookingData?.consultant?.userId
+					)
+				);
+				if (find) {
+					router.push({
+						pathname: "/(app)/chat",
+						params: {
+							chatRoomId: find.chat?.chatRoomId,
+							user: find.name,
+							image: find.profilePhotoUrl,
+							newMsg: "1",
+							receiverId: user.userId,
+							isParticipant: `true`,
+						},
+					});
+				} else {
+					router.push({
+						pathname: "/(app)/chat",
+						params: {
+							chatRoomId: null,
+							user: bookingData.consultant?.name,
+							image: bookingData?.consultant?.profilePhotoUrl,
+							newMsg: "1",
+							receiverId: user.userId,
+							isParticipant: `true`,
+						},
+					});
+				}
+			} else {
+				router.push({
+					pathname: "/(app)/chat",
+					params: {
+						chatRoomId: null,
+						user: bookingData.consultant?.name,
+						image: bookingData?.consultant?.profilePhotoUrl,
+						newMsg: "1",
+						receiverId: user.userId,
+						isParticipant: `true`,
+					},
+				});
+			}
+		} catch (err) {
+			setLoadChat(false);
 		}
 	};
 
@@ -132,19 +180,7 @@ const ActivityBookings = () => {
 							/>
 							<View style={{ marginLeft: 10 }}>
 								<Text style={[textStyles.textBold]}>
-									From {bookingData?.user?.name}
-								</Text>
-								<Text
-									style={[
-										textStyles.text,
-										{ fontSize: 13, marginTop: 4 },
-									]}
-								>
-									Booked on{" "}
-									{format(
-										bookingData.updatedAt,
-										"do MMMM, yyyy"
-									)}
+									{bookingData?.user?.name}
 								</Text>
 							</View>
 						</View>
@@ -186,17 +222,18 @@ const ActivityBookings = () => {
 							</TouchableOpacity>
 							<TouchableOpacity
 								style={styles.btn}
-								onPress={() => {
-									Linking.openURL(
-										`tel:${bookingData?.user?.phone}`
-									);
-								}}
+								onPress={chatConsultant}
+								disabled={loadChat}
 							>
-								<Feather
-									color={"#FFF"}
-									size={22}
-									name={"message-square"}
-								/>
+								{loadChat ? (
+									<ActivityIndicator color={"#FFF"} />
+								) : (
+									<Feather
+										color={"#FFF"}
+										size={22}
+										name={"message-square"}
+									/>
+								)}
 								<Text
 									style={[
 										textStyles.textMid,

@@ -1,10 +1,11 @@
 import chatService from "@/redux/chat/chatService";
 import colors from "@/utils/colors";
 import { mapChatToGifted } from "@/utils/data";
-import { displayError } from "@/utils/error";
+import { displayError, displaySuccess } from "@/utils/error";
 import { useAppSelector } from "@/utils/hooks";
 import { getSocket } from "@/utils/socket";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
 	ActivityIndicator,
@@ -31,10 +32,11 @@ import ItemChat from "./ItemChat";
 import ReceiptChat from "./ReceiptChat";
 
 const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
+	const router = useRouter();
+
 	const [messages, setMessages] = useState<IMessage[]>([]);
 	const [showMenu, setShowMenu] = useState(false);
 	const [showDoc, setShowDoc] = useState(false);
-	const [openModal, setOpenModal] = useState(false);
 
 	const socket = getSocket();
 
@@ -82,6 +84,10 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					])
 				);
 			}
+		});
+		socket.on("chatroom:deleted", (data) => {
+			displaySuccess("Hello!", "The Chat Room has been Deleted.");
+			router.back();
 		});
 	}, []);
 

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "951131909872",
-    "project_id": "hairsap-1db9d",
-    "storage_bucket": "hairsap-1db9d.appspot.com"
+    "project_number": "913133921485",
+    "project_id": "hairsap-41361",
+    "storage_bucket": "hairsap-41361.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:951131909872:android:0cb28e7665d45ea8c1dc35",
+        "mobilesdk_app_id": "1:913133921485:android:65323d3b996e1ed1303584",
         "android_client_info": {
           "package_name": "com.igoni.Hairsap"
         }
@@ -15,7 +15,32 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB8tkda9aY-TqR4UmeplibJ6Lc5fV8aS4I"
+          "current_key": "AIzaSyBYxkkcczd89Xm5ahdlIYuJOe_oILELHI8"
+        },
+        {
+          "current_key": "AIzaSyCR7759s1YA4xIDuUtcPJtSuquAmqzbQeo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913133921485:android:f48aa94407e49f8b303584",
+        "android_client_info": {
+          "package_name": "com.reotech.Hairsap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYxkkcczd89Xm5ahdlIYuJOe_oILELHI8"
+        },
+        {
+          "current_key": "AIzaSyCR7759s1YA4xIDuUtcPJtSuquAmqzbQeo"
         }
       ],
       "services": {

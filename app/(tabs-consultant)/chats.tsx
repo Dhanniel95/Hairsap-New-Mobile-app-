@@ -37,7 +37,7 @@ const ChatRooms = () => {
 	const [myCustomersList, setMyCustomersList] = useState<any>({});
 	const [customersList, setCustomersList] = useState<any>({});
 	const [braidersList, setBraidersList] = useState<any>({});
-	const [refreshing, setRefreshing] = useState<any>(false);
+	const [refreshing, setRefreshing] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
 	const [search, setSearch] = useState("");
 	const [searchList, setSearchList] = useState<any>([]);
@@ -60,6 +60,20 @@ const ChatRooms = () => {
 		socket.on("message:new:guest", (data) => {
 			listGuests();
 			listMyGuests();
+		});
+		socket.on("chatroom:updated", (data) => {
+			listGuests();
+			listMyGuests();
+			listCustomers();
+			listMyCustomers();
+			displaySuccess("Hello!", "Your Chat Room has been updated.");
+		});
+		socket.on("chatroom:deleted", (data) => {
+			listGuests();
+			listMyGuests();
+			listCustomers();
+			listMyCustomers();
+			displaySuccess("Hello!", "The Chat Room has been Deleted.");
 		});
 		socket.onAny((event, ...args) => {
 			console.log("Got event:", event, args);
@@ -146,18 +160,6 @@ const ChatRooms = () => {
 		}, 2000);
 	}, []);
 
-	const filterSearch = (val: string) => {
-		const lowerQuery = val.toLowerCase();
-
-		setSearchList(
-			customersList.chatRooms?.filter(
-				(user: any) =>
-					user?.name?.toLowerCase().includes(lowerQuery) ||
-					user?.phone?.includes(lowerQuery)
-			)
-		);
-	};
-
 	const arrayType = (type: string) => {
 		if (activeTab === 1) {
 			return guestList[type];
@@ -179,26 +181,6 @@ const ChatRooms = () => {
 			return braidersList[type];
 		}
 	};
-
-	// const zegoInit = async (userID: number, userName: string) => {
-	// 	return ZegoUIKitPrebuiltCallService.init(
-	// 		"1499669791",
-	// 		"fef5cd5708bd1f97d3d8c885079eb7c167e25cf0efd5706175f80a9e86416ecb",
-	// 		userID,
-	// 		userName,
-	// 		[],
-	// 		{
-	// 			ringtoneConfig: {
-	// 				incomingCallFileName: "zego_incoming.mp3",
-	// 				outgoingCallFileName: "zego_outgoing.mp3",
-	// 			},
-	// 			androidNotificationConfig: {
-	// 				channelID: "ZegoUIKit",
-	// 				channelName: "ZegoUIKit",
-	// 			},
-	// 		}
-	// 	);
-	// };
 
 	return (
 		<View
