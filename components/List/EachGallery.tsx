@@ -14,7 +14,6 @@ import ModalComponent from "../ModalComponent";
 const EachGallery = ({
 	gallery,
 	itemSize,
-	videos,
 }: {
 	gallery: any;
 	itemSize: number;
@@ -26,15 +25,17 @@ const EachGallery = ({
 
 	const item = gallery?.items[0];
 
+	const reelHandler = () => {
+		router.push({
+			pathname: "/(app)/reel",
+			params: { startFrom: item.galleryId },
+		});
+	};
+
 	return item.itemId ? (
 		<>
 			<Pressable
-				onPress={() =>
-					router.push({
-						pathname: "/(app)/reel",
-						params: { startFrom: item.itemId },
-					})
-				}
+				onPress={reelHandler}
 				style={{
 					width: itemSize,
 					height: 180,
@@ -70,7 +71,6 @@ const EachGallery = ({
 								pathname: "/(app)/reel",
 								params: {
 									startFrom: gallery.galleryId,
-									videos,
 								},
 							});
 						}}

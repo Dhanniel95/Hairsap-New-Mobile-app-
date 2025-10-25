@@ -55,7 +55,6 @@ export default function TabLayout() {
 				dispatch(
 					saveUserData({
 						...data.data.user,
-						changePassword: decode?.changePassword,
 					})
 				);
 				setOpenUser(true);

@@ -35,8 +35,7 @@ const GuestToUser = ({ closeModal }: { closeModal: () => void }) => {
 				style={[textStyles.textMid, { marginBottom: 20, fontSize: 14 }]}
 			>
 				{user?.changePassword
-					? `A Customer Account has been created for you. You can continue
-				using our services with it.`
+					? `Welcome, ${user?.name}.`
 					: `Welcome Back, ${user?.name}`}
 			</Text>
 			<TouchableOpacity
