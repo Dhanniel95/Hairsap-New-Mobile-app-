@@ -18,7 +18,6 @@ const GalleryCheck = () => {
 				alignItems: "center",
 				height: 500,
 				paddingHorizontal: "10%",
-				transform: [{ scaleY: -1 }],
 			}}
 		>
 			<Text

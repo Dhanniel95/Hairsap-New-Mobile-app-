@@ -405,9 +405,12 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 						user.role === "consultant" || user.role === "pro" ? (
 							<></>
 						) : (
-							<GalleryCheck />
+							<View style={{ transform: [{ scaleY: -1 }] }}>
+								<GalleryCheck />
+							</View>
 						)
 					}
+					inverted={false}
 					renderBubble={(props: any) =>
 						props.currentMessage.messageType === "receipt" ? (
 							<ReceiptChat
