@@ -7,6 +7,7 @@ import colors from "@/utils/colors";
 import { displayError } from "@/utils/error";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { registerForPushNotificationsAsync } from "@/utils/notification";
+import { initStreamClient } from "@/utils/stream";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -43,6 +44,7 @@ const Login = () => {
 			if (res?.userId && !res.faceIdPhotoUrl && res.role === "user") {
 				router.push({ pathname: "/(auth)/faceverify", params: res });
 			} else if (res?.userId) {
+				loadStream(res);
 				if (res?.role === "consultant") {
 					router.replace("/(tabs-consultant)/chats");
 				} else if (res?.role === "pro") {
@@ -54,6 +56,19 @@ const Login = () => {
 				}
 			}
 		}
+	};
+
+	const loadStream = async (user: any) => {
+		await initStreamClient(
+			{
+				id: `${user.userId}`,
+				image: user.faceIdPhotoUrl,
+				name: user.name,
+			},
+			user.userId == 2182
+				? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjE4MiJ9.ISBIu6BEpDb-CI0d9fbHABkNU9OZwHWA1xDlG2lONWI"
+				: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjM1NCJ9.o-kUptC9OLQ0_iHRj5wPLkNPimKBPXf_RCQd_GO8D9k"
+		);
 	};
 
 	const registerGuest = async () => {
