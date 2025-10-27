@@ -32,6 +32,12 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 			call.state.callingState === CallingState.JOINED
 	);
 
+	console.log(
+		calls.map((call) => {
+			return call.state.callingState;
+		})
+	);
+
 	// --- Start audio-only call ---
 	const startAudioCall = async () => {
 		if (!client) {
@@ -39,7 +45,7 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 			return;
 		}
 
-		if (!user?.userId || !targetUserId) {
+		if (!user?.userId) {
 			Alert.alert("Error", "Missing user IDs");
 			return;
 		}
@@ -54,7 +60,7 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 				data: {
 					members: [
 						{ user_id: `${user.userId}` },
-						{ user_id: targetUserId },
+						{ user_id: user.userId == 2354 ? "2182" : "2354" },
 					],
 				},
 				ring: true,

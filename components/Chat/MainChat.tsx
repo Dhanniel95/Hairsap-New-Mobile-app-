@@ -410,7 +410,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 							</View>
 						)
 					}
-					inverted={false}
+					// inverted={false}
 					renderBubble={(props: any) =>
 						props.currentMessage.messageType === "receipt" ? (
 							<ReceiptChat

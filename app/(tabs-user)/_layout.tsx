@@ -7,11 +7,13 @@ import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { connectSocket, disconnectSocket } from "@/utils/socket";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { Platform } from "react-native";
 
 export default function TabLayout() {
+	const router = useRouter();
+
 	const dispatch = useAppDispatch();
 
 	const { user } = useAppSelector((state) => state.auth);
