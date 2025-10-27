@@ -13,6 +13,7 @@
 			"bundleIdentifier": "com.reotech.Hairsap",
 			"googleServicesFile": "./GoogleService-Info.plist",
 			"infoPlist": {
+				"NSMicrophoneUsageDescription": "Hairsap needs access to your microphone to communicate with users on the platform",
 				"NSCameraUsageDescription": "Hairsap needs access to your camera to capture your face for verification and security reasons during delivery of service.",
 				"NSPhotoLibraryUsageDescription": "Hairsap needs permission to access your photo library to upload hairstyle image, set custom avatar and upload videos.",
 				"NSLocationWhenInUseUsageDescription": "Hairsap needs users location for connecting clients to the nearest beauty pro for quicker delivery of services",

@@ -16,6 +16,7 @@ import {
 	Text,
 	View,
 } from "react-native";
+import Container from "./Container";
 
 const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 	const { user } = useAppSelector((state) => state.auth);
@@ -87,9 +88,11 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 	// --- Active / joined call UI ---
 	if (activeCall) {
 		return (
-			<StreamCall call={activeCall}>
-				<CallContent />
-			</StreamCall>
+			<Container>
+				<StreamCall call={activeCall}>
+					<CallContent CallControls={} onHangupCallHandler={} />
+				</StreamCall>
+			</Container>
 		);
 	}
 
@@ -98,9 +101,7 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 		return (
 			<View style={styles.callingContainer}>
 				<ActivityIndicator size="large" color="#007AFF" />
-				<Text style={styles.callingText}>
-					Calling user {targetUserId}...
-				</Text>
+				<Text style={styles.callingText}>Calling user...</Text>
 				<Button title="Cancel" onPress={() => setDialingCall(null)} />
 			</View>
 		);
@@ -111,7 +112,7 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 		<View style={styles.container}>
 			<Text style={styles.info}>Ready to make or receive calls</Text>
 			<Button
-				title={`Call User ${targetUserId}`}
+				title={`Call User ${user.userId}`}
 				onPress={startAudioCall}
 			/>
 		</View>
