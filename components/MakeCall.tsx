@@ -58,13 +58,12 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 
 			await call.getOrCreate({
 				data: {
-					members: [
-						{ user_id: `${user.userId}` },
-						{ user_id: user.userId == 2354 ? "2182" : "2354" },
-					],
+					members: [{ user_id: `2354` }, { user_id: "2182" }],
 				},
 				ring: true,
 			});
+
+			await call.camera.disable();
 
 			await call.join({ video: false });
 			console.log("Audio call started!");
@@ -88,7 +87,13 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 	if (activeCall) {
 		return (
 			<StreamCall call={activeCall}>
-				<CallContent />
+				<View style={{ flex: 1, paddingBottom: 50 }}>
+					<CallContent
+						onHangupCallHandler={() => {
+							console.log("Call Ended");
+						}}
+					/>
+				</View>
 			</StreamCall>
 		);
 	}
@@ -111,7 +116,7 @@ const MakeCallScreen = ({ targetUserId }: { targetUserId: string }) => {
 		<View style={styles.container}>
 			<Text style={styles.info}>Ready to make or receive calls</Text>
 			<Button
-				title={`Call User ${targetUserId}`}
+				title={`Call User ${user.userId}`}
 				onPress={startAudioCall}
 			/>
 		</View>

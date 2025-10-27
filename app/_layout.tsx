@@ -1,7 +1,7 @@
 import store from "@/redux/store";
 import { getStreamClient } from "@/utils/stream";
 import * as Sentry from "@sentry/react-native";
-import { StreamVideoProvider } from "@stream-io/video-react-native-sdk";
+import { StreamVideo } from "@stream-io/video-react-native-sdk";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
@@ -72,9 +72,9 @@ export default Sentry.wrap(function RootLayout() {
 		<Provider store={store}>
 			<PersistGate persistor={persistor}>
 				<GestureHandlerRootView style={{ flex: 1 }}>
-					<StreamVideoProvider client={client!}>
+					<StreamVideo client={client!}>
 						<Stack screenOptions={{ headerShown: false }} />
-					</StreamVideoProvider>
+					</StreamVideo>
 				</GestureHandlerRootView>
 				<FlashMessage
 					position="top"

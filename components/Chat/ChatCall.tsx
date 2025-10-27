@@ -25,22 +25,23 @@ const ChatCall = ({
 		if (!client) return;
 
 		try {
-			const callId = `${user.userId}-${userId}-${Date.now()}`;
+			const callId = `call_${Date.now()}`;
 			const call = client.call("default", callId);
 
-			await call.create({
+			await call.getOrCreate({
 				data: {
-					members: [
-						{ user_id: `${user.userId}` },
-						{ user_id: `${userId}` },
-					],
+					members: [{ user_id: `2354` }, { user_id: "2182" }],
 				},
+				ring: true,
 			});
 
-			// await call.join(); // join AFTER creation succeeds
+			await call.camera.disable();
+
+			await call.join({ video: false });
 
 			dispatch(setActiveCall({ callId: call.id, type: "outgoing" }));
 			router.push("/(app)/call");
+			console.log(call, "calls");
 		} catch (error) {
 			console.error("Error creating or joining call:", error);
 		}
