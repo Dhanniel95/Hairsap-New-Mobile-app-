@@ -19,7 +19,7 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.7.8</string>
+    <string>1.7.9</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleURLTypes</key>
@@ -68,7 +68,7 @@
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Hairsap needs users location for connecting clients to the nearest beauty pro for quicker delivery of services</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your microphone</string>
+    <string>Hairsap needs access to your microphone to communicate with users on the platform</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Hairsap needs permission to access your photo library to upload hairstyle image, set custom avatar and upload videos.</string>
     <key>NSUserActivityTypes</key>
@@ -79,6 +79,7 @@
     <true/>
     <key>UIBackgroundModes</key>
     <array>
+      <string>remote-notification</string>
       <string>remote-notification</string>
       <string>audio</string>
     </array>

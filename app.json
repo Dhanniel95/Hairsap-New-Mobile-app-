@@ -23,7 +23,8 @@
 					"remote-notification"
 				],
 				"ITSAppUsesNonExemptEncryption": false
-			}
+			},
+			"associatedDomains": ["applinks:hairsap.com"]
 		},
 		"android": {
 			"permissions": [
@@ -46,7 +47,24 @@
 			"softwareKeyboardLayoutMode": "resize",
 			"package": "com.igoni.Hairsap",
 			"googleServicesFile": "./google-services.json",
-			"versionCode": 15
+			"versionCode": 15,
+			"intentFilters": [
+				{
+					"action": "VIEW",
+					"autoVerify": true,
+					"data": [
+						{
+							"scheme": "https",
+							"host": "hairsap.com",
+							"pathPrefix": "/"
+						},
+						{
+							"scheme": "hairsap"
+						}
+					],
+					"category": ["BROWSABLE", "DEFAULT"]
+				}
+			]
 		},
 		"androidNavigationBar": {
 			"barStyle": "light-content",
