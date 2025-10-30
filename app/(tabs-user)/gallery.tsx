@@ -8,7 +8,6 @@ const GalleryScreen = () => {
 
 	const { user } = useAppSelector((state) => state.auth);
 
-	console.log(user.userId, "dd");
 	useEffect(() => {
 		if (user.userId && !user.faceIdPhotoUrl) {
 			setTimeout(() => {
