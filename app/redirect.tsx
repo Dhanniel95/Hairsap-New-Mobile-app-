@@ -10,7 +10,6 @@ export default function RedirectPage() {
 
 	const router = useRouter();
 	const { user } = useAppSelector((state) => state.auth);
-	const { activated } = useAppSelector((state) => state.call);
 
 	useEffect(() => {
 		if (user?.userId) {
@@ -45,16 +44,13 @@ export default function RedirectPage() {
 	}, []);
 
 	const loadStream = async () => {
-		await initStreamClient(
-			{
+		if (user.userId && user.role !== "guest") {
+			await initStreamClient({
 				id: `${user.userId}`,
 				image: user.faceIdPhotoUrl,
 				name: user.name,
-			},
-			user.userId == 2182
-				? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjE4MiJ9.ISBIu6BEpDb-CI0d9fbHABkNU9OZwHWA1xDlG2lONWI"
-				: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjM1NCJ9.o-kUptC9OLQ0_iHRj5wPLkNPimKBPXf_RCQd_GO8D9k"
-		);
+			});
+		}
 	};
 
 	return (

@@ -13,17 +13,17 @@ const myLogger: Logger = (logLevel, message, ...args) => {
 const tokenProvider = async () => {
 	try {
 		const { data } = await apiRequest().get(`/generate-call-token`);
-		console.log(data, "dataToken");
-		return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjE4MiJ9.0OJAunsKAtVdajq9k-BxqJj43TwzHKjQvAU2NPLQki4";
+		return data?.token;
 	} catch (err) {
 		console.log(displayError(err, false), "Error From Fetch TOKEN");
 	}
 };
 
-export const initStreamClient = async (
-	user: { id: string; image: string; name: string },
-	token: string
-) => {
+export const initStreamClient = async (user: {
+	id: string;
+	image: string;
+	name: string;
+}) => {
 	client = StreamVideoClient.getOrCreateInstance({
 		apiKey: "2qnp99kyb7vj",
 		user,

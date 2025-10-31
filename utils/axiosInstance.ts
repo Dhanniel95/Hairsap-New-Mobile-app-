@@ -10,6 +10,7 @@ const apiRequest = (file?: boolean) => {
 	axiosInstance.interceptors.request.use(
 		async (config) => {
 			const accessToken = await AsyncStorage.getItem("@accesstoken");
+			console.log(accessToken, "ACCESTOK");
 			if (accessToken) {
 				config.headers.Authorization = `Bearer ${accessToken}`;
 			}

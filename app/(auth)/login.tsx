@@ -59,16 +59,11 @@ const Login = () => {
 	};
 
 	const loadStream = async (user: any) => {
-		await initStreamClient(
-			{
-				id: `${user.userId}`,
-				image: user.faceIdPhotoUrl,
-				name: user.name,
-			},
-			user.userId == 2182
-				? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjE4MiJ9.ISBIu6BEpDb-CI0d9fbHABkNU9OZwHWA1xDlG2lONWI"
-				: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjM1NCJ9.o-kUptC9OLQ0_iHRj5wPLkNPimKBPXf_RCQd_GO8D9k"
-		);
+		await initStreamClient({
+			id: `${user.userId}`,
+			image: user.faceIdPhotoUrl,
+			name: user.name,
+		});
 	};
 
 	const registerGuest = async () => {

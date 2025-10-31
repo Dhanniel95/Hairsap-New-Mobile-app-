@@ -401,6 +401,7 @@ const MainChat = ({ chatInfo }: { chatInfo?: any }) => {
 					renderMessageImage={renderMessageImage}
 					renderMessageVideo={renderMessageVideo}
 					isKeyboardInternallyHandled={true}
+					inverted={messages.length > 0 ? true : false}
 					renderChatEmpty={() =>
 						user.role === "consultant" || user.role === "pro" ? (
 							<></>

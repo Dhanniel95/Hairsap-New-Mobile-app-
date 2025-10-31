@@ -161,7 +161,10 @@ const ActivityBookings = () => {
 						paddingVertical: 25,
 					}}
 				>
-					<ScrollView showsVerticalScrollIndicator={false}>
+					<ScrollView
+						showsVerticalScrollIndicator={false}
+						contentContainerStyle={{ paddingBottom: 50 }}
+					>
 						<View style={styles.topContainer}>
 							<Image
 								style={{
@@ -384,41 +387,22 @@ const ActivityBookings = () => {
 							</Text>
 							<Text style={[textStyles.textMid]}>--</Text>
 						</View>
-						<View style={[styles.line, { flexDirection: "row" }]}>
-							<View style={{ width: "50%" }}>
-								<Text
-									style={[
-										textStyles.textMid,
-										{
-											color: colors.mildGray,
-											fontSize: 14,
-											marginBottom: 2,
-										},
-									]}
-								>
-									Price:
-								</Text>
-								<Text style={[textStyles.textMid]}>
-									₦{formatCurrency(price)}
-								</Text>
-							</View>
-							<View style={{ width: "50%" }}>
-								<Text
-									style={[
-										textStyles.textMid,
-										{
-											color: colors.mildGray,
-											fontSize: 14,
-											marginBottom: 2,
-										},
-									]}
-								>
-									Transportation:
-								</Text>
-								<Text style={[textStyles.textMid]}>
-									₦{formatCurrency(transportation)}
-								</Text>
-							</View>
+						<View style={styles.line}>
+							<Text
+								style={[
+									textStyles.textMid,
+									{
+										color: colors.mildGray,
+										fontSize: 14,
+										marginBottom: 2,
+									},
+								]}
+							>
+								Price:
+							</Text>
+							<Text style={[textStyles.textMid]}>
+								₦{formatCurrency(price)}
+							</Text>
 						</View>
 						{bookingData.pinDate && (
 							<View style={[styles.line]}>
@@ -439,6 +423,25 @@ const ActivityBookings = () => {
 										bookingData.pinDate,
 										"do MMMM, yyyy"
 									)}
+								</Text>
+							</View>
+						)}
+						{bookingData.description && (
+							<View style={[styles.line]}>
+								<Text
+									style={[
+										textStyles.textMid,
+										{
+											color: colors.mildGray,
+											fontSize: 14,
+											marginBottom: 2,
+										},
+									]}
+								>
+									Description:
+								</Text>
+								<Text style={[textStyles.textMid]}>
+									{bookingData.description?.text || "--"}
 								</Text>
 							</View>
 						)}
