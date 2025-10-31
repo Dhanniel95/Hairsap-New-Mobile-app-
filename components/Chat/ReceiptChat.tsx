@@ -25,6 +25,8 @@ const ReceiptChat = ({
 
 	const pinDate = metadata?.pinDate ? parseISO(metadata.pinDate) : new Date();
 
+	console.log(metadata, "mm");
+
 	const receiptNav = () => {
 		if (metadata.bookingId) {
 			if (user.role === "pro") {
@@ -117,6 +119,24 @@ const ReceiptChat = ({
 									{formatCommas((metadata?.price || 0) / 100)}
 								</Text>
 							</Text>
+							{metadata.discount > 0 && (
+								<Text
+									style={[
+										textStyles.textBold,
+										{
+											color: "#FFF",
+											fontSize: 14,
+											marginBottom: 5,
+										},
+									]}
+								>
+									Discount:{" "}
+									<Text style={{ fontFamily: "regular" }}>
+										₦
+										{formatCommas(metadata?.discount / 100)}
+									</Text>
+								</Text>
+							)}
 							<Text
 								style={[
 									textStyles.textBold,

@@ -49,7 +49,6 @@ const MakeCall = () => {
 			<StreamCall call={incomingCall}>
 				<IncomingCall
 					onRejectCallHandler={() => {
-						incomingCall.endCall();
 						incomingCall.leave();
 						navigateTo();
 					}}
@@ -64,8 +63,8 @@ const MakeCall = () => {
 				<View style={{ flex: 1, paddingBottom: insets.bottom }}>
 					<CallContent
 						onHangupCallHandler={() => {
-							activeCall.endCall();
 							activeCall.leave();
+							activeCall.endCall();
 							navigateTo();
 						}}
 					/>

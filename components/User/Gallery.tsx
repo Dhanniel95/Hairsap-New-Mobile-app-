@@ -14,7 +14,6 @@ import {
 	TextInput,
 	View,
 } from "react-native";
-import ChatCall from "../Chat/ChatCall";
 import Header from "../Header";
 import EachGallery from "../List/EachGallery";
 import GalleryLoad from "../Load/GalleryLoad";
@@ -133,7 +132,6 @@ const Gallery = () => {
 				) : (
 					<GalleryLoad />
 				)}
-				<ChatCall userId={2354} username="Olawale Caller" />
 			</View>
 		</View>
 	);

@@ -89,6 +89,13 @@ const generateToken = async (userId: string) => {
 	return data;
 };
 
+const magicLinkLogin = async (token: any) => {
+	const { data } = await apiRequest().post(`/auth/login/magic`, {
+		token,
+	});
+	return data?.data;
+};
+
 const authService = {
 	login,
 	register,
@@ -107,6 +114,7 @@ const authService = {
 	linkUser,
 	exchangeToken,
 	generateToken,
+	magicLinkLogin,
 };
 
 export default authService;

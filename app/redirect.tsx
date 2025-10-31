@@ -39,6 +39,7 @@ export default function RedirectPage() {
 		const client = getStreamClient();
 
 		client?.on("call.ring", (event) => {
+			console.log(event, "event for Ring");
 			router.push("/(app)/call");
 		});
 	}, []);
@@ -46,7 +47,7 @@ export default function RedirectPage() {
 	const loadStream = async () => {
 		await initStreamClient(
 			{
-				id: `2354`,
+				id: `${user.userId}`,
 				image: user.faceIdPhotoUrl,
 				name: user.name,
 			},
